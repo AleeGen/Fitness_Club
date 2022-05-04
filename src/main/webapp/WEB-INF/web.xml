@@ -26,7 +26,8 @@
 
     <context-param>
         <param-name>admin</param-name>
-        <param-value>pass</param-value>
+        <param-value>passadmin</param-value>
     </context-param>
+
 
 </web-app>

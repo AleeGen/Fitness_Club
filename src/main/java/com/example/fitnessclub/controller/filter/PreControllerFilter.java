@@ -1,3 +1,4 @@
+/*
 package com.example.fitnessclub.controller.filter;
 
 import jakarta.servlet.*;
@@ -29,3 +30,4 @@ public class PreControllerFilter implements Filter {
     }
 
 }
+*/

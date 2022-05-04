@@ -1,3 +1,4 @@
+/*
 package com.example.fitnessclub.controller.filter;
 
 import jakarta.servlet.*;
@@ -28,3 +29,4 @@ public class PreIndexFilter implements Filter {
     public void destroy() {
     }
 }
+*/

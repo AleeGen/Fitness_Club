@@ -1,32 +1,34 @@
 package com.example.fitnessclub.command.impl;
 
 import com.example.fitnessclub.command.Command;
+import com.example.fitnessclub.constants.MassagePage;
+import com.example.fitnessclub.constants.SessionAttributes;
+import com.example.fitnessclub.entity.User;
 import com.example.fitnessclub.exception.CommandException;
 import com.example.fitnessclub.exception.ServiceException;
 import com.example.fitnessclub.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.Optional;
+
 public class LoginCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-
         String login = request.getParameter("login");
-        String pass = request.getParameter("pass");
+        String pass = request.getParameter("password");
         UserServiceImpl userService = UserServiceImpl.getInstance();
-        String page;
+        String page = "index.jsp";
         HttpSession session = request.getSession();
         try {
-            if (userService.authenticate(login, pass)) {
-                request.setAttribute("user", login);
-                session.setAttribute("user_name", login);
+            Optional<User> optionalUser = userService.authenticate(login, pass);
+            if (optionalUser.isPresent()) {
+                session.setAttribute(SessionAttributes.ALL_INFO_USER, optionalUser.get());
                 page = "pages/main.jsp";
             } else {
-                request.setAttribute("login_msg", "incorrect login or password");
-                page = "index.jsp";
+                request.setAttribute("msg", MassagePage.INCORRECT_LOGIN_PASSWORD);
             }
-            session.setAttribute("current_page", page);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

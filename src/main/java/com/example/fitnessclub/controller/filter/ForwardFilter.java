@@ -1,3 +1,4 @@
+/*
 package com.example.fitnessclub.controller.filter;
 
 import jakarta.servlet.*;
@@ -23,3 +24,4 @@ public class ForwardFilter implements Filter {
         chain.doFilter(request, response);
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.example.fitnessclub.controller.filter;
 
 import jakarta.servlet.*;
@@ -21,7 +22,7 @@ public class SecurityFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        httpResponse.sendRedirect(httpRequest.getContextPath() + indexPath);
+        //httpResponse.sendRedirect(httpRequest.getContextPath() + indexPath);
         chain.doFilter(request, response);
     }
 
@@ -30,3 +31,4 @@ public class SecurityFilter implements Filter {
 
 
 }
+*/

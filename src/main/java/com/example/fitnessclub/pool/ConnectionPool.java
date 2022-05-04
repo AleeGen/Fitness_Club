@@ -15,8 +15,8 @@ public class ConnectionPool {
 
     private static int CAPACITY_POOL = 8;
     private static ConnectionPool instance;
-    private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(CAPACITY_POOL);
-    private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(CAPACITY_POOL);
+    private BlockingQueue<Connection> free = new LinkedBlockingQueue<>(CAPACITY_POOL);
+    private BlockingQueue<Connection> used = new LinkedBlockingQueue<>(CAPACITY_POOL);
 
     //// TODO: 24.04.2022 неуверен с ProxyConnection, правильно ли везде я его подобавлял 
     static {
@@ -29,8 +29,8 @@ public class ConnectionPool {
 
     //// TODO: 19.04.2022 познакомиться с Connection
     //// TODO: 19.04.2022 будем использовать прокси коннекшен
-    private ConnectionPool() {  //// TODO: 19.04.2022 конструктор вызывается только один раз при обращении к пулу? там ниже в цикле мы создаем 8 конекшнов свободных, по ходу да, вызывается в самом начале... наверное
-        String url = "jdbc:mysql://localhost:3306/fonestest";
+    private ConnectionPool() {
+        String url = "jdbc:mysql://localhost:3306/fitness_club";
         Properties prop = new Properties(); //// TODO: 19.04.2022 из проперти должны читаться все эти строки
         prop.put("user", "root");
         prop.put("password", "aleegen");
@@ -43,9 +43,9 @@ public class ConnectionPool {
         prop.put("serverTimezone", "UTC");
         prop.put("serverSslCert", "classpath:server.crt");
         for (int i = 0; i < CAPACITY_POOL; i++) {
-            ProxyConnection connection = null;
+            Connection connection = null;
             try {
-                connection = (ProxyConnection) DriverManager.getConnection(url, prop);
+                connection = DriverManager.getConnection(url, prop);
             } catch (SQLException e) {
                 throw new ExceptionInInitializerError(e.getMessage());
             }
@@ -61,7 +61,7 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() {
-        ProxyConnection connection = null;
+        Connection connection = null;
         try {
             connection = free.take();
             used.put(connection);
@@ -73,12 +73,12 @@ public class ConnectionPool {
     }
 
     public void releaseConnection(Connection connection) throws ConnectionPoolException {
-        if (connection.getClass() != ProxyConnection.class) {
-            throw new ConnectionPoolException();
-        }
+        /*if (connection.getClass() != ProxyConnection.class) {
+            throw new ConnectionPoolException(); //проверка на принадлежность коннекшена нашему проекту
+        }*/
         try {
             used.remove(connection);
-            free.put((ProxyConnection) connection);
+            free.put(connection);
         } catch (InterruptedException e) {
             //log
             Thread.currentThread().interrupt();
@@ -90,8 +90,8 @@ public class ConnectionPool {
     public void destroyPool() {
         for (int i = 0; i < CAPACITY_POOL; i++) {
             try {
-                free.take().reallyClose();
-            } catch (InterruptedException e) {
+                free.take().close();
+            } catch (SQLException |InterruptedException e) {
                 //log
             }
         }

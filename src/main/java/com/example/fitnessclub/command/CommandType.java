@@ -1,16 +1,14 @@
 package com.example.fitnessclub.command;
 
-import com.example.fitnessclub.command.impl.AddUserCommand;
-import com.example.fitnessclub.command.impl.DefaultCommand;
-import com.example.fitnessclub.command.impl.LoginCommand;
-import com.example.fitnessclub.command.impl.LogoutCommand;
+import com.example.fitnessclub.command.impl.*;
 
 import java.util.Locale;
 
 public enum CommandType {
-    ADD_USER(new AddUserCommand()),
+    REGISTRATION(new RegistrationCommand()),
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
+    OPEN_PAGE(new OpenPageCommand()),
     DEFAULT(new DefaultCommand());
 
     Command command;
