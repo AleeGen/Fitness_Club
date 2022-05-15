@@ -1,16 +1,13 @@
 package com.example.fitnessclub.controller;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.fitnessclub.command.Command;
-import com.example.fitnessclub.command.CommandType;
+import com.example.fitnessclub.controller.command.Command;
+import com.example.fitnessclub.controller.command.CommandType;
 import com.example.fitnessclub.exception.CommandException;
-import com.example.fitnessclub.pool.ConnectionPool;
-import jakarta.servlet.ServletConfig;
+import com.example.fitnessclub.model.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -32,7 +29,18 @@ public class Controller extends HttpServlet {
     private static final String SAVE_PATH = "D:\\dir\\";
     private static final String UPLOAD_DIR = "uploads";
     private static Map<String, String> paramInit = new HashMap<String, String>();
-//// TODO: 16.04.2022 загрузка parts происходит вместе с загрузкой кнопки submit
+
+    //// TODO: 16.04.2022 загрузка parts происходит вместе с загрузкой кнопки submit
+    public void init() {
+        /*Enumeration e = this.getServletConfig().getInitParameterNames();
+        while (e.hasMoreElements()) { //// TODO: 27.04.2022 записываю в map параметры инициализации. Зачем? возможно понадобиться (passAdmin - admin, passUser - user)
+            String name = (String) e.nextElement();
+            String value = this.getServletConfig().getInitParameter(name);
+            paramInit.put(name, value);
+        }*/
+        ConnectionPool.getInstance();
+        logger.log(Level.INFO, "|||++++++++++> servlet init: " + this.getServletInfo());
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -59,43 +67,33 @@ public class Controller extends HttpServlet {
         req.getRequestDispatcher("pages/main.jsp").forward(req, resp);
     }
 
-    public void init() {
-        Enumeration e = this.getServletConfig().getInitParameterNames();
-        while (e.hasMoreElements()) { //// TODO: 27.04.2022 записываю в map параметры инициализации. Зачем? возможно понадобиться (passAdmin - admin, passUser - user)
-            String name = (String) e.nextElement();
-            String value = this.getServletConfig().getInitParameter(name);
-            paramInit.put(name, value);
-        }
-        ConnectionPool.getInstance();
-        logger.log(Level.INFO, "|||++++++++++> servlet init: " + this.getServletInfo());
-    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        System.out.println("->11");
+        process(request, response);
+    }
+
+    private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.log(Level.INFO, "first log from" + this.getServletName() + " Method " + request.getMethod());
         response.setContentType("text/html");//// TODO: 19.04.2022 что за строка?  это фильтр! а что он делает?
         //response.addCookie() добавляет куки к объекту ответа для пересылки на клиентский компьютер (может полезно будет это использовать?)
-        System.out.println("->12");
-        String commandStr = request.getParameter("command");
-        System.out.println("->13");
-        // параметры реквеста - это та информация, которая передается от форм jsp
-        // а атрибуты реквеста, это та информация, которую мы сами устанавливаем методом setAttribute()
+        String commandStr = request.getParameter(ParameterName.COMMAND);
         Command command = CommandType.define(commandStr);
-        System.out.println("->14");
-        String page = null;
         try {
-            page = command.execute(request);
-            System.out.println("->15");
-            request.getRequestDispatcher(page).forward(request, response);
-            System.out.println("->16");
-            //response.sendRedirect(page); //// TODO: 23.04.2022 redirect изначально переходит в корень page, поэтому работает некорректно
-            // // TODO: 23.04.2022 redirect используем такой переход для защиты от f5 
+            Router router = command.execute(request);
+            if (router.getType() == Router.Type.FORWARD) {
+                request.getRequestDispatcher(router.getPage()).forward(request, response);
+            } else if (router.getType() == Router.Type.REDIRECT) {
+                response.sendRedirect(router.getPage());
+            } else {
+                response.sendError(500, MessagePage.UNKNOWN_TRANSITION_ROUTER);
+            }
+            //// TODO: 23.04.2022 redirect изначально переходит в корень page, поэтому работает некорректно
+            //// TODO: 23.04.2022 redirect используем такой переход для защиты от f5
         } catch (CommandException e) {
-            throw new ServletException(e);
+            response.sendError(500, e.getMessage());
         }
     }
-
 
     public void destroy() {
         ConnectionPool.getInstance().destroyPool();

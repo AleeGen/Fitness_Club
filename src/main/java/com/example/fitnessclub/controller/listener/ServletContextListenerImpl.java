@@ -1,6 +1,5 @@
 package com.example.fitnessclub.controller.listener;
 
-import com.example.fitnessclub.pool.ConnectionPool;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
 import org.apache.logging.log4j.Level;

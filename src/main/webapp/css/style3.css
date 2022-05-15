@@ -1,0 +1,245 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #CCCCCC;
+}
+
+.decor {
+    position: relative;
+    max-width: 400px;
+    margin: 50px auto 0;
+    background: white;
+    border-radius: 30px;
+}
+
+.form-row {
+    padding: 50px;
+}
+
+/*дизайн input*/
+.form-row input {
+    border: none;
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    width: 100%;
+    padding: 0 10px;
+    line-height: 40px;
+    font-family: 'Roboto', sans-serif;
+    background: none;
+    border-bottom: 2px solid #4a90e2;
+    transition: all 0.2s ease;
+}
+
+/*дизайн submit*/
+.form-row input[type="submit"] {
+    margin-top: 30px;
+    background: #11B1F0;
+    color: white;
+    font-size: 14px;
+}
+
+/*дизайн reset*/
+.form-row input[type="reset"] {
+    margin-top: 30px;
+    background: #9fa2a2;
+    color: white;
+    font-size: 14px;
+}
+
+/*закругление reset и submit*/
+.form-row input[type="submit"], .form-row input[type="reset"] {
+    border-radius: 20px;
+    border: none;
+}
+
+/*анимация submit*/
+.form-row input[type="submit"]:focus,
+.form-row input[type="submit"]:hover {
+    background-color: #47CAFF; /*RGBA Цвет фона и значение прозрачности.*/
+}
+
+/*анимация reset*/
+.form-row input[type="reset"]:focus,
+.form-row input[type="reset"]:hover {
+    background-color: #b9bcbc; /*RGBA Цвет фона и значение прозрачности.*/
+}
+
+/*анимация submit при нажатии*/
+.form-row input[type="submit"]:focus,
+.form-row input[type="reset"]:focus {
+    outline: 0;
+    border: 2px solid #F77A52;
+    transition: all 0.1s ease;
+}
+
+.form-row h1 {
+    margin-top: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 36px;
+    color: #707981;
+}
+
+.form-row h2 {
+    margin-top: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 28px;
+    color: #707981;
+}
+
+.form-row h3 {
+    margin-top: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    color: #707981;
+}
+
+.form-row h4 {
+    margin-top: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: #707981;
+}
+
+.h4class {
+    margin-top: -20px;
+    margin-left: 20px;
+    color: #343636;
+}
+
+.form-row h5 {
+    margin-top: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #707981;
+}
+
+/*меняет цвет нижней границы*/
+.form-row input:focus {
+    outline: 0;
+    border-bottom: 2px solid #F77A52;
+}
+
+/*меняем плавающую строку при нажатии*/
+.form-row label {
+    position: absolute;
+    left: 65px;
+    color: #9d959d;
+    font-size: 20px;
+    font-weight: 300;
+    transform: translateY(-40px);
+    transition: all 0.2s ease;
+}
+
+/*анимация плавающей строки, остается сверху, если не пустая*/
+.form-row input:focus + label, .form-row input:not(:placeholder-shown) + label {
+    transform: translateY(-60px);
+    margin-left: -14px;
+    font-size: 14px;
+    font-weight: 400;
+    outline: 0;
+    border-color: #F77A52;
+    color: #F77A52;
+}
+
+
+/* для элемента input c type="radio" */
+.custom-radio {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+/* для элемента label связанного с .custom-radio */
+.custom-radio + label {
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+}
+
+/* создание в label псевдоэлемента  before со следующими стилями */
+.custom-radio + label::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 1px solid #adb5bd;
+    border-radius: 50%;
+    margin-right: 0.5em;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+}
+
+/* стили при наведении курсора на радио */
+.custom-radio:not(:disabled):not(:checked) + label:hover::before {
+    border-color: #b3d7ff;
+}
+
+/* стили для активной радиокнопки (при нажатии на неё) */
+.custom-radio:not(:disabled):active + label::before {
+    background-color: #4a90e2;
+    border-color: rgba(0, 123, 255, 0.25);
+}
+
+/* стили для радиокнопки, находящейся в фокусе */
+.custom-radio:focus + label::before {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* стили для радиокнопки, находящейся в фокусе и не находящейся в состоянии checked */
+.custom-radio:focus:not(:checked) + label::before {
+    border-color: #b3d7ff;
+}
+
+/* стили для радиокнопки, находящейся в состоянии checked */
+.custom-radio:checked + label::before {
+    border-color: #4a90e2;
+    background-color: #4a90e2;
+}
+
+/* стили для радиокнопки, находящейся в состоянии disabled */
+.custom-radio:disabled + label::before {
+    background-color: #e9ecef;
+}
+
+
+.table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table td, .table th {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #ddd;
+}
+
+.table th {
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+}
+.table td {
+    text-align: left;
+}
