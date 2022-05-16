@@ -49,4 +49,19 @@ public class ItemDaoImpl extends BaseDao<Item> implements ItemDao {
         return null;
     }
 
+    public Optional<Item> find(String serviceId) throws DaoException {
+        Optional<Item> item = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_SERVICE_BY_ID)) {
+            statement.setString(1,serviceId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                item = ItemMapper.getInstance().rowMap(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DaoException(e);
+        }
+        return item;
+    }
 }

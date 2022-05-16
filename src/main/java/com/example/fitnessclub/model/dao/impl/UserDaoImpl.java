@@ -45,33 +45,21 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         System.out.println("+addUser+");
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.INSERT_USER)) {
-            System.out.println(user.getLogin());
             statement.setString(1, user.getLogin());
-            System.out.println(user.getPassword());
             statement.setString(2, user.getPassword());
-            System.out.println(user.getMail());
             statement.setString(3, user.getMail());
-            System.out.println(user.getName());
             statement.setString(4, user.getName());
-            System.out.println(user.getLastname());
             statement.setString(5, user.getLastname());
-            System.out.println(user.getDateBirth());
             statement.setDate(6, user.getDateBirth());
-            System.out.println(user.getSex());
             statement.setString(7, user.getSex());
-            System.out.println(user.getPhone());
             statement.setString(8, user.getPhone());
-            System.out.println(user.getNumberCard());
             if (user.getNumberCard().equals("")) {// FIXME: 12.05.2022  В БД номер карты установлен как decimal(20,0), поэтому он не принимает пустые "" строки, нужно передавать null чтобы избежать эксепшен
                 statement.setString(9, null);
             } else {
                 statement.setString(9, user.getNumberCard());
             }
-            System.out.println("+addUser9+");
             int execute = statement.executeUpdate();
-            System.out.println("+addUser10+");
             if (execute == 1) {
-                System.out.println("+addUser11+");
                 return true;
             }
         } catch (SQLException e) {
@@ -121,6 +109,5 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         }
         return optionalUser;
     }
-
 
 }

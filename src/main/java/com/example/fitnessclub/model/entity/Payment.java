@@ -2,24 +2,29 @@ package com.example.fitnessclub.model.entity;
 
 public class Payment extends AbstractEntity {
 
-    private Long usersId;
+    private Long userId;
     private Long serviceId;
     private byte remainedVisits;
-    private boolean paid;
+    private boolean paid = false;
 
-    public Payment(Long usersId, Long serviceId, byte remainedVisits, boolean paid) {
-        this.usersId = usersId;
-        this.serviceId = serviceId;
-        this.remainedVisits = remainedVisits;
+    public static Payment.PaymentBuilder newBuilder() {
+        return new Payment().new PaymentBuilder();
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
         this.paid = paid;
     }
 
-    public Long getUsersId() {
-        return usersId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUsersId(Long usersId) {
-        this.usersId = usersId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getServiceId() {
@@ -38,11 +43,30 @@ public class Payment extends AbstractEntity {
         this.remainedVisits = remainedVisits;
     }
 
-    public boolean isPaid() {
-        return paid;
-    }
+    public class PaymentBuilder {
 
-    public void setPaid(boolean paid) {
-        this.paid = paid;
+        public Payment.PaymentBuilder setUserId(Long userId) {
+            Payment.this.userId = userId;
+            return this;
+        }
+
+        public Payment.PaymentBuilder setServiceId(Long serviceId) {
+            Payment.this.serviceId = serviceId;
+            return this;
+        }
+
+        public Payment.PaymentBuilder setRemainedVisits(byte remainedVisits) {
+            Payment.this.remainedVisits = remainedVisits;
+            return this;
+        }
+
+        public Payment.PaymentBuilder setPaid(boolean paid) {
+            Payment.this.paid = paid;
+            return this;
+        }
+
+        public Payment build() {
+            return Payment.this;
+        }
     }
 }
