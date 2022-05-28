@@ -28,10 +28,4 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
-    <context-param>
-        <param-name>admin</param-name>
-        <param-value>passadmin</param-value>
-    </context-param>
-
-
 </web-app>

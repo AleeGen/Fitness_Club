@@ -15,14 +15,14 @@ public class ServletContextListenerImpl implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
         //ConnectionPool.getInstance();
-        logger.log(Level.INFO, "|||++++++++++> context initialized: " + sce.getServletContext().getServerInfo());
+        //logger.log(Level.INFO, "|||++++++++++> context initialized: " + sce.getServletContext().getServerInfo());
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         /* This method is called when the servlet Context is undeployed or Application Server shuts down. */
         //ConnectionPool.getInstance().destroyPool();
-        logger.log(Level.INFO, "|||----------> context destroyed: " + sce.getServletContext().getContextPath());
+        //logger.log(Level.INFO, "|||----------> context destroyed: " + sce.getServletContext().getContextPath());
     }
 
 }

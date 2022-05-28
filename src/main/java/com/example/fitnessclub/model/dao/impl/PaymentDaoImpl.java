@@ -5,15 +5,12 @@ import com.example.fitnessclub.model.dao.BaseDao;
 import com.example.fitnessclub.model.dao.DatabaseQuery;
 import com.example.fitnessclub.model.dao.PaymentDao;
 import com.example.fitnessclub.model.entity.Payment;
-import com.example.fitnessclub.model.entity.User;
-import com.example.fitnessclub.model.mapper.ColumnName;
 import com.example.fitnessclub.model.pool.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
     @Override
@@ -24,7 +21,6 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
             statement.setLong(2, payment.getServiceId());
             statement.setByte(3, payment.getRemainedVisits());
             statement.setBoolean(4, payment.isPaid());
-            //statement.executeUpdate();
             System.out.println("add1");
             int execute = statement.executeUpdate();
             System.out.println("add2");

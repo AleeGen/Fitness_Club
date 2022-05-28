@@ -90,17 +90,12 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_USER_BY_LOGIN_PASSWORD)) {
             //// TODO: 24.04.2022 пересмотреть в learne про PrepareStatement, а именно про то как отключают коммиты, добавляются запросы, фиксируется это всё и обновляется
-            System.out.println("4");
             statement.setString(1, login);
             statement.setString(2, codePassword);
             //// TODO: 24.04.2022 Batch лучше использовать для повышения производительности
-            System.out.println("5");
             ResultSet resultSet = statement.executeQuery();
-            System.out.println("6");
             if (resultSet.next()) {
-                System.out.println("7");
                 optionalUser = UserMapper.getInstance().rowMap(resultSet);
-                System.out.println("10");
             }
         } catch (SQLException e) {
             e.printStackTrace();

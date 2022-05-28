@@ -1,8 +1,6 @@
 package com.example.fitnessclub.model.service.impl;
 
 import com.example.fitnessclub.controller.AttributeName;
-import com.example.fitnessclub.model.dao.impl.ItemDaoImpl;
-import com.example.fitnessclub.model.mapper.ColumnName;
 import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.controller.RequestParameters;
 import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
@@ -34,7 +32,6 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = Optional.empty();
         UserDaoImpl userDao = UserDaoImpl.getInstance();
         try {
-            System.out.println("3");
             optionalUser = userDao.authenticate(login, codePassword);
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -53,14 +50,14 @@ public class UserServiceImpl implements UserService {
             if (validation.isValidRegistrationStepOne(paramUser)) {
                 System.out.println("if2");
                 try {
-                    if (!userDao.checkingExistence(paramUser.get(ColumnName.LOGIN))) {
+                    if (!userDao.checkingExistence(paramUser.get(AttributeName.LOGIN))) {
                         System.out.println("if3");
                         exists = true;
                     } else {
-                        paramUser.put(ColumnName.LOGIN, MessagePage.USER_EXISTS);
-                        paramUser.put(ColumnName.LOGIN + COLOR, COLOR_INVALID);
-                        System.out.println(ColumnName.LOGIN + COLOR);
-                        paramUser.put(ColumnName.PASSWORD, "");
+                        paramUser.put(AttributeName.LOGIN, MessagePage.USER_EXISTS);
+                        paramUser.put(AttributeName.LOGIN + COLOR, COLOR_INVALID);
+                        System.out.println(AttributeName.LOGIN + COLOR);
+                        paramUser.put(AttributeName.PASSWORD, "");
                     }
                 } catch (DaoException e) {
                     //log
@@ -71,25 +68,25 @@ public class UserServiceImpl implements UserService {
             if (validation.isValidRegistrationStepTwo(paramUser)) {
                 System.out.println("if5");
                 try {
-                    String password = paramUser.get(ColumnName.PASSWORD);
+                    String password = paramUser.get(AttributeName.PASSWORD);
                     String codePassword = Base64.getEncoder().encodeToString(password.getBytes());
                     Date date = null;
                     try {
-                        date = Date.valueOf(paramUser.get(ColumnName.DATE_BIRTH));
+                        date = Date.valueOf(paramUser.get(AttributeName.DATE_BIRTH));
                     } catch (Exception e) {
                         //log
                     }
-                    System.out.println("--->"+paramUser.get(ColumnName.NUMBER_CARD)+"<---");
+                    System.out.println("--->"+paramUser.get(AttributeName.NUMBER_CARD)+"<---");
                     User user = User.newBuilder()
-                            .setLogin(paramUser.get(ColumnName.LOGIN))
+                            .setLogin(paramUser.get(AttributeName.LOGIN))
                             .setPassword(codePassword)
-                            .setMail(paramUser.get(ColumnName.MAIL))
-                            .setName(paramUser.get(ColumnName.NAME))
-                            .setLastname(paramUser.get(ColumnName.LASTNAME))
+                            .setMail(paramUser.get(AttributeName.MAIL))
+                            .setName(paramUser.get(AttributeName.NAME))
+                            .setLastname(paramUser.get(AttributeName.LASTNAME))
                             .setDate_birth(date)
-                            .setSex(paramUser.get(ColumnName.SEX))
-                            .setPhone(paramUser.get(ColumnName.PHONE))
-                            .setNumberCard(paramUser.get(ColumnName.NUMBER_CARD))
+                            .setSex(paramUser.get(AttributeName.SEX))
+                            .setPhone(paramUser.get(AttributeName.PHONE))
+                            .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
                             .build();
                     System.out.println("if6");
                     exists = UserDaoImpl.getInstance().add(user);

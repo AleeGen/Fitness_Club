@@ -1,19 +1,22 @@
 package com.example.fitnessclub.controller;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 
 import com.example.fitnessclub.controller.command.Command;
 import com.example.fitnessclub.controller.command.CommandType;
 import com.example.fitnessclub.exception.CommandException;
+import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.model.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.w3c.dom.Node;
 
 
 @WebServlet(name = "helloServlet", urlPatterns = {"/controller", "*.do"},
@@ -39,7 +42,7 @@ public class Controller extends HttpServlet {
             paramInit.put(name, value);
         }*/
         ConnectionPool.getInstance();
-        logger.log(Level.INFO, "|||++++++++++> servlet init: " + this.getServletInfo());
+        logger.log(Level.INFO, "servlet init: " + this.getServletInfo());
     }
 
     @Override
@@ -74,29 +77,35 @@ public class Controller extends HttpServlet {
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.log(Level.INFO, "first log from" + this.getServletName() + " Method " + request.getMethod());
-        response.setContentType("text/html");//// TODO: 19.04.2022 что за строка?  это фильтр! а что он делает?
-        //response.addCookie() добавляет куки к объекту ответа для пересылки на клиентский компьютер (может полезно будет это использовать?)
+        logger.log(Level.INFO, "first log from " + this.getServletName() + " Method " + request.getMethod());
+        response.setContentType("text/html"); //// TODO: 19.04.2022 что за строка?  это фильтр! а что он делает?
+        System.out.println("-----------------------------");
         String commandStr = request.getParameter(ParameterName.COMMAND);
         Command command = CommandType.define(commandStr);
         try {
             Router router = command.execute(request);
-            if (router.getType() == Router.Type.FORWARD) {
-                request.getRequestDispatcher(router.getPage()).forward(request, response);
-            } else if (router.getType() == Router.Type.REDIRECT) {
-                response.sendRedirect(router.getPage());
-            } else {
-                response.sendError(500, MessagePage.UNKNOWN_TRANSITION_ROUTER);
+            switch (router.getType()) {
+                case FORWARD:
+                    System.out.println("Forward->");
+                    request.getRequestDispatcher(router.getPage()).forward(request, response);
+                    break;
+                case REDIRECT:
+                    System.out.println("Redirect->");
+                    response.sendRedirect(router.getPage());
+                    break;
+                default:
+                    response.sendError(500, MessagePage.UNKNOWN_TRANSITION_ROUTER);
             }
             //// TODO: 23.04.2022 redirect изначально переходит в корень page, поэтому работает некорректно
             //// TODO: 23.04.2022 redirect используем такой переход для защиты от f5
         } catch (CommandException e) {
             response.sendError(500, e.getMessage());
         }
+        System.out.println("-----------------------------");
     }
 
     public void destroy() {
         ConnectionPool.getInstance().destroyPool();
-        logger.log(Level.INFO, "|||++++++++++> servlet destroyed: " + this.getServletName());
+        logger.log(Level.INFO, "servlet destroyed: " + this.getServletName());
     }
 }

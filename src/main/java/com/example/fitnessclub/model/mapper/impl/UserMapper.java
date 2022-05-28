@@ -1,8 +1,8 @@
 package com.example.fitnessclub.model.mapper.impl;
 
+import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.model.entity.UserRole;
-import com.example.fitnessclub.model.mapper.ColumnName;
 import com.example.fitnessclub.model.mapper.RowMapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -33,22 +33,21 @@ public class UserMapper implements RowMapper<User> {
     public Optional<User> rowMap(ResultSet resultSet) {
         Optional<User> optionalUser;
         try {
-            System.out.println("8");
             User user = User.newBuilder()
-                    .setId(resultSet.getLong(ColumnName.USERS_ID)) //// FIXME: 15.05.2022 наверное, безопаснее убрать setId, а покупки устанавливать по Логину, он тоже уникален
-                    .setRole(UserRole.getRole(resultSet.getString(ColumnName.ROLE)))
-                    .setMail(resultSet.getString(ColumnName.MAIL))
-                    .setName(resultSet.getString(ColumnName.NAME))
-                    .setLastname(resultSet.getString(ColumnName.LASTNAME))
-                    .setDate_birth(resultSet.getDate(ColumnName.DATE_BIRTH))
-                    .setSex(resultSet.getString(ColumnName.SEX))
-                    .setPhone(resultSet.getString(ColumnName.PHONE))
-                    .setCorporate(resultSet.getBoolean(ColumnName.CORPORATE))
-                    .setVisitPeriodMonths(resultSet.getByte(ColumnName.VISIT_PERIOD_MONTHS))
-                    .setDiscount_code(resultSet.getString(ColumnName.DISCOUNT_CODE))
-                    .setNumberCard(resultSet.getString(ColumnName.NUMBER_CARD))
+                    .setId(resultSet.getLong(AttributeName.USER_ID)) //// FIXME: 15.05.2022 наверное, безопаснее убрать setId, а покупки устанавливать по Логину, он тоже уникален
+                    .setLogin(resultSet.getString(AttributeName.LOGIN))
+                    .setRole(UserRole.getRole(resultSet.getString(AttributeName.ROLE)))
+                    .setMail(resultSet.getString(AttributeName.MAIL))
+                    .setName(resultSet.getString(AttributeName.NAME))
+                    .setLastname(resultSet.getString(AttributeName.LASTNAME))
+                    .setDate_birth(resultSet.getDate(AttributeName.DATE_BIRTH))
+                    .setSex(resultSet.getString(AttributeName.SEX))
+                    .setPhone(resultSet.getString(AttributeName.PHONE))
+                    .setCorporate(resultSet.getBoolean(AttributeName.CORPORATE))
+                    .setVisitPeriodMonths(resultSet.getByte(AttributeName.VISIT_PERIOD_MONTHS))
+                    .setDiscount_code(resultSet.getString(AttributeName.DISCOUNT_CODE))
+                    .setNumberCard(resultSet.getString(AttributeName.NUMBER_CARD))
                     .build();
-            System.out.println("9");
             optionalUser = Optional.of(user);
         } catch (SQLException e) {
             logger.log(Level.ERROR, MAPPING_ERROR, e);

@@ -3,9 +3,9 @@ package com.example.fitnessclub.model.dao.impl;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.model.dao.BaseDao;
 import com.example.fitnessclub.model.dao.DatabaseQuery;
-import com.example.fitnessclub.model.dao.ItemDao;
-import com.example.fitnessclub.model.entity.Item;
-import com.example.fitnessclub.model.mapper.impl.ItemMapper;
+import com.example.fitnessclub.model.dao.ServiceDao;
+import com.example.fitnessclub.model.entity.Service;
+import com.example.fitnessclub.model.mapper.impl.ServiceMapper;
 import com.example.fitnessclub.model.pool.ConnectionPool;
 
 import java.sql.Connection;
@@ -16,47 +16,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemDaoImpl extends BaseDao<Item> implements ItemDao {
+public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
     @Override
-    public boolean add(Item item) throws DaoException {
+    public boolean add(Service item) throws DaoException {
         return false;
     }
 
     @Override
-    public boolean delete(Item item) throws DaoException {
+    public boolean delete(Service item) throws DaoException {
         return false;
     }
 
     @Override
-    public List<Item> findAll() throws DaoException {
-        List<Item> items = new ArrayList<>();
+    public List<Service> findAll() throws DaoException {
+        List<Service> services = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_ALL_SERVICES)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Optional<Item> item = ItemMapper.getInstance().rowMap(resultSet);
-                item.ifPresent(items::add);
+                Optional<Service> service = ServiceMapper.getInstance().rowMap(resultSet);
+                service.ifPresent(services::add);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DaoException(e);
         }
-        return items;
+        return services;
     }
 
     @Override
-    public Item update(Item item) throws DaoException {
+    public Service update(Service item) throws DaoException {
         return null;
     }
 
-    public Optional<Item> find(String serviceId) throws DaoException {
-        Optional<Item> item = Optional.empty();
+    public Optional<Service> find(String serviceId) throws DaoException {
+        Optional<Service> item = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_SERVICE_BY_ID)) {
             statement.setString(1,serviceId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                item = ItemMapper.getInstance().rowMap(resultSet);
+                item = ServiceMapper.getInstance().rowMap(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();

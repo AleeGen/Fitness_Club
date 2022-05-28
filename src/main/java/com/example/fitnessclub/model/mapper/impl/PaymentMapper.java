@@ -1,16 +1,11 @@
 package com.example.fitnessclub.model.mapper.impl;
 
 import com.example.fitnessclub.model.entity.Payment;
-import com.example.fitnessclub.model.entity.User;
-import com.example.fitnessclub.model.entity.UserRole;
-import com.example.fitnessclub.model.mapper.ColumnName;
 import com.example.fitnessclub.model.mapper.RowMapper;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 public class PaymentMapper implements RowMapper<Payment> {

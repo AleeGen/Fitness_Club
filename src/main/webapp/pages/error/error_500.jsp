@@ -18,9 +18,5 @@ ServletName: ${pageContext.errorData.servletName}
 StatusCode: ${pageContext.errorData.statusCode}
 <hr/>
 Exception: ${pageContext.exception}
-<hr/>
-Exception2: ${pageContext.errorData.throwable} <br/>
-<hr/>
-Message: ${error_message}
 </body>
 </html>

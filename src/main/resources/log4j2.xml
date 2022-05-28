@@ -10,14 +10,14 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${pattern_console}"/>
         </Console>
-        <RollingFile name="FileRolling" fileName="logs/log_roll.log" append="true"
+        <!--<RollingFile name="FileRolling" fileName="D:/logs/log_roll.log" append="true"
                      filePattern="logs/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}_%i.log">
             <PatternLayout pattern="${pattern_file}"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="15 KB"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
-        </RollingFile>
+        </RollingFile>-->
     </Appenders>
     <Loggers>
         <Logger name="Log_File2" level="error" additivity="false">

@@ -1,6 +1,6 @@
 package com.example.fitnessclub.validation;
 
-import com.example.fitnessclub.model.mapper.ColumnName;
+import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.RequestParameters;
 
 import java.util.regex.Matcher;
@@ -61,59 +61,59 @@ public class ValidationUser {
             return false;
         }
         boolean isValid = true;
-        if (param.get(ColumnName.LOGIN).equals("")) {
+        if (param.get(AttributeName.LOGIN).equals("")) {
             isValid = false;
-            param.put(ColumnName.LOGIN, TypeInvalid.OBLIGATORY_FIELD);
-            param.put(ColumnName.LOGIN + COLOR, TypeInvalid.COLOR_INVALID);
-        } else if (!isValidLogin(param.get(ColumnName.LOGIN))) {
+            param.put(AttributeName.LOGIN, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.LOGIN + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidLogin(param.get(AttributeName.LOGIN))) {
             isValid = false;
-            param.put(ColumnName.LOGIN, TypeInvalid.INVALID_LOGIN);
-            param.put(ColumnName.LOGIN + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.LOGIN, TypeInvalid.INVALID_LOGIN);
+            param.put(AttributeName.LOGIN + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (param.get(ColumnName.PASSWORD).equals("")) {
+        if (param.get(AttributeName.PASSWORD).equals("")) {
             isValid = false;
-            param.put(ColumnName.PASSWORD, TypeInvalid.OBLIGATORY_FIELD);
-            param.put(ColumnName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
-        } else if (!isValidPassword(param.get(ColumnName.PASSWORD))) {
+            param.put(AttributeName.PASSWORD, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidPassword(param.get(AttributeName.PASSWORD))) {
             isValid = false;
-            param.put(ColumnName.PASSWORD, TypeInvalid.INVALID_PASSWORD);
-            param.put(ColumnName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.PASSWORD, TypeInvalid.INVALID_PASSWORD);
+            param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (param.get(ColumnName.MAIL).equals("")) {
+        if (param.get(AttributeName.MAIL).equals("")) {
             isValid = false;
-            param.put(ColumnName.MAIL, TypeInvalid.OBLIGATORY_FIELD);
-            param.put(ColumnName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
-        } else if (!isValidMail(param.get(ColumnName.MAIL))) {
+            param.put(AttributeName.MAIL, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidMail(param.get(AttributeName.MAIL))) {
             isValid = false;
-            param.put(ColumnName.MAIL, TypeInvalid.INVALID_EMAIL);
-            param.put(ColumnName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.MAIL, TypeInvalid.INVALID_EMAIL);
+            param.put(AttributeName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (param.get(ColumnName.NAME).equals("")) {
+        if (param.get(AttributeName.NAME).equals("")) {
             isValid = false;
-            param.put(ColumnName.NAME, TypeInvalid.OBLIGATORY_FIELD);
-            param.put(ColumnName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
-        } else if (!isValidName(param.get(ColumnName.NAME))) {
+            param.put(AttributeName.NAME, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidName(param.get(AttributeName.NAME))) {
             isValid = false;
-            param.put(ColumnName.NAME, TypeInvalid.INVALID_NAME);
-            param.put(ColumnName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.NAME, TypeInvalid.INVALID_NAME);
+            param.put(AttributeName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (param.get(ColumnName.LASTNAME).equals("")) {
+        if (param.get(AttributeName.LASTNAME).equals("")) {
             isValid = false;
-            param.put(ColumnName.LASTNAME, TypeInvalid.OBLIGATORY_FIELD);
-            param.put(ColumnName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
-        } else if (!isValidLastname(param.get(ColumnName.LASTNAME))) {
+            param.put(AttributeName.LASTNAME, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidLastname(param.get(AttributeName.LASTNAME))) {
             isValid = false;
-            param.put(ColumnName.LASTNAME, TypeInvalid.INVALID_LASTNAME);
-            param.put(ColumnName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.LASTNAME, TypeInvalid.INVALID_LASTNAME);
+            param.put(AttributeName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
         if (!isValid) {
-            param.put(ColumnName.PASSWORD, "");
-            param.put(ColumnName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.PASSWORD, "");
+            param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
         }
         return isValid;
     }
@@ -124,36 +124,36 @@ public class ValidationUser {
         }
         boolean isValid = true;
         System.out.println("v1");
-        if (!param.get(ColumnName.PHONE).equals("") && !isValidPhone(param.get(ColumnName.PHONE))) {
+        if (!param.get(AttributeName.PHONE).equals("") && !isValidPhone(param.get(AttributeName.PHONE))) {
             isValid = false;
-            param.put(ColumnName.PHONE, TypeInvalid.INVALID_PHONE);
-            param.put(ColumnName.PHONE + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.PHONE, TypeInvalid.INVALID_PHONE);
+            param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_INVALID);
         } else {
-            param.put(ColumnName.PHONE + COLOR, TypeInvalid.COLOR_VALID);
+            param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_VALID);
         }
         System.out.println("v2");
-        if (!param.get(ColumnName.DATE_BIRTH).equals("") && !isValidDate(param.get(ColumnName.DATE_BIRTH))) {
+        if (!param.get(AttributeName.DATE_BIRTH).equals("") && !isValidDate(param.get(AttributeName.DATE_BIRTH))) {
             isValid = false;
-            param.put(ColumnName.DATE_BIRTH, TypeInvalid.INVALID_DATE);
-            param.put(ColumnName.DATE_BIRTH + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.DATE_BIRTH, TypeInvalid.INVALID_DATE);
+            param.put(AttributeName.DATE_BIRTH + COLOR, TypeInvalid.COLOR_INVALID);
         } else {
-            param.put(ColumnName.DATE_BIRTH + COLOR, TypeInvalid.COLOR_VALID);
+            param.put(AttributeName.DATE_BIRTH + COLOR, TypeInvalid.COLOR_VALID);
         }
         System.out.println("v3");
-        if (param.get(ColumnName.SEX) != null) {
-            if (!param.get(ColumnName.SEX).equals("") && !isValidSex(param.get(ColumnName.SEX))) {
+        if (param.get(AttributeName.SEX) != null) {
+            if (!param.get(AttributeName.SEX).equals("") && !isValidSex(param.get(AttributeName.SEX))) {
                 isValid = false;
-                param.put(ColumnName.SEX, TypeInvalid.INVALID_SEX);
-                param.put(ColumnName.SEX + COLOR, TypeInvalid.COLOR_INVALID);
+                param.put(AttributeName.SEX, TypeInvalid.INVALID_SEX);
+                param.put(AttributeName.SEX + COLOR, TypeInvalid.COLOR_INVALID);
             }
         }
         System.out.println("v4");
-        if (!param.get(ColumnName.NUMBER_CARD).equals("") && !isValidNumberCard(param.get(ColumnName.NUMBER_CARD))) {
+        if (!param.get(AttributeName.NUMBER_CARD).equals("") && !isValidNumberCard(param.get(AttributeName.NUMBER_CARD))) {
             isValid = false;
-            param.put(ColumnName.NUMBER_CARD, TypeInvalid.INVALID_NUMBER_CARD);
-            param.put(ColumnName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.NUMBER_CARD, TypeInvalid.INVALID_NUMBER_CARD);
+            param.put(AttributeName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_INVALID);
         } else {
-            param.put(ColumnName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_VALID);
+            param.put(AttributeName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_VALID);
         }
         System.out.println("v5");
         return isValid;

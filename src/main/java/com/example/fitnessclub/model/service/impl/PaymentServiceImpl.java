@@ -1,9 +1,9 @@
 package com.example.fitnessclub.model.service.impl;
 
 import com.example.fitnessclub.exception.DaoException;
-import com.example.fitnessclub.model.dao.impl.ItemDaoImpl;
+import com.example.fitnessclub.model.dao.impl.ServiceDaoImpl;
 import com.example.fitnessclub.model.dao.impl.PaymentDaoImpl;
-import com.example.fitnessclub.model.entity.Item;
+import com.example.fitnessclub.model.entity.Service;
 import com.example.fitnessclub.model.entity.Payment;
 import com.example.fitnessclub.model.service.PaymentService;
 
@@ -22,10 +22,12 @@ public class PaymentServiceImpl implements PaymentService {
 
     public boolean addToCart(Long userId, Long serviceId) {
         try {
-            ItemDaoImpl itemDao = new ItemDaoImpl();
-            Optional<Item> item = itemDao.find(serviceId.toString());
+            ServiceDaoImpl itemDao = new ServiceDaoImpl();
+            Optional<Service> item = itemDao.find(serviceId.toString());
             if (item.isPresent()) {
-                byte remainedVisits = Byte.parseByte(item.get().getNumberVisit());
+                System.out.println("add0");
+                byte remainedVisits = item.get().getNumberVisit();
+                System.out.println("add1");
                 Payment payment = Payment.newBuilder()
                         .setUserId(userId)
                         .setServiceId(serviceId)

@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+
 public class ConnectionPool {
 
     private static int CAPACITY_POOL = 5;
@@ -16,7 +17,6 @@ public class ConnectionPool {
     private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(CAPACITY_POOL);
     private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(CAPACITY_POOL);
 
-    //// TODO: 24.04.2022 неуверен с ProxyConnection, правильно ли везде я его подобавлял 
     static {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());

@@ -13,8 +13,7 @@ public class SessionAttributeListenerImpl implements HttpSessionAttributeListene
     @Override
     public void attributeAdded(HttpSessionBindingEvent sbe) {
         /* This method is called when an attribute is added to a session. */
-        logger.log(Level.INFO, "++++<<<<---------> attribute added: " + sbe.getSession().getAttribute("user_name"));
-        logger.log(Level.INFO, "++++<<<<---------> attribute added: " + sbe.getSession().getAttribute("current_page"));
+        //logger.log(Level.INFO, "++++<<<<---------> attribute added: " + sbe.getSession().getAttribute("current_page"));
     }
 
     @Override
@@ -25,7 +24,6 @@ public class SessionAttributeListenerImpl implements HttpSessionAttributeListene
     @Override
     public void attributeReplaced(HttpSessionBindingEvent sbe) {
         /* This method is called when an attribute is replaced in a session. */
-        logger.log(Level.INFO, "####<<<<---------> attribute replaced: " + sbe.getSession().getAttribute("user_name"));
-        logger.log(Level.INFO, "####<<<<---------> attribute replaced: " + sbe.getSession().getAttribute("current_page"));
+
     }
 }

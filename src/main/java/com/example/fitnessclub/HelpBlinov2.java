@@ -39,44 +39,11 @@ public class HelpBlinov2 { //// TODO: 23.04.2022 https://www.guru99.com/learn-sq
     }
 
     //------------------
-    @FunctionalInterface
-    public interface CustomRowMapper<T extends AbstractEntity> {   //// TODO: 24.04.2022 что-то достаем 
-        */
-/**
-         * Map row optional.
-         *
-         * @param resultSet the result set
-         * @return the optional
-         * @throws DaoException the dao exception
-         *//*
 
-        Optional<T> mapRow(ResultSet resultSet) throws DaoException;
-    }
 
-    //------------------
-    public Optional<User> mapRow(ResultSet resultSet) {  //// TODO: 24.04.2022 реализация одно из методов (доставать юзера)
-        User user = new User();
-        Optional<User> optionalUser;
-        try {
-            user.setUserId(resultSet.getLong(USER_ID));
-            user.setFirstName(resultSet.getString(FIRST_NAME));
-            user.setLastName(resultSet.getString(LAST_NAME));
-            user.setLogin(resultSet.getString(LOGIN));
-            user.setPassword(resultSet.getString(PASSWORD));
-            user.setEmail(resultSet.getString(EMAIL));
-            user.setPhoneNumber(resultSet.getInt(PHONE_NUMBER));
-            user.setBirthday(resultSet.getDate(BIRTHDAY).toLocalDate());
-            user.setDiscountId(resultSet.getLong(DISCOUNT_ID));
-            user.setState(User.UserState.valueOf(resultSet.getString(USER_STATE)
-                    .trim().toUpperCase()));
-            user.setRole(User.UserRole.valueOf(resultSet.getString(USER_ROLE)
-                    .trim().toUpperCase()));
-            optionalUser = Optional.of(user);
-        } catch (SQLException e) {
-            optionalUser = Optional.empty();
-        }
-        return optionalUser;
-    }
+
+
+
     //------------------
     try(
     InputStream inputStream = ConnectionPool.class.getClassLoader()
