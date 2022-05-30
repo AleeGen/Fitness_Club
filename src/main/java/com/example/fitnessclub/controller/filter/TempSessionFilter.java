@@ -29,14 +29,14 @@ public class TempSessionFilter implements Filter {
         HashMap temp = (HashMap) request.getSession().getAttribute(AttributeName.TEMP_SESSION);
         HashMap result = new HashMap();
         switch (currentPage) {
-            case (PagePath.REGISTRATION_STEP_TWO), (PagePath.REGISTRATION_STEP_ONE), (PagePath.MAIN):
+            case (PagePath.REGISTRATION_STEP_TWO), (PagePath.REGISTRATION_STEP_ONE), (PagePath.PROFILE):
                 result.put(AttributeName.USER, temp.get(AttributeName.USER));
                 break;
             case (PagePath.SERVICE):
                 result.put(AttributeName.SERVICES, temp.get(AttributeName.SERVICES));
                 break;
             default:
-                logger.log(Level.INFO, "страница не удалила атрибуты сессии");
+                logger.log(Level.INFO, "delete all temp attribute");
         }
         temp.clear();
         temp.putAll(result);

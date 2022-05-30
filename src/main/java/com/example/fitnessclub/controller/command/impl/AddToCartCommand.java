@@ -17,7 +17,6 @@ public class AddToCartCommand implements Command {
         PaymentServiceImpl paymentService = PaymentServiceImpl.getInstance();
         Long serviceId = Long.valueOf(request.getParameter(ParameterName.SERVICE_CART));
         Long userId = (Long) request.getSession().getAttribute(AttributeName.USER_ID);
-        System.out.println("step1");
         if (paymentService.addToCart(userId, serviceId)) {
             request.setAttribute(MessagePage.MESSAGE, MessagePage.ADDED_TO_CART);
         } else {

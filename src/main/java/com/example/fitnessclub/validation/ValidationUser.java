@@ -71,15 +71,23 @@ public class ValidationUser {
             param.put(AttributeName.LOGIN + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (param.get(AttributeName.PASSWORD).equals("")) {
+        if (param.get(AttributeName.REPEAT_PASSWORD).equals(param.get(AttributeName.PASSWORD))) {
+            if (param.get(AttributeName.PASSWORD).equals("")) {
+                isValid = false;
+                param.put(AttributeName.PASSWORD, TypeInvalid.OBLIGATORY_FIELD);
+                param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            } else if (!isValidPassword(param.get(AttributeName.PASSWORD))) {
+                isValid = false;
+                param.put(AttributeName.PASSWORD, TypeInvalid.INVALID_PASSWORD);
+                param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            }
+        } else {
             isValid = false;
-            param.put(AttributeName.PASSWORD, TypeInvalid.OBLIGATORY_FIELD);
             param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
-        } else if (!isValidPassword(param.get(AttributeName.PASSWORD))) {
-            isValid = false;
-            param.put(AttributeName.PASSWORD, TypeInvalid.INVALID_PASSWORD);
-            param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.REPEAT_PASSWORD, TypeInvalid.INVALID_REPEAT_PASSWORD);
+            param.put(AttributeName.REPEAT_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
         }
+
 
         if (param.get(AttributeName.MAIL).equals("")) {
             isValid = false;
@@ -111,9 +119,11 @@ public class ValidationUser {
             param.put(AttributeName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (!isValid) {
+        if (!isValid) { //// TODO: 29.05.2022 подумать над сообщениями, есть todo в классе TypeInvalid
             param.put(AttributeName.PASSWORD, "");
             param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.REPEAT_PASSWORD, "");
+            param.put(AttributeName.REPEAT_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
         }
         return isValid;
     }

@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private UserServiceImpl() {
     }
 
-    public static UserServiceImpl getInstance() {
+    public static UserServiceImpl getInstance() {  //// TODO: 29.05.2022 сделать потокобезопасным?
         return instance;
     }
 

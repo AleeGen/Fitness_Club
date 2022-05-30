@@ -10,6 +10,9 @@
 </head>
 
 <body>
+pageContext.getAttribute("services"): ${pageContext.getAttribute("services")}
+services: ${services}
+applicationScope ${applicationScope}
 <div class="decor" style="max-width: 900px">
     <div class="form-row">
         <fmt:message key="message"/>: ${message}

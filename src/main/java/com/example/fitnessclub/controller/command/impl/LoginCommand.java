@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Optional;
 
 public class LoginCommand implements Command {
@@ -24,14 +23,12 @@ public class LoginCommand implements Command {
         String login = request.getParameter(ParameterName.LOGIN);
         String pass = request.getParameter(ParameterName.PASSWORD);
         UserServiceImpl userService = UserServiceImpl.getInstance();
-        String page = PagePath.INDEX;
+        String page = PagePath.LOGIN;
         HttpSession session = request.getSession();
         try {
             Optional<User> optionalUser = userService.authenticate(login, pass);
             if (optionalUser.isPresent()) {
-                page = PagePath.MAIN;
-                //request.setAttribute(AttributeName.USER, optionalUser.get());
-                //session.setAttribute(AttributeName.USER, optionalUser.get());
+                page = PagePath.PROFILE;
                 ((HashMap) session.getAttribute("temp")).put(AttributeName.USER, optionalUser.get());
                 session.setAttribute(AttributeName.ROLE, optionalUser.get().getRole());
                 session.setAttribute(AttributeName.USER_ID, optionalUser.get().getId());

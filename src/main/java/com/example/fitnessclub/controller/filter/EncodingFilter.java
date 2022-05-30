@@ -1,4 +1,3 @@
-/*
 package com.example.fitnessclub.controller.filter;
 
 import jakarta.servlet.*;
@@ -34,4 +33,4 @@ public class EncodingFilter implements Filter {
     public void destroy() {
         code = null;
     }
-}*/
+}

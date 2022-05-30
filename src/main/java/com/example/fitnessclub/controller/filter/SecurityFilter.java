@@ -1,4 +1,3 @@
-/*
 package com.example.fitnessclub.controller.filter;
 
 import jakarta.servlet.*;
@@ -12,14 +11,14 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 @WebFilter(filterName = "SecurityFilter", urlPatterns = {"/pages/*"},
-        initParams = {@WebInitParam(name = "INDEX_PATH", value = "/index.jsp")})
+        initParams = {@WebInitParam(name = "MAIN_PATH", value = "/main.jsp")})
 public class SecurityFilter implements Filter {
     private static final Logger logger = LogManager.getLogger();
 
     private String indexPath;
 
     public void init(FilterConfig config) throws ServletException {
-        indexPath = config.getInitParameter("INDEX_PATH");
+        indexPath = config.getInitParameter("MAIN_PATH");
     }
 
     @Override
@@ -34,7 +33,5 @@ public class SecurityFilter implements Filter {
     public void destroy() {
     }
 
-
 }
 
-*/

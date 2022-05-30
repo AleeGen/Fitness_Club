@@ -1,4 +1,3 @@
-/*
 package com.example.fitnessclub.controller.filter;
 
 import jakarta.servlet.*;
@@ -21,9 +20,7 @@ public class PreControllerFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         response.setContentType("text/html");
-        //logger.log(Level.INFO, "filter precontroller: /controller");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-
         chain.doFilter(request, response);
     }
 
@@ -32,4 +29,3 @@ public class PreControllerFilter implements Filter {
 
 }
 
-*/

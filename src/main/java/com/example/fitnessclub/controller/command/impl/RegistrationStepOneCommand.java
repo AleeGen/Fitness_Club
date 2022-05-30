@@ -22,6 +22,7 @@ public class RegistrationStepOneCommand implements Command {
         paramUser.put(AttributeName.STEP_NUMBER, AttributeName.STEP_ONE);
         paramUser.put(AttributeName.LOGIN, request.getParameter(AttributeName.LOGIN));
         paramUser.put(AttributeName.PASSWORD, request.getParameter(AttributeName.PASSWORD));
+        paramUser.put(AttributeName.REPEAT_PASSWORD, request.getParameter(AttributeName.REPEAT_PASSWORD));
         paramUser.put(AttributeName.NAME, request.getParameter(AttributeName.NAME));
         paramUser.put(AttributeName.LASTNAME, request.getParameter(AttributeName.LASTNAME));
         paramUser.put(AttributeName.MAIL, request.getParameter(AttributeName.MAIL));
@@ -29,13 +30,9 @@ public class RegistrationStepOneCommand implements Command {
         UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
             if (userService.registration(paramUser)) {
-                //((HashMap) session.getAttribute(AttributeName.TEMP_SESSION)).put(AttributeName.USER, paramUser);
-                //session.setAttribute(AttributeName.USER, paramUser);
                 page = PagePath.REGISTRATION_STEP_TWO;
                 session.setAttribute(AttributeName.CURRENT_PAGE, page);
-            } /*else {
-                request.setAttribute(AttributeName.USER, paramUser);
-            }*/
+            }
             ((HashMap) session.getAttribute(AttributeName.TEMP_SESSION)).put(AttributeName.USER, paramUser);
         } catch (ServiceException e) {
             throw new CommandException(e);

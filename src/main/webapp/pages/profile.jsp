@@ -5,7 +5,7 @@
 <fmt:setBundle basename="prop.text"/>
 <html>
 <head>
-    <title><fmt:message key="head.main"/></title>
+    <title><fmt:message key="head.profile"/></title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="css/style3.css" type="text/css"/>
 </head>
@@ -39,7 +39,6 @@
             <h4 style="margin-top: -20px;margin-left: 20px; color: #343636">${temp.get("user").getDiscountCode()}</h4>
             <h5><fmt:message key="field.user.number_cart"/>:</h5>
             <h4 style="margin-top: -20px;margin-left: 20px; color: #343636">${temp.get("user").getNumberCard()}</h4>
-
             <form style="margin-right: 700px" action="${pageContext.request.contextPath}/controller" method="get">
                 <div>
                     <input type="hidden" name="command" value="open_page">

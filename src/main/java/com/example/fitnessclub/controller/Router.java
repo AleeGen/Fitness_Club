@@ -1,7 +1,7 @@
 package com.example.fitnessclub.controller;
 
 public class Router {
-    private String page = "index.jsp";
+    private String page = "pages/logIn.jsp";
     private Type type = Type.FORWARD;
 
     public enum Type {

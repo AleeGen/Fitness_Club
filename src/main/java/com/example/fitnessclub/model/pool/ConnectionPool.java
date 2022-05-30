@@ -1,19 +1,37 @@
 package com.example.fitnessclub.model.pool;
 
 import com.example.fitnessclub.exception.ConnectionPoolException;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class ConnectionPool {
 
-    private static int CAPACITY_POOL = 5;
+    private static final Logger logger = LogManager.getLogger();
+
+    private static final String PATH_PROPERTIES = "prop/database.properties";
+    private static final String SIZE_POOL = "size_pool";
+    private static final String URL = "url";
+    private static final Properties property = new Properties();
+    private static int CAPACITY_POOL;
+
     private static ConnectionPool instance;
+    private static final ReentrantLock lock = new ReentrantLock();
+    private static final AtomicBoolean isCreated = new AtomicBoolean(false);
     private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(CAPACITY_POOL);
     private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(CAPACITY_POOL);
 
@@ -21,37 +39,55 @@ public class ConnectionPool {
         try {
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
         } catch (SQLException e) {
+            logger.fatal("Not register driver", e);
+            throw new ExceptionInInitializerError(e.getMessage());
+        }
+        try {
+            InputStream inputStream = ConnectionPool.class.getClassLoader().getResourceAsStream(PATH_PROPERTIES);
+            property.load(inputStream);
+            CAPACITY_POOL = Integer.parseInt(property.getProperty(SIZE_POOL));
+        } catch (IOException e) {
+            logger.fatal("Properties not load", e);
             throw new ExceptionInInitializerError(e.getMessage());
         }
     }
 
     private ConnectionPool() {
-        String url = "jdbc:mysql://localhost:3306/fitness_club";
-        Properties prop = new Properties(); //// TODO: 19.04.2022 из проперти должны читаться все эти строки
-        prop.put("user", "root");
-        prop.put("password", "aleegen");
-        prop.put("autoReconnect", "true");
-        prop.put("characterEncoding", "UTF-8");
-        prop.put("useUnicode", "true");
-        prop.put("useSSL", "true");
-        prop.put("useJDBCCompliantTimezoneShift", "true");
-        prop.put("useLegacyDatetimeCode", "false");
-        prop.put("serverTimezone", "UTC");
-        prop.put("serverSslCert", "classpath:server.crt");
         for (int i = 0; i < CAPACITY_POOL; i++) {
             Connection connection = null;
             try {
-                connection = DriverManager.getConnection(url, prop);
+                connection = DriverManager.getConnection((String) property.get(URL), property);
             } catch (SQLException e) {
-                throw new ExceptionInInitializerError(e.getMessage());
+                logger.warn("Exception when creating connection", e);
             }
             free.add(new ProxyConnection(connection));
         }
+        if (free.size() < CAPACITY_POOL) {
+            for (int i = 0; i < CAPACITY_POOL - free.size(); i++) {
+                Connection connection = null;
+                try {
+                    connection = DriverManager.getConnection((String) property.get(URL), property);
+                } catch (SQLException e) {
+                    logger.fatal("Connections was not created!", e);
+                    throw new ExceptionInInitializerError(e.getMessage());
+                }
+                free.add(new ProxyConnection(connection));
+            }
+        }
     }
 
-    public static ConnectionPool getInstance() { //// TODO: 18.04.2022 потокобезопасным сделать, локи и тд
-        if (instance == null) {
-            instance = new ConnectionPool();
+    public static ConnectionPool getInstance() {
+        if (!isCreated.get()) {
+            lock.lock();
+            if (instance == null) {
+                try {
+                    instance = new ConnectionPool();
+                    isCreated.set(true);
+                    logger.log(Level.INFO, "ConnectionPool initialized");
+                } finally {
+                    lock.unlock();
+                }
+            }
         }
         return instance;
     }
@@ -62,7 +98,7 @@ public class ConnectionPool {
             proxyConnection = free.take();
             used.put(proxyConnection);
         } catch (InterruptedException e) {
-            //log
+            logger.error("Connection not release, thread interrupt", e);
             Thread.currentThread().interrupt();
         }
         return proxyConnection;
@@ -74,22 +110,21 @@ public class ConnectionPool {
                 used.remove(connection);
                 free.put((ProxyConnection) connection);
             } catch (InterruptedException e) {
-                //log
+                logger.error("Connection not release, thread interrupt", e);
                 Thread.currentThread().interrupt();
             }
         }
     }
-
-    //// TODO: 23.04.2022 deregisterDriver(){} нужно (первые ссылки в инете)
 
     public void destroyPool() {
         for (int i = 0; i < CAPACITY_POOL; i++) {
             try {
                 free.take().close();
             } catch (SQLException | InterruptedException e) {
-                //log
+                logger.error("Error when destroy pool", e);
             }
         }
+        deregisterDrivers();
     }
 
     private void deregisterDrivers() {
@@ -97,7 +132,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                //log
+                logger.error("Error when deregister driver", e);
             }
         });
     }

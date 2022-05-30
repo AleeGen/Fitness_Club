@@ -25,6 +25,11 @@
                pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,25}$" required>
         <label><fmt:message key="field.user.password"/></label>
 
+        <input type="password" name="repeat_password" placeholder=" " value="${temp.get("user").get("repeat_password")}"
+               style="background: ${temp.get("user").get("repeat_password_color")}"
+               pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,25}$" required>
+        <label><fmt:message key="field.user.repeat_password"/></label>
+
         <input type="text" name="name" placeholder=" " value="${temp.get("user").get("name")}"
                style="background: ${temp.get("user").get("name_color")}" pattern="^\p{L}{2,}$" required>
         <label><fmt:message key="field.user.name"/></label>

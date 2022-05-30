@@ -12,6 +12,7 @@ public class AttributeName {
     public static final String LOCALE = "locale";
     public static final String CURRENT_PAGE = "current_page";
     public static final String TEMP_SESSION = "temp";
+    public static final String REPEAT_PASSWORD = "repeat_password";
 
     //table users
     public static final String USER_ID = "user_id";

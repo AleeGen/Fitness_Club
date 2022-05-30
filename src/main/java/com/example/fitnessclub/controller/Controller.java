@@ -19,10 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Node;
 
 
-@WebServlet(name = "helloServlet", urlPatterns = {"/controller", "*.do"},
-        initParams = {
-                @WebInitParam(name = "passAdmin", value = "admin"),
-                @WebInitParam(name = "passUser", value = "user")})
+@WebServlet(name = "helloServlet", urlPatterns = {"/controller", "*.do"}) //// TODO: 29.05.2022 "*.do" зачем это?
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 25)
@@ -33,20 +30,16 @@ public class Controller extends HttpServlet {
     private static final String UPLOAD_DIR = "uploads";
     private static Map<String, String> paramInit = new HashMap<String, String>();
 
-    //// TODO: 16.04.2022 загрузка parts происходит вместе с загрузкой кнопки submit
     public void init() {
-        /*Enumeration e = this.getServletConfig().getInitParameterNames();
-        while (e.hasMoreElements()) { //// TODO: 27.04.2022 записываю в map параметры инициализации. Зачем? возможно понадобиться (passAdmin - admin, passUser - user)
-            String name = (String) e.nextElement();
-            String value = this.getServletConfig().getInitParameter(name);
-            paramInit.put(name, value);
-        }*/
         ConnectionPool.getInstance();
         logger.log(Level.INFO, "servlet init: " + this.getServletInfo());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.log(Level.INFO, "-----------------------------" + req.getMethod());
+        process(req, resp);
+        logger.log(Level.INFO, "-----------------------------" + req.getMethod());
 
         String pathApp = req.getServletContext().getRealPath("");
         String uploadDir = pathApp + File.separator + UPLOAD_DIR + File.separator;
@@ -67,30 +60,27 @@ public class Controller extends HttpServlet {
                         req.setAttribute("upload_result", name + " upload failed");
                     }
                 });
-        req.getRequestDispatcher("pages/main.jsp").forward(req, resp);
+        req.getRequestDispatcher("pages/profile.jsp").forward(req, resp);
     }
 
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.log(Level.INFO, "-----------------------------" + request.getMethod());
         process(request, response);
+        logger.log(Level.INFO, "-----------------------------" + request.getMethod());
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.log(Level.INFO, "first log from " + this.getServletName() + " Method " + request.getMethod());
-        response.setContentType("text/html"); //// TODO: 19.04.2022 что за строка?  это фильтр! а что он делает?
-        System.out.println("-----------------------------");
         String commandStr = request.getParameter(ParameterName.COMMAND);
         Command command = CommandType.define(commandStr);
         try {
             Router router = command.execute(request);
             switch (router.getType()) {
                 case FORWARD:
-                    System.out.println("Forward->");
                     request.getRequestDispatcher(router.getPage()).forward(request, response);
                     break;
                 case REDIRECT:
-                    System.out.println("Redirect->");
                     response.sendRedirect(router.getPage());
                     break;
                 default:
@@ -101,9 +91,9 @@ public class Controller extends HttpServlet {
         } catch (CommandException e) {
             response.sendError(500, e.getMessage());
         }
-        System.out.println("-----------------------------");
     }
 
+    @Override
     public void destroy() {
         ConnectionPool.getInstance().destroyPool();
         logger.log(Level.INFO, "servlet destroyed: " + this.getServletName());
