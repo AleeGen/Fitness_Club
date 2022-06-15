@@ -17,7 +17,8 @@ import java.util.HashMap;
 public class RegistrationStepOneCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String page = PagePath.REGISTRATION_STEP_ONE;
+        HttpSession session = request.getSession();
+        String page = (String) session.getAttribute(AttributeName.CURRENT_PAGE);
         RequestParameters paramUser = new RequestParameters();
         paramUser.put(AttributeName.STEP_NUMBER, AttributeName.STEP_ONE);
         paramUser.put(AttributeName.LOGIN, request.getParameter(AttributeName.LOGIN));
@@ -26,17 +27,16 @@ public class RegistrationStepOneCommand implements Command {
         paramUser.put(AttributeName.NAME, request.getParameter(AttributeName.NAME));
         paramUser.put(AttributeName.LASTNAME, request.getParameter(AttributeName.LASTNAME));
         paramUser.put(AttributeName.MAIL, request.getParameter(AttributeName.MAIL));
-        HttpSession session = request.getSession();
         UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
             if (userService.registration(paramUser)) {
                 page = PagePath.REGISTRATION_STEP_TWO;
                 session.setAttribute(AttributeName.CURRENT_PAGE, page);
             }
-            ((HashMap) session.getAttribute(AttributeName.TEMP_SESSION)).put(AttributeName.USER, paramUser);
+            ((HashMap) session.getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, paramUser);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(page);
+        return new Router(page, Router.Type.REDIRECT);
     }
 }

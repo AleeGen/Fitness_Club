@@ -4,13 +4,17 @@ import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.exception.ServiceException;
 import com.example.fitnessclub.model.dao.impl.ServiceDaoImpl;
 import com.example.fitnessclub.model.entity.Service;
-import com.example.fitnessclub.model.service.ItemService;
+import com.example.fitnessclub.model.service.ServiceService;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceServiceImpl implements ItemService {
+public class ServiceServiceImpl implements ServiceService {
 
+    private static final Logger logger = LogManager.getLogger();
     private static ServiceServiceImpl instance = new ServiceServiceImpl();
 
     private ServiceServiceImpl() {
@@ -23,9 +27,9 @@ public class ServiceServiceImpl implements ItemService {
     public List<Service> findAll() throws ServiceException {
         List<Service> services = new ArrayList<>();
         try {
-            services = new ServiceDaoImpl().findAll();
+            services = ServiceDaoImpl.getInstance().findAll();
         } catch (DaoException e) {
-            //log
+            logger.log(Level.ERROR,"An error occurred when finding services");
             throw new ServiceException(e);
         }
         return services;

@@ -3,12 +3,16 @@ package com.example.fitnessclub.validation;
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.RequestParameters;
 
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class ValidationUser {
 
+    private static final String EMPTY = "";
     private static final String COLOR = "_color";
 
     public boolean isValidLogin(String login) {
@@ -41,6 +45,16 @@ public class ValidationUser {
         return pattern.matches();
     }
 
+    public boolean isValidDateRegister(String date) {
+        boolean result = false;
+        if (isValidDate(date)) {
+            Date now = Calendar.getInstance().getTime();
+            Date verifiable = java.sql.Date.valueOf(date);
+            result = now.after(verifiable);
+        }
+        return result;
+    }
+
     public boolean isValidSex(String sex) {
         Matcher pattern = Pattern.compile(ColumnValidation.REGEX_SEX).matcher(sex);
         return pattern.matches();
@@ -61,7 +75,7 @@ public class ValidationUser {
             return false;
         }
         boolean isValid = true;
-        if (param.get(AttributeName.LOGIN).equals("")) {
+        if (param.get(AttributeName.LOGIN).isBlank()) {
             isValid = false;
             param.put(AttributeName.LOGIN, TypeInvalid.OBLIGATORY_FIELD);
             param.put(AttributeName.LOGIN + COLOR, TypeInvalid.COLOR_INVALID);
@@ -72,7 +86,7 @@ public class ValidationUser {
         }
 
         if (param.get(AttributeName.REPEAT_PASSWORD).equals(param.get(AttributeName.PASSWORD))) {
-            if (param.get(AttributeName.PASSWORD).equals("")) {
+            if (param.get(AttributeName.PASSWORD).isBlank()) {
                 isValid = false;
                 param.put(AttributeName.PASSWORD, TypeInvalid.OBLIGATORY_FIELD);
                 param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
@@ -89,7 +103,7 @@ public class ValidationUser {
         }
 
 
-        if (param.get(AttributeName.MAIL).equals("")) {
+        if (param.get(AttributeName.MAIL).isBlank()) {
             isValid = false;
             param.put(AttributeName.MAIL, TypeInvalid.OBLIGATORY_FIELD);
             param.put(AttributeName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
@@ -99,7 +113,7 @@ public class ValidationUser {
             param.put(AttributeName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (param.get(AttributeName.NAME).equals("")) {
+        if (param.get(AttributeName.NAME).isBlank()) {
             isValid = false;
             param.put(AttributeName.NAME, TypeInvalid.OBLIGATORY_FIELD);
             param.put(AttributeName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
@@ -109,7 +123,7 @@ public class ValidationUser {
             param.put(AttributeName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
         }
 
-        if (param.get(AttributeName.LASTNAME).equals("")) {
+        if (param.get(AttributeName.LASTNAME).isBlank()) {
             isValid = false;
             param.put(AttributeName.LASTNAME, TypeInvalid.OBLIGATORY_FIELD);
             param.put(AttributeName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
@@ -120,9 +134,9 @@ public class ValidationUser {
         }
 
         if (!isValid) { //// TODO: 29.05.2022 подумать над сообщениями, есть todo в классе TypeInvalid
-            param.put(AttributeName.PASSWORD, "");
+            param.put(AttributeName.PASSWORD, EMPTY);
             param.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
-            param.put(AttributeName.REPEAT_PASSWORD, "");
+            param.put(AttributeName.REPEAT_PASSWORD, EMPTY);
             param.put(AttributeName.REPEAT_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
         }
         return isValid;
@@ -133,39 +147,139 @@ public class ValidationUser {
             return false;
         }
         boolean isValid = true;
-        System.out.println("v1");
-        if (!param.get(AttributeName.PHONE).equals("") && !isValidPhone(param.get(AttributeName.PHONE))) {
+
+        if (!param.get(AttributeName.PHONE).isBlank() && !isValidPhone(param.get(AttributeName.PHONE))) {
             isValid = false;
             param.put(AttributeName.PHONE, TypeInvalid.INVALID_PHONE);
             param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_INVALID);
         } else {
             param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_VALID);
         }
-        System.out.println("v2");
-        if (!param.get(AttributeName.DATE_BIRTH).equals("") && !isValidDate(param.get(AttributeName.DATE_BIRTH))) {
+
+        if (!param.get(AttributeName.DATE_BIRTH).isBlank() && !isValidDateRegister(param.get(AttributeName.DATE_BIRTH))) {
             isValid = false;
             param.put(AttributeName.DATE_BIRTH, TypeInvalid.INVALID_DATE);
             param.put(AttributeName.DATE_BIRTH + COLOR, TypeInvalid.COLOR_INVALID);
         } else {
-            param.put(AttributeName.DATE_BIRTH + COLOR, TypeInvalid.COLOR_VALID);
+            param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_VALID);
         }
-        System.out.println("v3");
+
         if (param.get(AttributeName.SEX) != null) {
-            if (!param.get(AttributeName.SEX).equals("") && !isValidSex(param.get(AttributeName.SEX))) {
+            if (!param.get(AttributeName.SEX).isBlank() && !isValidSex(param.get(AttributeName.SEX))) {
                 isValid = false;
                 param.put(AttributeName.SEX, TypeInvalid.INVALID_SEX);
                 param.put(AttributeName.SEX + COLOR, TypeInvalid.COLOR_INVALID);
             }
         }
-        System.out.println("v4");
-        if (!param.get(AttributeName.NUMBER_CARD).equals("") && !isValidNumberCard(param.get(AttributeName.NUMBER_CARD))) {
+        if (!param.get(AttributeName.NUMBER_CARD).isBlank() && !isValidNumberCard(param.get(AttributeName.NUMBER_CARD))) {
             isValid = false;
             param.put(AttributeName.NUMBER_CARD, TypeInvalid.INVALID_NUMBER_CARD);
             param.put(AttributeName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_INVALID);
         } else {
             param.put(AttributeName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_VALID);
         }
-        System.out.println("v5");
+        return isValid;
+    }
+
+    public boolean isValidEditUser(RequestParameters param) {
+        if (param == null) {
+            return false;
+        }
+        boolean isValid = true;
+
+        if (param.get(AttributeName.MAIL).isBlank()) {
+            isValid = false;
+            param.put(AttributeName.MAIL, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidMail(param.get(AttributeName.MAIL))) {
+            isValid = false;
+            param.put(AttributeName.MAIL, TypeInvalid.INVALID_EMAIL);
+            param.put(AttributeName.MAIL + COLOR, TypeInvalid.COLOR_INVALID);
+        }
+
+        if (param.get(AttributeName.NAME).isBlank()) {
+            isValid = false;
+            param.put(AttributeName.NAME, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidName(param.get(AttributeName.NAME))) {
+            isValid = false;
+            param.put(AttributeName.NAME, TypeInvalid.INVALID_NAME);
+            param.put(AttributeName.NAME + COLOR, TypeInvalid.COLOR_INVALID);
+        }
+
+        if (param.get(AttributeName.LASTNAME).isBlank()) {
+            isValid = false;
+            param.put(AttributeName.LASTNAME, TypeInvalid.OBLIGATORY_FIELD);
+            param.put(AttributeName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
+        } else if (!isValidLastname(param.get(AttributeName.LASTNAME))) {
+            isValid = false;
+            param.put(AttributeName.LASTNAME, TypeInvalid.INVALID_LASTNAME);
+            param.put(AttributeName.LASTNAME + COLOR, TypeInvalid.COLOR_INVALID);
+        }
+
+        if (!param.get(AttributeName.DATE_BIRTH).isBlank() && !isValidDateRegister(param.get(AttributeName.DATE_BIRTH))) {
+            isValid = false;
+            param.put(AttributeName.DATE_BIRTH, TypeInvalid.INVALID_DATE);
+            param.put(AttributeName.DATE_BIRTH + COLOR, TypeInvalid.COLOR_INVALID);
+        } else {
+            param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_VALID);
+        }
+
+        if (!param.get(AttributeName.PHONE).isBlank() && !isValidPhone(param.get(AttributeName.PHONE))) {
+            isValid = false;
+            param.put(AttributeName.PHONE, TypeInvalid.INVALID_PHONE);
+            param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_INVALID);
+        } else {
+            param.put(AttributeName.PHONE + COLOR, TypeInvalid.COLOR_VALID);
+        }
+
+        if (param.get(AttributeName.SEX) != null) {
+            if (!param.get(AttributeName.SEX).isBlank() && !isValidSex(param.get(AttributeName.SEX))) {
+                isValid = false;
+                param.put(AttributeName.SEX, TypeInvalid.INVALID_SEX);
+                param.put(AttributeName.SEX + COLOR, TypeInvalid.COLOR_INVALID);
+            }
+        }
+
+        if (!param.get(AttributeName.NUMBER_CARD).isBlank() && !isValidNumberCard(param.get(AttributeName.NUMBER_CARD))) {
+            isValid = false;
+            param.put(AttributeName.NUMBER_CARD, TypeInvalid.INVALID_NUMBER_CARD);
+            param.put(AttributeName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_INVALID);
+        } else {
+            param.put(AttributeName.NUMBER_CARD + COLOR, TypeInvalid.COLOR_VALID);
+        }
+
+
+        return isValid;
+    }
+
+    public boolean isValidEditPassword(RequestParameters param) {
+        if (param == null) {
+            return false;
+        }
+        boolean isValid = true;
+        if (param.get(AttributeName.REPEAT_PASSWORD).equals(param.get(AttributeName.REPLACE_PASSWORD))) {
+            if (param.get(AttributeName.REPLACE_PASSWORD).isBlank()) {
+                isValid = false;
+                param.put(AttributeName.REPLACE_PASSWORD, TypeInvalid.OBLIGATORY_FIELD);
+                param.put(AttributeName.PASSWORD, EMPTY);
+                param.put(AttributeName.REPEAT_PASSWORD, EMPTY);
+                param.put(AttributeName.REPLACE_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            } else if (!isValidPassword(param.get(AttributeName.REPLACE_PASSWORD))) {
+                isValid = false;
+                param.put(AttributeName.REPLACE_PASSWORD, TypeInvalid.INVALID_PASSWORD);
+                param.put(AttributeName.PASSWORD, EMPTY);
+                param.put(AttributeName.REPEAT_PASSWORD, EMPTY);
+                param.put(AttributeName.REPLACE_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            }
+        } else {
+            isValid = false;
+            param.put(AttributeName.REPLACE_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.REPEAT_PASSWORD, TypeInvalid.INVALID_REPEAT_PASSWORD);
+            param.put(AttributeName.REPLACE_PASSWORD, EMPTY);
+            param.put(AttributeName.PASSWORD, EMPTY);
+            param.put(AttributeName.REPEAT_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+        }
         return isValid;
     }
 }

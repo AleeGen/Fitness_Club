@@ -13,7 +13,6 @@ public class SessionAttributeListenerImpl implements HttpSessionAttributeListene
     @Override
     public void attributeAdded(HttpSessionBindingEvent sbe) {
         /* This method is called when an attribute is added to a session. */
-        //logger.log(Level.INFO, "++++<<<<---------> attribute added: " + sbe.getSession().getAttribute("current_page"));
     }
 
     @Override

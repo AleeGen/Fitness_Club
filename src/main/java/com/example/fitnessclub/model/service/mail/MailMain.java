@@ -1,25 +1,27 @@
 package com.example.fitnessclub.model.service.mail;
 
-import com.example.fitnessclub.model.pool.ConnectionPool;
-
-import java.io.FileReader;
+import com.example.fitnessclub.controller.AttributeName;
+import com.example.fitnessclub.controller.RequestParameters;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
 public class MailMain {
-    public static void main(String[] args) {
+
+    private static final String PATH_CONFIG_MAIL = "config/mail.properties";
+    private static final String SUBJECT = "Registration on the \"Fitness club\"";
+    private static final String BODY_PATTERN = "Welcome, %1$s %2$s (%3$s)! You have registered in a fitness club";
+
+    public static void sendTo(RequestParameters user) throws IOException {
         Properties properties = new Properties();
-        try {
-            InputStream inputStream = ConnectionPool.class.getClassLoader().getResourceAsStream("config/mail.properties");
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(properties);
-        String mailTo = "leshaleonenko@mail.ru";
-        String subject = "Sample Mail";
-        String body = "Hello java mail";
-        MailSender sender = new MailSender(mailTo, subject, body, properties);
+        InputStream inputStream = MailMain.class.getClassLoader().getResourceAsStream(PATH_CONFIG_MAIL);
+        properties.load(inputStream);
+        String lastname = user.get(AttributeName.LASTNAME);
+        String name = user.get(AttributeName.NAME);
+        String login = user.get(AttributeName.LOGIN);
+        String body = String.format(BODY_PATTERN, lastname, name, login);
+        String emailTo = user.get(AttributeName.MAIL);
+        MailSender sender = new MailSender(emailTo, SUBJECT, body, properties);
         sender.send();
     }
 }

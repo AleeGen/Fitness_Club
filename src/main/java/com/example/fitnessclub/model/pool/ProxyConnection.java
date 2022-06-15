@@ -11,7 +11,7 @@ public class ProxyConnection implements Connection {
 
     private Connection connection;
 
-    protected ProxyConnection(Connection connection) {
+    ProxyConnection(Connection connection) {
         this.connection = connection;
     }
 
@@ -24,7 +24,7 @@ public class ProxyConnection implements Connection {
         }
     }
 
-    protected void reallyClose() {
+    void reallyClose() {
         try {
             connection.close();
         } catch (SQLException e) {

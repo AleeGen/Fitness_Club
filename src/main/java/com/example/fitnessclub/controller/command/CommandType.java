@@ -13,9 +13,14 @@ public enum CommandType {
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
     OPEN_PAGE(new OpenPageCommand()),
-    CHECK_SERVICE(new CheckServiceCommand()),
     ADD_TO_CART(new AddToCartCommand()),
-    SET_LOCALE(new SetLocaleCommand());
+    SET_LOCALE(new SetLocaleCommand()),
+    VIEW_PROFILE(new ViewProfileCommand()),
+    VIEW_INDEX(new ViewIndexCommand()),
+    EDIT_AVATAR(new EditAvatarCommand()),
+    EDIT_USER(new EditUserCommand()),
+    EDIT_PASSWORD(new EditPasswordCommand()),
+    VIEW_APPOINTMENTS(new ViewAppointmentsCommand());
 
     Command command;
 

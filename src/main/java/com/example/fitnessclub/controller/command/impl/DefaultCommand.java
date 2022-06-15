@@ -9,6 +9,6 @@ public class DefaultCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) {
-        return new Router(PagePath.MAIN);
+        return new Router(PagePath.INDEX, Router.Type.REDIRECT);
     }
 }

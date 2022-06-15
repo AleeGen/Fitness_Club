@@ -1,7 +1,7 @@
-package com.example.fitnessclub.model.mapper.impl;
+package com.example.fitnessclub.model.dao.mapper.impl;
 
 import com.example.fitnessclub.model.entity.Payment;
-import com.example.fitnessclub.model.mapper.RowMapper;
+import com.example.fitnessclub.model.dao.mapper.RowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

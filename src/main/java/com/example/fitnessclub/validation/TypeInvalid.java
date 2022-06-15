@@ -15,6 +15,7 @@ public final class TypeInvalid {
     public static final String INVALID_PHONE = "incorrect phone";
     public static final String INVALID_NUMBER_CARD = "incorrect number card";
     public static final String COLOR_INVALID = "#FFEBE8";
+    public static final String COLOR_INVALID_RED = "red";
     public static final String COLOR_VALID = "";
 
 }

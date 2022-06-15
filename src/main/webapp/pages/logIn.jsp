@@ -7,14 +7,18 @@ ${pageContext.request.session.setAttribute("current_page","pages/logIn.jsp")}
 <!DOCTYPE html>
 <html>
 <head>
+    <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
     <title><fmt:message key="head.logIn"/></title>
     <link rel="stylesheet" href="css/style3.css" type="text/css">
 </head>
 <body>
 <div class="decor">
+    <c:import url="/pages/support/header.jsp"/>
+</div>
+<div class="decor">
     <div class="form-row">
         <h1 align="center"><fmt:message key="fitness_club"/></h1>
-        <form action="${pageContext.request.contextPath}/controller" method="get">
+        <form action="${pageContext.request.contextPath}/controller" method="post">
             <div>
                 <input type="hidden" name="command" value="login"/>
                 <input type="text" name="login" placeholder=" " value=""/><label><fmt:message
@@ -34,8 +38,6 @@ ${pageContext.request.session.setAttribute("current_page","pages/logIn.jsp")}
         </form>
     </div>
 </div>
-<div class="table">
-    <c:import url="insert/locale.jsp"/>
-</div>
+
 </body>
 </html>

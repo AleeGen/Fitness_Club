@@ -1,3 +1,4 @@
+/*
 package com.example.fitnessclub.model.dao.logic;
 
 import com.example.fitnessclub.model.dao.BaseDao;
@@ -50,3 +51,4 @@ public class EntityTransaction {   //// TODO: 24.04.2022 как я понял, �
         }
     }
 }
+*/

@@ -7,16 +7,36 @@ import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.exception.ServiceException;
+import com.example.fitnessclub.model.pool.ConnectionPool;
 import com.example.fitnessclub.model.service.UserService;
+import com.example.fitnessclub.model.service.mail.MailMain;
+import com.example.fitnessclub.validation.TypeInvalid;
 import com.example.fitnessclub.validation.ValidationUser;
+import jakarta.servlet.http.Part;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
 
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = LogManager.getLogger();
+    private static final String EMPTY = "";
     private static final String COLOR = "_color";
     private static final String COLOR_INVALID = "#FFEBE8";
+    private static final String PATH_PROPERTIES = "prop/uploadPath.properties";
+    private static final String PATH_AVATAR = "path.avatar";
+    private static final String ENCODE = "UTF-8";
+    private static final String WRONG_PASSWORD = "Wrong password";
+    private static final Properties property = new Properties();
     private static UserServiceImpl instance = new UserServiceImpl();
 
     private UserServiceImpl() {
@@ -41,63 +61,156 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean registration(RequestParameters paramUser) throws ServiceException {
-        System.out.println("+registration+");
         ValidationUser validation = new ValidationUser();
         boolean exists = false;
         UserDaoImpl userDao = UserDaoImpl.getInstance();
         if (paramUser.get(AttributeName.STEP_NUMBER).equals(AttributeName.STEP_ONE)) {
-            System.out.println("if1");
             if (validation.isValidRegistrationStepOne(paramUser)) {
-                System.out.println("if2");
                 try {
                     if (!userDao.checkingExistence(paramUser.get(AttributeName.LOGIN))) {
-                        System.out.println("if3");
                         exists = true;
                     } else {
                         paramUser.put(AttributeName.LOGIN, MessagePage.USER_EXISTS);
                         paramUser.put(AttributeName.LOGIN + COLOR, COLOR_INVALID);
-                        System.out.println(AttributeName.LOGIN + COLOR);
-                        paramUser.put(AttributeName.PASSWORD, "");
+                        paramUser.put(AttributeName.PASSWORD, EMPTY);
+                        paramUser.put(AttributeName.REPEAT_PASSWORD, EMPTY);
                     }
                 } catch (DaoException e) {
-                    //log
+                    logger.log(Level.ERROR, "Error checking the presence of a user");
                 }
             }
         } else if (paramUser.get(AttributeName.STEP_NUMBER).equals(AttributeName.STEP_TWO)) {
-            System.out.println("if4");
             if (validation.isValidRegistrationStepTwo(paramUser)) {
-                System.out.println("if5");
                 try {
                     String password = paramUser.get(AttributeName.PASSWORD);
                     String codePassword = Base64.getEncoder().encodeToString(password.getBytes());
-                    Date date = null;
-                    try {
-                        date = Date.valueOf(paramUser.get(AttributeName.DATE_BIRTH));
-                    } catch (Exception e) {
-                        //log
-                    }
-                    System.out.println("--->"+paramUser.get(AttributeName.NUMBER_CARD)+"<---");
+                    String date = paramUser.get(AttributeName.DATE_BIRTH);
+                    Date dateResult = date.isBlank() ? null : Date.valueOf(date);
                     User user = User.newBuilder()
                             .setLogin(paramUser.get(AttributeName.LOGIN))
                             .setPassword(codePassword)
                             .setMail(paramUser.get(AttributeName.MAIL))
                             .setName(paramUser.get(AttributeName.NAME))
                             .setLastname(paramUser.get(AttributeName.LASTNAME))
-                            .setDate_birth(date)
+                            .setDate_birth(dateResult)
                             .setSex(paramUser.get(AttributeName.SEX))
                             .setPhone(paramUser.get(AttributeName.PHONE))
                             .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
                             .build();
-                    System.out.println("if6");
-                    exists = UserDaoImpl.getInstance().add(user);
-                    System.out.println("if7");
-                } catch (DaoException | IllegalArgumentException e) {
+                    exists = userDao.add(user);
+                    MailMain.sendTo(paramUser);
+                } catch (IOException e) {
+                    logger.log(Level.ERROR, "Failed to send notification to email");
+                } catch (DaoException e) {
+                    logger.log(Level.ERROR, "Error when adding a user");
                     throw new ServiceException(e);
                 }
             }
-            System.out.println("if8");
         }
         return exists;
+    }
+
+    @Override
+    public Optional<User> find(String login) throws ServiceException {
+        Optional<User> optionalUser = Optional.empty();
+        if (login != null) {
+            UserDaoImpl userDao = UserDaoImpl.getInstance();
+            try {
+                optionalUser = userDao.find(login);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return optionalUser;
+    }
+
+    public Optional<User> update(RequestParameters paramUser) throws ServiceException {
+        ValidationUser validation = new ValidationUser();
+        Optional<User> result = Optional.empty();
+        String date = paramUser.get(AttributeName.DATE_BIRTH);
+        Date dateResult = date.isBlank() ? null : Date.valueOf(date);
+        boolean isValid = validation.isValidEditUser(paramUser);
+        User user = User.newBuilder()
+                .setLogin(paramUser.get(AttributeName.LOGIN))
+                .setMail(paramUser.get(AttributeName.MAIL))
+                .setName(paramUser.get(AttributeName.NAME))
+                .setLastname(paramUser.get(AttributeName.LASTNAME))
+                .setDate_birth(dateResult)
+                .setSex(paramUser.get(AttributeName.SEX))
+                .setPhone(paramUser.get(AttributeName.PHONE))
+                .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
+                .build();
+        if (isValid) {
+            try {
+                result = UserDaoImpl.getInstance().update(user);
+                paramUser.put(MessagePage.MESSAGE, MessagePage.EDIT_USER_SUCCESSFULLY);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        } else {
+            result = Optional.of(user);
+            paramUser.put(MessagePage.MESSAGE, MessagePage.EDIT_USER_FAILED);
+        }
+        return result;
+    }
+
+    public boolean editAvatar(Part part, String login) throws ServiceException {
+        InputStream inputStream = ConnectionPool.class.getClassLoader().getResourceAsStream(PATH_PROPERTIES);
+        try {
+            property.load(inputStream);
+        } catch (IOException e) {
+            logger.fatal("Properties not load", e);
+            throw new ServiceException(e);
+        }
+        String savePath = property.getProperty(PATH_AVATAR);
+        File fileSaveDir = new File(savePath);
+        if (!fileSaveDir.exists()) {
+            fileSaveDir.mkdirs();
+        }
+        String path = part.getSubmittedFileName();
+        String randFileName = UUID.randomUUID() + path.substring(path.lastIndexOf("."));
+        try {
+            String pathAvatar = savePath + File.separator + randFileName;
+            part.write(pathAvatar);
+            UserDaoImpl userDao = UserDaoImpl.getInstance();
+            return userDao.editAvatar(URLEncoder.encode(pathAvatar, ENCODE), login);
+        } catch (IOException e) {
+            logger.log(Level.ERROR, "Failed to write to the server at the specified path");
+            throw new ServiceException(e);
+        } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to perform an update in the database");
+            throw new ServiceException(e);
+        }
+    }
+
+    public boolean editPassword(RequestParameters parameters) throws ServiceException {
+        String currentPass = parameters.get(AttributeName.PASSWORD);
+        currentPass = Base64.getEncoder().encodeToString(currentPass.getBytes());
+        String login = parameters.get(AttributeName.LOGIN);
+        boolean result = false;
+        if (new ValidationUser().isValidEditPassword(parameters)) {
+            UserDaoImpl userDao = UserDaoImpl.getInstance();
+            try {
+                Optional<String> password = userDao.findPassword(login);
+                if (password.isPresent() && currentPass.equals(password.get())) {
+                    parameters.put(AttributeName.PASSWORD, EMPTY);
+                    String replacePass = parameters.get(AttributeName.REPLACE_PASSWORD);
+                    replacePass = Base64.getEncoder().encodeToString(replacePass.getBytes());
+                    if (userDao.editPassword(login, replacePass)) {
+                        result = true;
+                    }
+                } else {
+                    parameters.put(AttributeName.PASSWORD, WRONG_PASSWORD);
+                    parameters.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
+                }
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            } finally {
+                parameters.put(AttributeName.REPLACE_PASSWORD, EMPTY);
+                parameters.put(AttributeName.REPEAT_PASSWORD, EMPTY);
+            }
+        }
+        return result;
     }
 
 }

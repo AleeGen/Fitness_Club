@@ -5,14 +5,15 @@
 <fmt:setBundle basename="prop.text"/>
 <html>
 <head>
+    <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
     <title><fmt:message key="head.services"/></title>
     <link rel="stylesheet" href="css/style3.css" type="text/css">
 </head>
 
 <body>
-pageContext.getAttribute("services"): ${pageContext.getAttribute("services")}
-services: ${services}
-applicationScope ${applicationScope}
+<div class="decor">
+    <c:import url="/pages/support/header.jsp"/>
+</div>
 <div class="decor" style="max-width: 900px">
     <div class="form-row">
         <fmt:message key="message"/>: ${message}
@@ -29,7 +30,7 @@ applicationScope ${applicationScope}
                 <th><fmt:message key="field.service.description"/>
                 </td>
             </tr>
-            <c:forEach var="service" items="${temp.get('services')}">
+            <c:forEach var="service" items="${services}">
                 <tr>
                     <td><c:out value="${service.getServiceName()}"/></td>
                     <c:if test="${service.getNumberVisit()==0}">
@@ -41,21 +42,21 @@ applicationScope ${applicationScope}
                     <td><c:out value="${service.getValidityPeriod()}"/></td>
                     <td><c:out value="${service.getPrice()}"/></td>
                     <td><c:out value="${service.getDescription()}"/></td>
-                    <td>
-                        <form action="${pageContext.request.contextPath}/controller" method="get">
-                            <input type="hidden" name="command" value="add_to_cart">
-                            <input type="hidden" name="service_cart" value="${service.getId()}">
-                            <input style="margin-block: 0px" type="submit" name="submit"
-                                   value="<fmt:message key="submit.add.cart"/>"/>
-                        </form>
-                    </td>
+                    <c:if test="${sessionScope.get('login')!=null}">
+                        <td>
+                            <form action="${pageContext.request.contextPath}/controller" method="post">
+                                <input type="hidden" name="command" value="add_to_cart">
+                                <input type="hidden" name="service_id_cart" value="${service.getId()}">
+                                <input style="margin-block: 0px" type="submit" name="submit"
+                                       value="<fmt:message key="submit.add.cart"/>"/>
+                            </form>
+                        </td>
+                    </c:if>
                 </tr>
             </c:forEach>
         </table>
     </div>
 </div>
-<div class="table">
-    <c:import url="insert/locale.jsp"/>
-</div>
+
 </body>
 </html>

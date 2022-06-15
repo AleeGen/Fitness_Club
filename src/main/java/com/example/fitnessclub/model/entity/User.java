@@ -18,6 +18,7 @@ public class User extends AbstractEntity {
     private byte visitPeriodMonths;
     private String discountCode;
     private String numberCard;
+    private String pathAvatar;
 
     public static UserBuilder newBuilder() {
         return new User().new UserBuilder();
@@ -127,6 +128,13 @@ public class User extends AbstractEntity {
         this.discountCode = discountCode;
     }
 
+    public String getPathAvatar() {
+        return pathAvatar;
+    }
+
+    public void setPathAvatar(String pathAvatar) {
+        this.pathAvatar = pathAvatar;
+    }
 
     public class UserBuilder {
 
@@ -195,8 +203,13 @@ public class User extends AbstractEntity {
             return this;
         }
 
-        public UserBuilder setDiscount_code(String discount_code) {
-            User.this.discountCode = discount_code;
+        public UserBuilder setDiscountCode(String discountCode) {
+            User.this.discountCode = discountCode;
+            return this;
+        }
+
+        public UserBuilder setPathAvatar(String pathAvatar) {
+            User.this.pathAvatar = pathAvatar;
             return this;
         }
 

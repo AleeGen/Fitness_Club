@@ -10,4 +10,6 @@ public interface UserService {
     Optional<User> authenticate(String login, String password) throws ServiceException;
 
     boolean registration(RequestParameters paramUser) throws ServiceException;
+
+    Optional<User> find(String login) throws ServiceException;
 }

@@ -1,8 +1,8 @@
-package com.example.fitnessclub.model.mapper.impl;
+package com.example.fitnessclub.model.dao.mapper.impl;
 
 import com.example.fitnessclub.controller.AttributeName;
+import com.example.fitnessclub.model.dao.mapper.RowMapper;
 import com.example.fitnessclub.model.entity.Service;
-import com.example.fitnessclub.model.mapper.RowMapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
