@@ -16,11 +16,10 @@ public class ViewProfileCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        String login = (String) session.getAttribute(AttributeName.LOGIN);
+        String login = request.getParameter(AttributeName.LOGIN);
         String page = (String) session.getAttribute(AttributeName.CURRENT_PAGE);
-        UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
-            Optional<User> optionalUser = userService.find(login);
+            Optional<User> optionalUser = UserServiceImpl.getInstance().find(login);
             if (optionalUser.isPresent()) {
                 page = PagePath.PROFILE;
                 ((HashMap) session.getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, optionalUser.get());

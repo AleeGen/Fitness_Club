@@ -4,22 +4,19 @@
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
 ${pageContext.request.session.setAttribute("current_page","pages/logIn.jsp")}
-<!DOCTYPE html>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
     <title><fmt:message key="head.logIn"/></title>
     <link rel="stylesheet" href="css/style3.css" type="text/css">
+    <link rel="stylesheet" href="css/newStyle.css" type="text/css"/>
 </head>
 <body>
-<div class="decor">
-    <c:import url="/pages/support/header.jsp"/>
-</div>
-<div class="decor">
-    <div class="form-row">
-        <h1 align="center"><fmt:message key="fitness_club"/></h1>
-        <form action="${pageContext.request.contextPath}/controller" method="post">
-            <div>
+<c:import url="/pages/header/header.jsp"/>
+<div class="container">
+    <div class="decor">
+        <div class="form-row">
+            <form action="${pageContext.request.contextPath}/controller" method="post">
                 <input type="hidden" name="command" value="login"/>
                 <input type="text" name="login" placeholder=" " value=""/><label><fmt:message
                     key="field.user.login"/></label>
@@ -27,17 +24,17 @@ ${pageContext.request.session.setAttribute("current_page","pages/logIn.jsp")}
                     key="field.user.password"/></label>
                 <output style="color: red">${message}</output>
                 <input type="submit" name="input" value="<fmt:message key="submit.sign_in"/>"/>
-            </div>
-        </form>
-        <form action="${pageContext.request.contextPath}/controller" method="get">
-            <div>
+            </form>
+        </div>
+        <div class="form-row">
+            <form action="${pageContext.request.contextPath}/controller" method="get">
                 <input type="hidden" name="command" value="open_page">
-                <input type="hidden" name="page" value="pages/registrationStepOne.jsp">
+                <input type="hidden" name="page" value="pages/common/registrationStepOne.jsp">
                 <input type="submit" name="submit" value="<fmt:message key="submit.registration"/>"><br/>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-
+<jsp:include page="/pages/footer/footer.jsp"/>
 </body>
 </html>

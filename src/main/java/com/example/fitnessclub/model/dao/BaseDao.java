@@ -13,8 +13,8 @@ public abstract class BaseDao<T extends AbstractEntity> {
 
     public abstract boolean delete(T t) throws DaoException;
 
-    public abstract List<T> findAll() throws DaoException;
+    public abstract Optional<T> find(String id) throws DaoException;
 
-    public abstract Optional<User> update(T t) throws DaoException;
+    public abstract Optional<T> update(T t) throws DaoException;
 
 }

@@ -6,7 +6,8 @@ import javax.mail.Session;
 
 public class SessionFactory {
 
-    private SessionFactory(){}
+    private SessionFactory() {
+    }
 
     private static final String NAME_PROP = "mail.user.name";
     private static final String PASSWORD_PROP = "mail.user.password";

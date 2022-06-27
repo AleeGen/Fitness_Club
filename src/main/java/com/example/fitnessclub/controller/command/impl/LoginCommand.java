@@ -28,6 +28,10 @@ public class LoginCommand implements Command {
             if (optionalUser.isPresent()) {
                 page = PagePath.INDEX;
                 session.setAttribute(AttributeName.ROLE, optionalUser.get().getRole());
+                switch (optionalUser.get().getRole()) {
+                    case ADMIN -> session.setAttribute(AttributeName.ADMIN_SWITCH, false);
+                    case TRAINER -> session.setAttribute(AttributeName.TRAINER_SWITCH, false);
+                }
                 session.setAttribute(AttributeName.LOGIN, optionalUser.get().getLogin());
                 session.setAttribute(AttributeName.CURRENT_PAGE, page);
             } else {

@@ -37,6 +37,6 @@ public class RegistrationStepOneCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(page, Router.Type.REDIRECT);
+        return new Router(page);
     }
 }

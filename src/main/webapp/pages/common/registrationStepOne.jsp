@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<fmt:setLocale value="${locale}" scope="session" />
+<fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
 <html>
 <head>
@@ -11,9 +11,7 @@
     <link rel="stylesheet" href="css/style3.css" type="text/css">
 </head>
 <body>
-<div class="decor">
-    <c:import url="/pages/support/header.jsp"/>
-</div>
+<c:import url="/pages/header/header.jsp"/>
 <form class="decor" action="${pageContext.request.contextPath}/controller" method="post" novalidate>
     <div class="form-row">
         <h1 align="center"><fmt:message key="head.registration"/></h1>
@@ -29,7 +27,8 @@
                pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,25}$" required>
         <label><fmt:message key="field.user.password"/></label>
 
-        <input type="password" name="repeat_password" placeholder=" " value="${temp_attribute.get("user").get("repeat_password")}"
+        <input type="password" name="repeat_password" placeholder=" "
+               value="${temp_attribute.get("user").get("repeat_password")}"
                style="background: ${temp_attribute.get("user").get("repeat_password_color")}"
                pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,25}$" required>
         <label><fmt:message key="field.user.repeat_password"/></label>
@@ -50,5 +49,6 @@
         <input type="submit" name="registration" value="<fmt:message key="submit.next"/>">
     </div>
 </form>
+<jsp:include page="/pages/footer/footer.jsp"/>
 </body>
 </html>

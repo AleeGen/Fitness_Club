@@ -70,6 +70,22 @@ public class ValidationUser {
         return pattern.matches();
     }
 
+    public boolean isValidRole(String role) {
+        Matcher pattern = Pattern.compile(ColumnValidation.ROLE).matcher(role);
+        return pattern.matches();
+    }
+
+    public boolean isValidCorporate(String corporate) {
+        Matcher pattern = Pattern.compile(ColumnValidation.REGEX_CORPORATE).matcher(corporate);
+        return pattern.matches();
+    }
+
+    public boolean isValidDiscountCode(String discountCode) {
+        Matcher pattern = Pattern.compile(ColumnValidation.REGEX_DISCOUNT_CODE).matcher(discountCode);
+        return pattern.matches();
+    }
+
+
     public boolean isValidRegistrationStepOne(RequestParameters param) {
         if (param == null) {
             return false;
@@ -280,6 +296,39 @@ public class ValidationUser {
             param.put(AttributeName.PASSWORD, EMPTY);
             param.put(AttributeName.REPEAT_PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
         }
+        return isValid;
+    }
+
+    public boolean isValidEditFeatures(RequestParameters param) {
+        if (param == null) {
+            return false;
+        }
+        boolean isValid = true;
+
+        if (!param.get(AttributeName.ROLE).isBlank() && !isValidRole(param.get(AttributeName.ROLE))) {
+            isValid = false;
+            param.put(AttributeName.ROLE, TypeInvalid.INVALID_ROLE);
+            param.put(AttributeName.ROLE + COLOR, TypeInvalid.COLOR_INVALID);
+        } else {
+            param.put(AttributeName.ROLE + COLOR, TypeInvalid.COLOR_VALID);
+        }
+
+        if (!param.get(AttributeName.CORPORATE).isBlank() && !isValidCorporate(param.get(AttributeName.CORPORATE))) {
+            isValid = false;
+            param.put(AttributeName.CORPORATE, TypeInvalid.INVALID_CORPORATE);
+            param.put(AttributeName.CORPORATE + COLOR, TypeInvalid.COLOR_INVALID);
+        } else {
+            param.put(AttributeName.CORPORATE + COLOR, TypeInvalid.COLOR_VALID);
+        }
+
+        if (!param.get(AttributeName.DISCOUNT_CODE).isBlank() && !isValidDiscountCode(param.get(AttributeName.DISCOUNT_CODE))) {
+            isValid = false;
+            param.put(AttributeName.DISCOUNT_CODE, TypeInvalid.INVALID_DISCOUNT_CODE);
+            param.put(AttributeName.DISCOUNT_CODE + COLOR, TypeInvalid.COLOR_INVALID);
+        } else {
+            param.put(AttributeName.DISCOUNT_CODE + COLOR, TypeInvalid.COLOR_VALID);
+        }
+
         return isValid;
     }
 }

@@ -36,16 +36,11 @@ public class AppointmentMapper implements RowMapper {
         Optional<Appointment> optionalAppointment = Optional.empty();
         try {
                 Appointment appointment = Appointment.newBuilder()
-                        .setId(resultSet.getLong(AttributeName.APPOINTMENT_DESCRIPTION_ID))
-                        .setAppointmentId(resultSet.getLong(AttributeName.APPOINTMENT_ID))
-                        //.setDate(resultSet.getDate(AttributeName.DATE))
-                        //.setType(AppointmentType.getType(resultSet.getString(AttributeName.APPOINTMENT_TYPE)))
-                        .setExerciseName(resultSet.getString(AttributeName.EXERCISE_NAME))
-                        .setNumberSets(resultSet.getByte(AttributeName.NUMBER_SETS))
-                        .setNumberRepetitions(resultSet.getByte(AttributeName.NUMBER_REPETITIONS))
-                        .setEquipment(resultSet.getString(AttributeName.EQUIPMENT))
+                        .setId(resultSet.getLong(AttributeName.APPOINTMENT_ID))
+                        .setUserId(resultSet.getLong(AttributeName.APPOINTMENT_USER_ID))
+                        .setDate(resultSet.getDate(AttributeName.DATE))
                         .setNutrition(resultSet.getString(AttributeName.NUTRITION))
-                        .setRunTime(resultSet.getTime(AttributeName.RUN_TIME))
+                        .setType(AppointmentType.getType(resultSet.getString(AttributeName.APPOINTMENT_TYPE)))
                         .build();
                 optionalAppointment = Optional.of(appointment);
         } catch (SQLException e) {

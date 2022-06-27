@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class RequestParameters {
     private final Map<String, String> parameters = new HashMap<>();
+
     public String put(String parameterName, String value) {
         return parameters.put(parameterName, value);
     }
@@ -14,7 +15,11 @@ public class RequestParameters {
         return parameters.get(parameterName);
     }
 
-    public Collection<String> values(){
+    public Collection<String> values() {
         return parameters.values();
+    }
+
+    public void clear() {
+        parameters.clear();
     }
 }

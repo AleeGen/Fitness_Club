@@ -3,7 +3,7 @@
 <fmt:setBundle basename="prop.text"/>
 <html>
 <head>
-    <title><fmt:message key="head.error.404"></title>
+    <title><fmt:message key="head.error.404"/></title>
 </head>
 <body>
 Exception: ${pageContext.exception}

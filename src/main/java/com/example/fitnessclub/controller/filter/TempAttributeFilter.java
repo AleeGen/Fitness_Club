@@ -28,8 +28,15 @@ public class TempAttributeFilter implements Filter {
                     (PagePath.PROFILE), (PagePath.PROFILE_EDIT):
                 result.put(AttributeName.USER, temp.get(AttributeName.USER));
                 break;
-            case ("pages/test.jsp"):
-                result.put(AttributeName.APPOINTMENTS, temp.get(AttributeName.APPOINTMENTS));
+            case (PagePath.APPOINTMENTS):
+                result.put(AttributeName.WORKOUTS, temp.get(AttributeName.WORKOUTS));
+                break;
+            case (PagePath.LIST_USERS):
+                result.put(AttributeName.USERS, temp.get(AttributeName.USERS));
+                break;
+            case (PagePath.PAYMENTS):
+                result.put(AttributeName.PAYMENTS, temp.get(AttributeName.PAYMENTS));
+                result.put(AttributeName.PAID, temp.get(AttributeName.PAID));
                 break;
             default:
                 logger.log(Level.INFO, "delete all temp attribute");

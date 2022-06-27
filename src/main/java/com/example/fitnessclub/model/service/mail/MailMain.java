@@ -2,6 +2,7 @@ package com.example.fitnessclub.model.service.mail;
 
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.RequestParameters;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

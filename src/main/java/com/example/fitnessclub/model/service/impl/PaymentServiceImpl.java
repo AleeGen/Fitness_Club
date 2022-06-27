@@ -1,6 +1,7 @@
 package com.example.fitnessclub.model.service.impl;
 
 import com.example.fitnessclub.exception.DaoException;
+import com.example.fitnessclub.exception.ServiceException;
 import com.example.fitnessclub.model.dao.impl.ServiceDaoImpl;
 import com.example.fitnessclub.model.dao.impl.PaymentDaoImpl;
 import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
@@ -11,6 +12,9 @@ import com.example.fitnessclub.model.service.PaymentService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PaymentServiceImpl implements PaymentService {
@@ -25,12 +29,12 @@ public class PaymentServiceImpl implements PaymentService {
         return instance;
     }
 
-    public boolean addToCart(String login, Long serviceId) {
+    public boolean addToCart(String login, Long serviceId) throws ServiceException {
         try {
-            Optional<Service> item = ServiceDaoImpl.getInstance().find(serviceId.toString());
-            Optional<User> user  = UserDaoImpl.getInstance().find(login);
-            if (item.isPresent()) {
-                byte remainedVisits = item.get().getNumberVisit();
+            Optional<Service> service = ServiceDaoImpl.getInstance().find(serviceId.toString());
+            Optional<User> user = UserDaoImpl.getInstance().find(login);
+            if (service.isPresent()) {
+                byte remainedVisits = service.get().getNumberVisit();
                 Payment payment = Payment.newBuilder()
                         .setUserId(user.get().getId())
                         .setServiceId(serviceId)
@@ -46,4 +50,31 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return false;
     }
+
+
+    public Optional<Payment> update(Payment payment) throws ServiceException {
+        Optional<Payment> optionalPayment = Optional.empty();
+        return optionalPayment;
+    }
+
+    public List<Payment> findAll(String login, boolean status) throws ServiceException {
+        List<Payment> listPayment = new ArrayList<>();
+        try {
+            Optional<User> optionalUser = UserDaoImpl.getInstance().find(login);
+            if (optionalUser.isPresent()) {
+                long userId = optionalUser.get().getId();
+                listPayment = PaymentDaoImpl.getInstance().findAll(userId);
+                for (int i = 0; i < listPayment.size(); i++) {
+                    if (listPayment.get(i).isPaid() != status) {
+                        listPayment.remove(i);
+                        i--;
+                    }
+                }
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return listPayment;
+    }
+
 }

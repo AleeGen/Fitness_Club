@@ -1,45 +1,46 @@
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    background: #CCCCCC;
-}
-
 .decor {
     position: relative;
-    max-width: 400px;
-    margin: 50px auto 0;
-    background: white;
-    border-radius: 30px;
+    max-width: 40%;
+    margin: auto;
+    background: rgba(121, 121, 121, 0.5);
+    /* border-radius: 30px;*/
 }
 
 .form-row {
-    padding: 50px;
+    padding: 1%;
 }
 
 /*дизайн input*/
 .form-row input {
     border: none;
     display: block;
-    margin-bottom: 10px;
-    border-radius: 20px;
     width: 100%;
-    padding: 0 10px;
-    line-height: 40px;
-    font-family: 'Roboto', sans-serif;
+    line-height: 500%;
     background: none;
     border-bottom: 2px solid #4a90e2;
     transition: all 0.2s ease;
+    margin-top: 2%;
+}
+
+.form-row input[type="date"] {
+    text-align: right;
+}
+
+.form-row input[type="radio"] {
+    margin-top: 4%;
+}
+
+.form-row input[type="text"], .form-row input[type="password"],
+.form-row input[type="email"], .form-row input[type="date"],
+.form-row input[type="radio"] {
+    color: white;
+    padding-left: 10%;
+    font-size: 130%;
 }
 
 /*дизайн submit*/
 .form-row input[type="submit"] {
-    margin-top: 30px;
-    background: #11B1F0;
     color: white;
-    font-size: 14px;
 }
 
 /*дизайн reset*/
@@ -50,9 +51,8 @@ body {
     font-size: 14px;
 }
 
-/*закругление reset и submit*/
+/*границы reset и submit*/
 .form-row input[type="submit"], .form-row input[type="reset"] {
-    border-radius: 20px;
     border: none;
 }
 
@@ -72,7 +72,7 @@ body {
 .form-row input[type="submit"]:focus,
 .form-row input[type="reset"]:focus {
     outline: 0;
-    border: 2px solid #F77A52;
+    background-color: #f77a52;
     transition: all 0.1s ease;
 }
 
@@ -81,15 +81,15 @@ body {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     font-size: 36px;
-    color: #707981;
+    color: #ffffff;
 }
 
 .form-row h2 {
-    margin-top: 0;
+    margin: auto;
     font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    font-size: 28px;
-    color: #707981;
+    font-weight: 1000;
+    font-size: 150%;
+    color: #ffffff;
 }
 
 .form-row h3 {
@@ -97,15 +97,16 @@ body {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     font-size: 22px;
-    color: #707981;
+    color: #ffffff;
 }
 
 .form-row h4 {
-    margin-top: 0;
+    display: inline-block;
     font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-weight: 1;
     font-size: 18px;
-    color: #707981;
+    color: #ffffff;
+    margin-top: -3%; margin-left: 10%;
 }
 
 .h4class {
@@ -115,11 +116,11 @@ body {
 }
 
 .form-row h5 {
-    margin-top: 0;
     font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-weight: 1000;
     font-size: 12px;
-    color: #707981;
+    color: #ffffff;
+    margin: 25px;
 }
 
 /*меняет цвет нижней границы*/
@@ -131,25 +132,38 @@ body {
 /*меняем плавающую строку при нажатии*/
 .form-row label {
     position: absolute;
-    left: 65px;
+    left: 10%;
     color: #9d959d;
-    font-size: 20px;
-    font-weight: 300;
-    transform: translateY(-40px);
+    font-size: 150%;
+    font-weight: 600;
+    transform: translateY(-200%);
     transition: all 0.2s ease;
 }
 
+
 /*анимация плавающей строки, остается сверху, если не пустая*/
-.form-row input:focus + label, .form-row input:not(:placeholder-shown) + label {
-    transform: translateY(-60px);
-    margin-left: -14px;
-    font-size: 14px;
-    font-weight: 400;
+.form-row input:focus + label, .form-row input[type="text"]:not(:placeholder-shown) + label,
+.form-row input[type="email"]:not(:placeholder-shown) + label, .form-row input[type="date"]:not(:empty) + label,
+.form-row input[type="password"]:not(:placeholder-shown) + label{
+    transform: translateY(-650%);
+    font-size: 100%;
+    font-weight: 600;
     outline: 0;
     border-color: #F77A52;
     color: #F77A52;
 }
 
+.form-row input[type="text"]:focus, .form-row input[type="text"]:not(:placeholder-shown) {
+    border-color: #F77A52;
+}
+
+.form-row input[type="radio"]:focus+label, .form-row input[type="radio"]:not(:empty)+label {
+    transform: translateY(-200%);
+    font-size: 150%;
+    font-weight: 600;
+    border-color: #F77A52;
+    color: #F77A52;
+}
 
 /* для элемента input c type="radio" */
 .custom-radio {
@@ -160,9 +174,9 @@ body {
 
 /* для элемента label связанного с .custom-radio */
 .custom-radio + label {
-    display: inline-flex;
-    align-items: center;
-    user-select: none;
+     display: inline-flex;
+     align-items: center;
+     user-select: none;
 }
 
 /* создание в label псевдоэлемента  before со следующими стилями */
@@ -214,32 +228,46 @@ body {
 }
 
 
+
 .table {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
+    background-color: rgb(176, 176, 176);
 }
 
 .table td, .table th {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding: 5px;
     border: 1px solid #ddd;
-    padding: 8px;
+    color: #000000;
 }
 
+
 .table tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #c5c5c5;
 }
 
 .table tr:hover {
-    background-color: #ddd;
+    background-color: rgba(243, 210, 1, 0.4);
 }
 
 .table th {
     text-align: center;
-    background-color: #4CAF50;
+    background-color: #2e86a9;
     color: white;
+    cursor: pointer;
 }
+
 .table td {
     text-align: left;
+}
+
+.table input[type="submit"]{
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #2e86a9;
+}
+
+.table input[type="submit"]:hover{
+    color: #f77a52;
 }

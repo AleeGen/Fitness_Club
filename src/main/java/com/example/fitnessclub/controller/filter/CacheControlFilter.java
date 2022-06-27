@@ -20,9 +20,8 @@ public class CacheControlFilter implements Filter { //// TODO: 04.06.2022 раз
         logger.log(Level.INFO, "filter: " + getClass());
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        httpResponse.addHeader("Cache-Control", "post-check=0, pre-check=0");
         httpResponse.setHeader("Pragma", "no-cache");
-        httpResponse.setDateHeader("Expires", 0);
+        httpResponse.setDateHeader("Expires", -1);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

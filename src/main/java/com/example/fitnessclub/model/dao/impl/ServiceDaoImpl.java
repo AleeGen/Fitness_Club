@@ -39,7 +39,6 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
         return false;
     }
 
-    @Override
     public List<Service> findAll() throws DaoException {
         List<Service> services = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -56,7 +55,7 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
     }
 
     @Override
-    public Optional<User> update(Service item) throws DaoException {
+    public Optional<Service> update(Service item) throws DaoException {
         return null;
     }
 

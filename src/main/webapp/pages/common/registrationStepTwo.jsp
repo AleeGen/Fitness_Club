@@ -11,9 +11,7 @@
     <link rel="stylesheet" href="css/style3.css" type="text/css">
 </head>
 <body>
-<div class="decor">
-    <c:import url="/pages/support/header.jsp"/>
-</div>
+<c:import url="/pages/header/header.jsp"/>
 <form class="decor" action="${pageContext.request.contextPath}/controller" method="post" novalidate>
     <div class="form-row">
         <h1 align="center"><fmt:message key="head.registration"/></h1>
@@ -29,28 +27,24 @@
                pattern="^[0-9]{13,20}$">
         <label><fmt:message key="field.user.number_cart"/></label>
 
-        <input type="date" style="margin-left: 156px; width: 48%;
-        line-height: 40px;" name="date_birth" placeholder=" " value="${temp_attribute.get("user").get("date_birth")}"/>
-        <h4 style="margin-left: 10px; margin-top: -40px;"><fmt:message key="field.user.date.birth"/></h4>
-        <h5 style="margin-left: 10px; margin-top: -15px; color:${temp_attribute.get("user").get("date_birth_color")}">${temp_attribute.get("user").get("date_birth")}</h5>
-        </br>
-        </br>
-        <h4 style="margin-left: 10px;"><fmt:message key="field.user.sex"/></h4>
-        <input class="custom-radio" type="radio" name="sex" id="id_male" value="male">
-        <label for="id_male"
-               style="margin-left: 60px; color: #343636; font-family: 'Roboto', sans-serif;"><fmt:message
-                key="field.user.sex.male"/></label>
-        </br>
-        </br>
-        <input class="custom-radio" type="radio" name="sex" id="id_female" value="female">
-        <label for="id_female"
-               style="margin-left: 60px; color: #343636; font-family: 'Roboto', sans-serif;"><fmt:message
-                key="field.user.sex.female"/></label>
+        <input type="date" name="date_birth" placeholder=" " value="${temp_attribute.get("user").get("date_birth")}"
+               style="background: ${temp_attribute.get("user").get("date_birth_color")}" pattern="^[0-9]{13,20}$">
+        <label><fmt:message key="field.user.date.birth"/></label>
+
+
+        <%--<h5 style="margin-left: 10px; margin-top: -15px; color:${temp_attribute.get("user").get("date_birth_color")}">
+            ${temp_attribute.get("user").get("date_birth")}</h5>--%>
+
+        <input type="radio" name="sex" id="id_male">
+        <label for="id_male" style="margin-top: 4%"><fmt:message key="field.user.sex.male"/></label>
+
+        <input type="radio" name="sex" id="id_female" value="female">
+        <label for="id_female" style="margin-top: 4%"><fmt:message key="field.user.sex.female"/></label>
 
         <input type="reset" value="<fmt:message key="submit.reset"/>"/>
         <input type="submit" name="registration" value="<fmt:message key="submit.sign_up"/>">
     </div>
 </form>
-
+<jsp:include page="/pages/footer/footer.jsp"/>
 </body>
 </html>

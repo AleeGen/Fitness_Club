@@ -10,6 +10,7 @@ public final class AttributeName {
     public static final String STEP_ONE = "step_one";
     public static final String STEP_TWO = "step_two";
     public static final String USER = "user";
+    public static final String USERS = "users";
     public static final String USER_PARAM = "param_user";
     public static final String SERVICES = "services";
     public static final String LOCALE = "locale";
@@ -20,6 +21,8 @@ public final class AttributeName {
     public static final String SERVICE_ID_CART = "service_id_cart";
     public static final String IMAGE_PATH = "imagePath";
     public static final String DATE = "date";
+    public static final String ADMIN_SWITCH = "admin_switch";
+    public static final String TRAINER_SWITCH = "trainer_switch";
 
     //table users
     public static final String USER_ID = "user_id";
@@ -39,6 +42,7 @@ public final class AttributeName {
     public static final String DISCOUNT_CODE = "discount_code";
     public static final String NUMBER_CARD = "number_card";
     public static final String PATH_AVATAR = "path_avatar";
+    public static final String DESCRIPTION = "description";
 
     //table services
     public static final String SERVICE_ID = "service_id";
@@ -46,26 +50,30 @@ public final class AttributeName {
     public static final String NUMBER_VISITS = "number_visits";
     public static final String VALIDITY_PERIOD = "validity_period";
     public static final String PRICE = "price";
-    public static final String DESCRIPTION = "description";
 
-    //table users_has_services
-    public static final String USER_SERVICE_ID = "user_service_id";
+    //table payment
+    public static final String PAYMENTS = "payments";
+    public static final String PAYMENT_STATUS = "payment_status";
+    public static final String PAYMENT_ID = "payment_id";
     public static final String REMAINED_VISITS = "remained_visits";
     public static final String EXPIRY = "expiry";
     public static final String PAID = "paid";
 
+    //appointment + List<exercise>
+    public static final String WORKOUTS = "workouts";
+
     //table appointment
-    public static final String APPOINTMENTS = "appointments";
-    //public static final String APPOINTMENT = "appointment";
     public static final String APPOINTMENT_ID = "appointment_id";
     public static final String APPOINTMENT_TYPE = "type_appointment";
-    public static final String APPOINTMENT_DESCRIPTION_ID = "appointment_description_id";
-    public static final String EXERCISE_NAME = "exercise_name";
+    public static final String NUTRITION = "nutrition";
+    public static final String APPOINTMENT_USER_ID = "user_id";
+
+    //table exercise
+    public static final String EXERCISE_ID = "exercise_id";
+    public static final String EXERCISE_NAME = "name";
     public static final String NUMBER_SETS = "number_sets";
     public static final String NUMBER_REPETITIONS = "number_repetitions";
     public static final String EQUIPMENT = "equipment";
-    public static final String NUTRITION = "nutrition";
-    public static final String RUN_TIME = "run_time";
 
 
 }

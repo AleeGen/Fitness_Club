@@ -2,6 +2,9 @@ package com.example.fitnessclub.controller.command;
 
 
 import com.example.fitnessclub.controller.command.impl.*;
+import com.example.fitnessclub.controller.command.impl.admin.AdminSwitchCommand;
+import com.example.fitnessclub.controller.command.impl.admin.EditUserFeaturesCommand;
+import com.example.fitnessclub.controller.command.impl.admin.ViewUsersCommand;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -20,7 +23,13 @@ public enum CommandType {
     EDIT_AVATAR(new EditAvatarCommand()),
     EDIT_USER(new EditUserCommand()),
     EDIT_PASSWORD(new EditPasswordCommand()),
-    VIEW_APPOINTMENTS(new ViewAppointmentsCommand());
+    VIEW_WORKOUT(new ViewWorkoutCommand()),
+    ADMIN_SWITCH(new AdminSwitchCommand()),
+    VIEW_USERS(new ViewUsersCommand()),
+    VIEW_EDIT_PROFILE(new ViewEditProfileCommand()),
+    EDIT_USER_FEATURES (new EditUserFeaturesCommand()),
+    VIEW_PAYMENT(new ViewPaymentCommand()),
+    BUY(new BuyCommand());
 
     Command command;
 

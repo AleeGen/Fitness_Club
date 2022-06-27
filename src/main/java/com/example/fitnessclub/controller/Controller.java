@@ -47,10 +47,12 @@ public class Controller extends HttpServlet {
                     response.sendRedirect(router.getPage());
                     break;
                 default:
-                    response.sendError(500, MessagePage.UNKNOWN_TRANSITION_ROUTER);
+                    request.setAttribute(MessagePage.MESSAGE, MessagePage.UNKNOWN_TRANSITION_ROUTER);
+                    request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);
             }
         } catch (CommandException e) {
-            response.sendError(500, e.getMessage());
+            request.setAttribute(MessagePage.MESSAGE, e);
+            request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);
         }
     }
 }

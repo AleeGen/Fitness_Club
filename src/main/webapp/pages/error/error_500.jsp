@@ -3,7 +3,7 @@
 <fmt:setBundle basename="prop.text"/>
 <html>
 <head>
-<title><fmt:message key="head.error.500"></title>
+<title><fmt:message key="head.error.500"/></title>
 </head>
 <body>
 RequestURI: ${pageContext.errorData.requestURI}
@@ -14,7 +14,10 @@ StatusCode: ${pageContext.errorData.statusCode}
 <hr/>
 Exception: ${pageContext.exception}
 <hr/>
-Exception: ${pageContext.exception.stackTrace}
+Exception.stackTrace: ${pageContext.exception.stackTrace}
+<hr/>
+Message: ${message}
+<hr/>
 <%
     response.getWriter().println("StackTrace:");
     for (int i = 0; i < 3; i++) {

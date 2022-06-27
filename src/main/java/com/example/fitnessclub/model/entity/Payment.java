@@ -1,10 +1,13 @@
 package com.example.fitnessclub.model.entity;
 
+import java.sql.Date;
+
 public class Payment extends AbstractEntity {
 
     private Long userId;
     private Long serviceId;
     private byte remainedVisits;
+    private Date expiry;
     private boolean paid = false;
 
     public static Payment.PaymentBuilder newBuilder() {
@@ -35,6 +38,14 @@ public class Payment extends AbstractEntity {
         this.serviceId = serviceId;
     }
 
+    public Date getExpiry() {
+        return expiry;
+    }
+
+    public void setExpiry(Date expiry) {
+        this.expiry = expiry;
+    }
+
     public byte getRemainedVisits() {
         return remainedVisits;
     }
@@ -44,6 +55,11 @@ public class Payment extends AbstractEntity {
     }
 
     public class PaymentBuilder {
+
+        public Payment.PaymentBuilder setId(Long paymentId) {
+            Payment.this.setId(paymentId);
+            return this;
+        }
 
         public Payment.PaymentBuilder setUserId(Long userId) {
             Payment.this.userId = userId;
@@ -57,6 +73,11 @@ public class Payment extends AbstractEntity {
 
         public Payment.PaymentBuilder setRemainedVisits(byte remainedVisits) {
             Payment.this.remainedVisits = remainedVisits;
+            return this;
+        }
+
+        public Payment.PaymentBuilder setExpiry(Date expiry) {
+            Payment.this.expiry = expiry;
             return this;
         }
 

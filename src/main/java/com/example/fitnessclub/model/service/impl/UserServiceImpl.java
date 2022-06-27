@@ -3,10 +3,12 @@ package com.example.fitnessclub.model.service.impl;
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.controller.RequestParameters;
+import com.example.fitnessclub.model.dao.impl.PaymentDaoImpl;
 import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.exception.ServiceException;
+import com.example.fitnessclub.model.entity.UserRole;
 import com.example.fitnessclub.model.pool.ConnectionPool;
 import com.example.fitnessclub.model.service.UserService;
 import com.example.fitnessclub.model.service.mail.MailMain;
@@ -16,15 +18,13 @@ import jakarta.servlet.http.Part;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.sql.Date;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class UserServiceImpl implements UserService {
 
@@ -36,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private static final String PATH_AVATAR = "path.avatar";
     private static final String ENCODE = "UTF-8";
     private static final String WRONG_PASSWORD = "Wrong password";
+    private static final String TRUE = "1";
+    private static final String FALSE = "0";
     private static final Properties property = new Properties();
     private static UserServiceImpl instance = new UserServiceImpl();
 
@@ -110,6 +112,16 @@ public class UserServiceImpl implements UserService {
         return exists;
     }
 
+    public List<User> findAll() throws ServiceException {
+        List<User> users = new ArrayList<>();
+        try {
+            users = UserDaoImpl.getInstance().findAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return users;
+    }
+
     @Override
     public Optional<User> find(String login) throws ServiceException {
         Optional<User> optionalUser = Optional.empty();
@@ -125,11 +137,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<User> update(RequestParameters paramUser) throws ServiceException {
-        ValidationUser validation = new ValidationUser();
         Optional<User> result = Optional.empty();
         String date = paramUser.get(AttributeName.DATE_BIRTH);
         Date dateResult = date.isBlank() ? null : Date.valueOf(date);
-        boolean isValid = validation.isValidEditUser(paramUser);
+        boolean isValid = new ValidationUser().isValidEditUser(paramUser);
         User user = User.newBuilder()
                 .setLogin(paramUser.get(AttributeName.LOGIN))
                 .setMail(paramUser.get(AttributeName.MAIL))
@@ -149,6 +160,28 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             result = Optional.of(user);
+            paramUser.put(MessagePage.MESSAGE, MessagePage.EDIT_USER_FAILED);
+        }
+        return result;
+    }
+
+    public Optional<User> editFeatures(RequestParameters paramUser) throws ServiceException {
+        Optional<User> result = Optional.empty();
+        boolean isValid = new ValidationUser().isValidEditFeatures(paramUser);
+        if (isValid) {
+            if (Boolean.parseBoolean(paramUser.get(AttributeName.CORPORATE))) {
+                paramUser.put(AttributeName.CORPORATE, TRUE);
+            } else {
+                paramUser.put(AttributeName.CORPORATE, FALSE);
+            }
+            try {
+                result = UserDaoImpl.getInstance().editFeatures(paramUser);
+                paramUser.clear();
+                paramUser.put(MessagePage.MESSAGE, MessagePage.EDIT_USER_SUCCESSFULLY);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        } else {
             paramUser.put(MessagePage.MESSAGE, MessagePage.EDIT_USER_FAILED);
         }
         return result;
@@ -213,4 +246,20 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    public boolean buy(String login, long paymentId) throws ServiceException {
+        if (canBuy(login)) {
+            try {
+                if (PaymentDaoImpl.getInstance().buy(paymentId)) {
+                    return true;
+                }
+            } catch (DaoException e) {
+                logger.log(Level.ERROR, e);
+            }
+        }
+        return false;
+    }
+
+    private boolean canBuy(String login) {
+        return true;
+    }
 }

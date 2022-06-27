@@ -13,8 +13,8 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class UserMapper implements RowMapper<User> {
-    private static final Logger logger = LogManager.getLogger();
 
+    private static final Logger logger = LogManager.getLogger();
     private final String MAPPING_ERROR = "Mapping error in UserMapper class!";
     private static UserMapper instance;
 

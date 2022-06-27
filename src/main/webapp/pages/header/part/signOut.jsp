@@ -4,14 +4,12 @@
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
-    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="css/newStyle.css" type="text/css"/>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/controller" method="get">
-    <div>
         <input type="hidden" name="command" value="logout">
         <input type="submit" value="<fmt:message key="submit.sign_out"/>"/>
-    </div>
 </form>
 </body>
 </html>

@@ -49,52 +49,30 @@ public class AppointmentDaoImpl extends BaseDao<Appointment> implements Appointm
     }
 
     @Override
-    public List<Appointment> findAll() throws DaoException {
-        return null;
+    public Optional<Appointment> find(String id) throws DaoException {
+        return Optional.empty();
     }
 
     public List<Appointment> findAll(long userId) throws DaoException {
-        logger.log(Level.INFO,"1");
         List<Appointment> appointments = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statementApp = connection.prepareStatement(DatabaseQuery.SELECT_APPOINTMENTS_BY_USER_ID)) {
-            logger.log(Level.INFO,"2");
-            statementApp.setLong(1, userId);
-            try (ResultSet resultSetApp = statementApp.executeQuery()) {
-                logger.log(Level.INFO,"3");
-                while (resultSetApp.next()) {
-                    logger.log(Level.INFO,"4");
-                    try (PreparedStatement statementAppDescription = connection.prepareStatement(DatabaseQuery.SELECT_APPOINTMENTS_DESCRIPTION_BY_ID)) {
-                        statementAppDescription.setLong(1, resultSetApp.getLong(AttributeName.APPOINTMENT_ID));
-                        try (ResultSet resultSetAppDescription = statementAppDescription.executeQuery()) {
-                            while (resultSetAppDescription.next()) {
-                                logger.log(Level.INFO,"5");
-                                logger.log(Level.INFO,resultSetAppDescription.getString(AttributeName.EXERCISE_NAME));
-                                Optional<Appointment> appointment = AppointmentMapper.getInstance().rowMap(resultSetAppDescription);
-                                if (appointment.isPresent()) {
-                                    logger.log(Level.INFO,appointment.get().getExerciseName());
-                                    logger.log(Level.INFO,"6");
-                                    Appointment app = appointment.get();
-                                    app.setDate(resultSetApp.getDate(AttributeName.DATE));
-                                    AppointmentType type = AppointmentType.getType(resultSetApp.getString(AttributeName.APPOINTMENT_TYPE));
-                                    app.setType(type);
-                                    appointments.add(app);
-                                }
-                            }
-                        }
-                    }
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_APPOINTMENTS_BY_USER_ID)) {
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Optional<Appointment> app = AppointmentMapper.getInstance().rowMap(resultSet);
+                    app.ifPresent(appointments::add);
                 }
             }
         } catch (SQLException e) {
             logger.log(Level.ERROR, e);
             throw new DaoException(e);
         }
-        logger.log(Level.INFO,"7");
         return appointments;
     }
 
     @Override
-    public Optional<User> update(Appointment appointment) throws DaoException {
+    public Optional<Appointment> update(Appointment appointment) throws DaoException {
         return Optional.empty();
     }
 }

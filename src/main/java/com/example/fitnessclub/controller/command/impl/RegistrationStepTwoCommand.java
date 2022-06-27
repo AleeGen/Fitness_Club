@@ -22,16 +22,19 @@ public class RegistrationStepTwoCommand implements Command {
         paramUser.put(AttributeName.NUMBER_CARD, request.getParameter(AttributeName.NUMBER_CARD));
         UserServiceImpl userService = UserServiceImpl.getInstance();
         HttpSession session = request.getSession();
+        Router.Type type = Router.Type.REDIRECT;
         try {
             if (userService.registration(paramUser)) { //// TODO: 11.06.2022 сообщение как передать об успешности, если redirect стирает 
                 page = PagePath.INDEX;
                 session.setAttribute(AttributeName.CURRENT_PAGE, page);
+            } else {
+                ((HashMap) session.getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, paramUser);
+                type = Router.Type.FORWARD;
             }
-            ((HashMap) session.getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, paramUser);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(page, Router.Type.REDIRECT);
+        return new Router(page, type);
     }
 
 

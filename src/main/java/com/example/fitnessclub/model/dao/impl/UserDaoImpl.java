@@ -1,6 +1,7 @@
 package com.example.fitnessclub.model.dao.impl;
 
 import com.example.fitnessclub.controller.AttributeName;
+import com.example.fitnessclub.controller.RequestParameters;
 import com.example.fitnessclub.model.dao.BaseDao;
 import com.example.fitnessclub.model.dao.DatabaseQuery;
 import com.example.fitnessclub.model.dao.UserDao;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +82,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_USER_ALL_BY_LOGIN)) {
             statement.setString(1, login);
             try (ResultSet resultSet = statement.executeQuery()) {
-                if(resultSet.next()) {
+                if (resultSet.next()) {
                     optionalUser = UserMapper.getInstance().rowMap(resultSet);
                 }
             }
@@ -90,13 +92,23 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         return optionalUser;
     }
 
-    @Override
-    public List<User> findAll() {
-        return null;
+    public List<User> findAll() throws DaoException {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_ALL_USERS);
+             ResultSet resultSet = statement.executeQuery();) {
+            while (resultSet.next()) {
+                Optional<User> user = UserMapper.getInstance().rowMap(resultSet);
+                user.ifPresent(users::add);
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return users;
     }
 
     @Override
-    public Optional<User> update(User user) throws DaoException { //// TODO: 13.06.2022 tranzaction? 
+    public Optional<User> update(User user) throws DaoException { //// TODO: 13.06.2022 tranzaction?
         Optional<User> result = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.UPDATE_USER)) {
@@ -116,7 +128,33 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_ALL_BY_LOGIN)) {
                     statementFind.setString(1, user.getLogin());
                     try (ResultSet resultSet = statementFind.executeQuery()) {
-                        result = UserMapper.getInstance().rowMap(resultSet);
+                        if (resultSet.next()) {
+                            result = UserMapper.getInstance().rowMap(resultSet);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
+    }
+
+    public Optional<User> editFeatures(RequestParameters paramUser) throws DaoException {
+        Optional<User> result = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statementFeatures = connection.prepareStatement(DatabaseQuery.UPDATE_FEATURES_USER)) {
+            statementFeatures.setString(1, paramUser.get(AttributeName.ROLE));
+            statementFeatures.setInt(2, Integer.parseInt(paramUser.get(AttributeName.CORPORATE)));
+            statementFeatures.setString(3, paramUser.get(AttributeName.DISCOUNT_CODE));
+            statementFeatures.setString(4, paramUser.get(AttributeName.LOGIN));
+            if (statementFeatures.executeUpdate() == 1) {
+                try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_ALL_BY_LOGIN)) {
+                    statementFind.setString(1, paramUser.get(AttributeName.LOGIN));
+                    try (ResultSet resultSet = statementFind.executeQuery()) {
+                        if (resultSet.next()) {
+                            result = UserMapper.getInstance().rowMap(resultSet);
+                        }
                     }
                 }
             }
