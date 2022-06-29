@@ -24,4 +24,5 @@ page: ${pageContext.page}
 <hr/>
 servletContext: ${pageContext.servletContext}
 </body>
+->${message}<-
 </html>

@@ -12,39 +12,38 @@
 </head>
 <body>
 <c:import url="/pages/header/header.jsp"/>
-<form class="decor" action="${pageContext.request.contextPath}/controller" method="post" novalidate>
+<div class="decor" style="max-width: 40%">
     <div class="form-row">
-        <h1 align="center"><fmt:message key="head.registration"/></h1>
-        <input type="hidden" name="command" value="registration_step_two">
+        <form action="${pageContext.request.contextPath}/controller" method="post" novalidate>
+            <h1 align="center"><fmt:message key="head.registration"/></h1>
+            <input type="hidden" name="command" value="registration_step_two">
 
-        <input type="text" name="phone" placeholder=" " value="${temp_attribute.get("user").get("phone")}"
-               style="background: ${temp_attribute.get("user").get("phone_color")}"
-               pattern="^(\+?[0-9]{5,15})+$">
-        <label><fmt:message key="field.user.phone"/></label>
+            <input type="text" name="phone" placeholder=" " value="${temp_attribute.get("user").get("phone")}"
+                   style="background: ${temp_attribute.get("user").get("phone_color")}"
+                   pattern="^(\+?[0-9]{5,15})+$">
+            <label><fmt:message key="field.user.phone"/></label>
 
-        <input type="text" name="number_card" placeholder=" " value="${temp_attribute.get("user").get("number_card")}"
-               style="background: ${temp_attribute.get("user").get("number_card_color")}"
-               pattern="^[0-9]{13,20}$">
-        <label><fmt:message key="field.user.number_cart"/></label>
+            <input type="text" name="number_card" placeholder=" "
+                   value="${temp_attribute.get("user").get("number_card")}"
+                   style="background: ${temp_attribute.get("user").get("number_card_color")}"
+                   pattern="^[0-9]{13,20}$">
+            <label><fmt:message key="field.user.number_cart"/></label>
 
-        <input type="date" name="date_birth" placeholder=" " value="${temp_attribute.get("user").get("date_birth")}"
-               style="background: ${temp_attribute.get("user").get("date_birth_color")}" pattern="^[0-9]{13,20}$">
-        <label><fmt:message key="field.user.date.birth"/></label>
+            <input type="date" name="date_birth" placeholder=" " value="${temp_attribute.get("user").get("date_birth")}"
+                   style="background: ${temp_attribute.get("user").get("date_birth_color")}" pattern="^[0-9]{13,20}$">
+            <label><fmt:message key="field.user.date.birth"/></label>
 
+            <input style="margin-top: 3%;" type="radio" name="sex" id="id_male" value="male">
+            <label for="id_male" style="margin-top: 4%"><fmt:message key="field.user.sex.male"/></label>
 
-        <%--<h5 style="margin-left: 10px; margin-top: -15px; color:${temp_attribute.get("user").get("date_birth_color")}">
-            ${temp_attribute.get("user").get("date_birth")}</h5>--%>
+            <input style="margin-top: 3%;" type="radio" name="sex" id="id_female" value="female">
+            <label for="id_female" style="margin-top: 4%"><fmt:message key="field.user.sex.female"/></label>
 
-        <input type="radio" name="sex" id="id_male">
-        <label for="id_male" style="margin-top: 4%"><fmt:message key="field.user.sex.male"/></label>
-
-        <input type="radio" name="sex" id="id_female" value="female">
-        <label for="id_female" style="margin-top: 4%"><fmt:message key="field.user.sex.female"/></label>
-
-        <input type="reset" value="<fmt:message key="submit.reset"/>"/>
-        <input type="submit" name="registration" value="<fmt:message key="submit.sign_up"/>">
+            <input type="reset" value="<fmt:message key="submit.reset"/>"/>
+            <input type="submit" name="registration" value="<fmt:message key="submit.sign_up"/>">
+        </form>
     </div>
-</form>
+</div>
 <jsp:include page="/pages/footer/footer.jsp"/>
 </body>
 </html>

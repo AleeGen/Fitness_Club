@@ -12,7 +12,8 @@
 </head>
 <body>
 <c:import url="/pages/header/header.jsp"/>
-<form class="decor" action="${pageContext.request.contextPath}/controller" method="post" novalidate>
+<div class="decor" style="max-width: 40%">
+<form action="${pageContext.request.contextPath}/controller" method="post" novalidate>
     <div class="form-row">
         <h1 align="center"><fmt:message key="head.registration"/></h1>
         <input type="hidden" name="command" value="registration_step_one">
@@ -49,6 +50,7 @@
         <input type="submit" name="registration" value="<fmt:message key="submit.next"/>">
     </div>
 </form>
+</div>
 <jsp:include page="/pages/footer/footer.jsp"/>
 </body>
 </html>

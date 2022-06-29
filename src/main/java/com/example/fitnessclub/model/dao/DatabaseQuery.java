@@ -12,7 +12,7 @@ public final class DatabaseQuery {
 
     public static final String SELECT_USER_ALL_BY_LOGIN = "SELECT user_id, login, password, role, mail, " +
             "name,lastname, date_birth, sex, phone, corporate, visit_period_months, discount_code, " +
-            "number_card, path_avatar FROM fitness_club.users WHERE login = ?";
+            "number_card, path_avatar, about_me FROM fitness_club.users WHERE login = ?";
 
     public static final String INSERT_USER = "INSERT INTO fitness_club.users (login, password, mail, name, " +
             "lastname, date_birth, sex, phone,number_card) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -28,8 +28,8 @@ public final class DatabaseQuery {
 
     public static final String UPDATE_USER_AVATAR = "UPDATE fitness_club.users SET path_avatar = ? WHERE login = ?";
 
-    public static final String UPDATE_USER = "UPDATE fitness_club.users SET mail = ?," +
-            "name = ?, lastname = ?, date_birth = ?, sex = ?, phone = ?, number_card = ? WHERE login = ?";
+    public static final String UPDATE_USER = "UPDATE fitness_club.users SET mail = ?, name = ?, lastname = ?, " +
+            "date_birth = ?, sex = ?, phone = ?, number_card = ?, about_me =? WHERE login = ?";
 
     public static final String SELECT_PASSWORD = "SELECT password FROM fitness_club.users WHERE login = ?";
 
@@ -43,7 +43,7 @@ public final class DatabaseQuery {
 
     public static final String SELECT_ALL_USERS = "SELECT user_id, login, password, role, mail, " +
             "name,lastname, date_birth, sex, phone, corporate, visit_period_months, discount_code, " +
-            "number_card, path_avatar FROM fitness_club.users";
+            "number_card, path_avatar, about_me FROM fitness_club.users";
 
     public static final String UPDATE_FEATURES_USER = "UPDATE fitness_club.users SET role = ?," +
             "corporate = ?, discount_code = ? WHERE login = ?";
@@ -60,5 +60,6 @@ public final class DatabaseQuery {
     public static final String MONEY_TRANSFER = "Query";
 
     public static final String BUY_PAYMENT = "UPDATE fitness_club.payment SET paid = 1 WHERE payment_id = ?";
+
 
 }

@@ -14,7 +14,6 @@ public class PreControllerFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        logger.log(Level.INFO,"filter: " + getClass());
         response.setContentType("text/html");
         chain.doFilter(request, response);
     }

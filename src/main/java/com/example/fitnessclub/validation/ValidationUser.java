@@ -3,17 +3,23 @@ package com.example.fitnessclub.validation;
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.RequestParameters;
 
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class ValidationUser {
 
+    private static ValidationUser instance = new ValidationUser();
     private static final String EMPTY = "";
     private static final String COLOR = "_color";
+
+    private ValidationUser() {
+    }
+
+    public static ValidationUser getInstance() {
+        return instance;
+    }
 
     public boolean isValidLogin(String login) {
         Matcher pattern = Pattern.compile(ColumnValidation.REGEX_LOGIN).matcher(login);

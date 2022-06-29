@@ -16,6 +16,8 @@
 <body>
 <c:import url="/pages/header/header.jsp"/>
 <div class="container">
+    <jsp:include page="/pages/aside/aside.jsp"/>
+    <div class="post-list">
     <div id="accordion-appointments">
         <c:forEach var="workout" items="${temp_attribute.get('workouts')}">
             <div class="accordion__item_body">
@@ -47,6 +49,7 @@
             </div>
         </c:forEach>
     </div>
+</div>
     <script>
         new ItcAccordion('#accordion-appointments');
     </script>

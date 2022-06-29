@@ -15,42 +15,45 @@
 <body>
 <c:import url="/pages/header/header.jsp"/>
 <div class="container">
-    ${message}
-    <table class="table">
-        <thead>
-        <tr>
-            <th><fmt:message key="field.service.name"/></th>
-            <th><fmt:message key="field.service.number_visit"/></th>
-            <th><fmt:message key="field.service.price"/></th>
-            <c:if test="${!paid}">
-                <th><fmt:message key="purchase"/></th>
-            </c:if>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="payment" items="${temp_attribute.get('payments')}">
+    <jsp:include page="/pages/aside/aside.jsp"/>
+    <div class="posts-list">
+        <output style="color: red">${message}</output>
+        <table class="table">
+            <thead>
             <tr>
-                <td>${services.get(payment.getServiceId()-1).getServiceName()}</td>
-                <c:if test="${services.get(payment.getServiceId()-1).getNumberVisit()==0}">
-                    <td><fmt:message key="month"/></td>
-                </c:if>
-                <c:if test="${services.get(payment.getServiceId()-1).getNumberVisit()!=0}">
-                    <td>${services.get(payment.getServiceId()-1).getNumberVisit()}</td>
-                </c:if>
-                <td>${services.get(payment.getServiceId()-1).getPrice()}</td>
+                <th><fmt:message key="field.service.name"/></th>
+                <th><fmt:message key="field.service.number_visit"/></th>
+                <th><fmt:message key="field.service.price"/></th>
                 <c:if test="${!paid}">
-                    <td>
-                        <form action="${pageContext.request.contextPath}/controller" method="post">
-                            <input type="hidden" name="command" value="buy">
-                            <input type="hidden" name="payment_id" value="${payment.getId()}">
-                            <input type="submit" value="<fmt:message key="submit.buy"/>">
-                        </form>
-                    </td>
+                    <th><fmt:message key="purchase"/></th>
                 </c:if>
             </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            <c:forEach var="payment" items="${temp_attribute.get('payments')}">
+                <tr>
+                    <td>${services.get(payment.getServiceId()-1).getServiceName()}</td>
+                    <c:if test="${services.get(payment.getServiceId()-1).getNumberVisit()==0}">
+                        <td><fmt:message key="month"/></td>
+                    </c:if>
+                    <c:if test="${services.get(payment.getServiceId()-1).getNumberVisit()!=0}">
+                        <td>${services.get(payment.getServiceId()-1).getNumberVisit()}</td>
+                    </c:if>
+                    <td>${services.get(payment.getServiceId()-1).getPrice()}</td>
+                    <c:if test="${!paid}">
+                        <td>
+                            <form action="${pageContext.request.contextPath}/controller" method="post">
+                                <input type="hidden" name="command" value="buy">
+                                <input type="hidden" name="payment_id" value="${payment.getId()}">
+                                <input type="submit" value="<fmt:message key="submit.buy"/>">
+                            </form>
+                        </td>
+                    </c:if>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
 </div>
 <jsp:include page="/pages/footer/footer.jsp"/>
 </body>

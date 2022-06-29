@@ -4,11 +4,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
-
-
 <html>
 <head>
-
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,15 +18,9 @@
 </head>
 <body>
 <header>
-
     <nav class="container">
-
         <a class="logo" href="">
-
-            <span> Fitness Club</span>
-           <%-- <span>O</span>
-            <span>G</span>
-            <span>O</span>--%>
+            <span>Fitness Club</span>
         </a>
         <div class="nav-toggle"><span></span></div>
         <form action="" method="get" id="searchform">

@@ -108,7 +108,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> update(User user) throws DaoException { //// TODO: 13.06.2022 tranzaction?
+    public Optional<User> update(User user) throws DaoException {
         Optional<User> result = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.UPDATE_USER)) {
@@ -118,6 +118,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statementUpdate.setDate(4, user.getDateBirth());
             statementUpdate.setString(5, user.getSex());
             statementUpdate.setString(6, user.getPhone());
+            statementUpdate.setString(7, user.getAboutMe());
             if (user.getNumberCard().isBlank()) {
                 statementUpdate.setString(7, null);
             } else {
@@ -210,10 +211,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         Optional<User> optionalUser = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_ROLE_BY_LOGIN_PASSWORD)) {
-            //// TODO: 24.04.2022 пересмотреть в learne про PrepareStatement, а именно про то как отключают коммиты, добавляются запросы, фиксируется это всё и обновляется
             statement.setString(1, login);
             statement.setString(2, codePassword);
-            //// TODO: 24.04.2022 Batch лучше использовать для повышения производительности
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     User user = User.newBuilder().setLogin(login)

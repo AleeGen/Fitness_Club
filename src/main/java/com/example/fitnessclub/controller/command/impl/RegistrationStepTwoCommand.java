@@ -23,8 +23,9 @@ public class RegistrationStepTwoCommand implements Command {
         UserServiceImpl userService = UserServiceImpl.getInstance();
         HttpSession session = request.getSession();
         Router.Type type = Router.Type.REDIRECT;
+
         try {
-            if (userService.registration(paramUser)) { //// TODO: 11.06.2022 сообщение как передать об успешности, если redirect стирает 
+            if (userService.registration(paramUser)) {
                 page = PagePath.INDEX;
                 session.setAttribute(AttributeName.CURRENT_PAGE, page);
             } else {

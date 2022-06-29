@@ -19,6 +19,7 @@ public class User extends AbstractEntity {
     private String discountCode;
     private String numberCard;
     private String pathAvatar;
+    private String aboutMe;
 
     public static UserBuilder newBuilder() {
         return new User().new UserBuilder();
@@ -136,6 +137,14 @@ public class User extends AbstractEntity {
         this.pathAvatar = pathAvatar;
     }
 
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
     public class UserBuilder {
 
         public UserBuilder setId(Long userId) {
@@ -210,6 +219,11 @@ public class User extends AbstractEntity {
 
         public UserBuilder setPathAvatar(String pathAvatar) {
             User.this.pathAvatar = pathAvatar;
+            return this;
+        }
+
+        public UserBuilder setAboutMe(String aboutMe) {
+            User.this.aboutMe = aboutMe;
             return this;
         }
 

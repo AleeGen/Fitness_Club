@@ -1,4 +1,3 @@
-<%@ page import="java.util.Enumeration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -14,7 +13,54 @@ ${pageContext.request.session.setAttribute("current_page","index.jsp")}
 </head>
 <body>
 <c:import url="/pages/header/header.jsp"/>
-${services}
+<a href="pages/common/exerciseRoom.jsp">
+    <div class="triangle-caption">
+        <img src="pictures/exercise_room.jpg" alt=""/>
+        <div class="caption">
+            <p><fmt:message key="exercise_room"/></p>
+        </div>
+    </div>
+</a>
+<a href="pages/common/fitnessRoom.jsp">
+    <div class="triangle-caption">
+        <img src="pictures/fitness_room.jpg" alt=""/>
+        <div class="caption">
+            <p><fmt:message key="fitness_room"/></p>
+        </div>
+    </div>
+</a>
+<a href="pages/common/yoga.jsp">
+    <div class="triangle-caption">
+        <img src="pictures/yoga.jpg" alt=""/>
+        <div class="caption">
+            <p><fmt:message key="yoga"/></p>
+        </div>
+    </div>
+</a>
+<a href="pages/common/swimming.jsp">
+    <div class="triangle-caption">
+        <img src="pictures/swimming.jpg" alt=""/>
+        <div class="caption">
+            <p><fmt:message key="swimming"/></p>
+        </div>
+    </div>
+</a>
+<a href="pages/common/trainer.jsp">
+    <div class="triangle-caption">
+        <img src="pictures/trainer.jpg" alt=""/>
+        <div class="caption">
+            <p><fmt:message key="trainer"/></p>
+        </div>
+    </div>
+</a>
+<a href="pages/common/martialArts.jsp">
+    <div class="triangle-caption">
+        <img src="pictures/martial_arts.jpg" alt=""/>
+        <div class="caption">
+            <p><fmt:message key="martial_arts"/></p>
+        </div>
+    </div>
+</a>
 <jsp:include page="/pages/footer/footer.jsp"/>
 </body>
 </html>

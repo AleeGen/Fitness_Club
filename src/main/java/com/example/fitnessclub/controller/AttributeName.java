@@ -42,7 +42,7 @@ public final class AttributeName {
     public static final String DISCOUNT_CODE = "discount_code";
     public static final String NUMBER_CARD = "number_card";
     public static final String PATH_AVATAR = "path_avatar";
-    public static final String DESCRIPTION = "description";
+    public static final String ABOUT_ME = "about_me";
 
     //table services
     public static final String SERVICE_ID = "service_id";
@@ -50,6 +50,7 @@ public final class AttributeName {
     public static final String NUMBER_VISITS = "number_visits";
     public static final String VALIDITY_PERIOD = "validity_period";
     public static final String PRICE = "price";
+    public static final String DESCRIPTION = "description";
 
     //table payment
     public static final String PAYMENTS = "payments";

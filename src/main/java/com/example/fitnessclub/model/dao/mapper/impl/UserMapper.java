@@ -48,6 +48,7 @@ public class UserMapper implements RowMapper<User> {
                         .setDiscountCode(resultSet.getString(AttributeName.DISCOUNT_CODE))
                         .setNumberCard(resultSet.getString(AttributeName.NUMBER_CARD))
                         .setPathAvatar(resultSet.getString(AttributeName.PATH_AVATAR))
+                        .setAboutMe(resultSet.getString(AttributeName.ABOUT_ME))
                         .build();
                 optionalUser = Optional.of(user);
         } catch (SQLException e) {

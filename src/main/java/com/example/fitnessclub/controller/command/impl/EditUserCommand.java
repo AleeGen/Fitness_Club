@@ -30,6 +30,7 @@ public class EditUserCommand implements Command {
         paramUser.put(AttributeName.DATE_BIRTH, request.getParameter(AttributeName.DATE_BIRTH));
         paramUser.put(AttributeName.SEX, request.getParameter(AttributeName.SEX));
         paramUser.put(AttributeName.NUMBER_CARD, request.getParameter(AttributeName.NUMBER_CARD));
+        paramUser.put(AttributeName.ABOUT_ME, request.getParameter(AttributeName.ABOUT_ME));
         try {
             User user = UserServiceImpl.getInstance().update(paramUser).get();
             request.setAttribute(AttributeName.USER_PARAM, paramUser);

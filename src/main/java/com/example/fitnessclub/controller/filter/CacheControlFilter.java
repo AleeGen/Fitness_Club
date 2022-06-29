@@ -11,13 +11,12 @@ import java.io.IOException;
 
 
 @WebFilter(urlPatterns = "/*", filterName = "CacheControlFilter")
-public class CacheControlFilter implements Filter { //// TODO: 04.06.2022 разобраться 
+public class CacheControlFilter implements Filter {
 
     private static final Logger logger = LogManager.getLogger();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        logger.log(Level.INFO, "filter: " + getClass());
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         httpResponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         httpResponse.setHeader("Pragma", "no-cache");

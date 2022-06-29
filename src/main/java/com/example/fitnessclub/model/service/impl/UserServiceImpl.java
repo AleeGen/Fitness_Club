@@ -8,7 +8,6 @@ import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.exception.ServiceException;
-import com.example.fitnessclub.model.entity.UserRole;
 import com.example.fitnessclub.model.pool.ConnectionPool;
 import com.example.fitnessclub.model.service.UserService;
 import com.example.fitnessclub.model.service.mail.MailMain;
@@ -63,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean registration(RequestParameters paramUser) throws ServiceException {
-        ValidationUser validation = new ValidationUser();
+        ValidationUser validation = ValidationUser.getInstance();
         boolean exists = false;
         UserDaoImpl userDao = UserDaoImpl.getInstance();
         if (paramUser.get(AttributeName.STEP_NUMBER).equals(AttributeName.STEP_ONE)) {
@@ -140,7 +139,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> result = Optional.empty();
         String date = paramUser.get(AttributeName.DATE_BIRTH);
         Date dateResult = date.isBlank() ? null : Date.valueOf(date);
-        boolean isValid = new ValidationUser().isValidEditUser(paramUser);
+        boolean isValid = ValidationUser.getInstance().isValidEditUser(paramUser);
         User user = User.newBuilder()
                 .setLogin(paramUser.get(AttributeName.LOGIN))
                 .setMail(paramUser.get(AttributeName.MAIL))
@@ -150,6 +149,7 @@ public class UserServiceImpl implements UserService {
                 .setSex(paramUser.get(AttributeName.SEX))
                 .setPhone(paramUser.get(AttributeName.PHONE))
                 .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
+                .setAboutMe(paramUser.get(AttributeName.ABOUT_ME))
                 .build();
         if (isValid) {
             try {
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
     public Optional<User> editFeatures(RequestParameters paramUser) throws ServiceException {
         Optional<User> result = Optional.empty();
-        boolean isValid = new ValidationUser().isValidEditFeatures(paramUser);
+        boolean isValid = ValidationUser.getInstance().isValidEditFeatures(paramUser);
         if (isValid) {
             if (Boolean.parseBoolean(paramUser.get(AttributeName.CORPORATE))) {
                 paramUser.put(AttributeName.CORPORATE, TRUE);
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
         currentPass = Base64.getEncoder().encodeToString(currentPass.getBytes());
         String login = parameters.get(AttributeName.LOGIN);
         boolean result = false;
-        if (new ValidationUser().isValidEditPassword(parameters)) {
+        if (ValidationUser.getInstance().isValidEditPassword(parameters)) {
             UserDaoImpl userDao = UserDaoImpl.getInstance();
             try {
                 Optional<String> password = userDao.findPassword(login);

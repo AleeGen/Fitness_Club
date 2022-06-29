@@ -1,13 +1,11 @@
 .decor {
     position: relative;
-    max-width: 40%;
     margin: auto;
     background: rgba(121, 121, 121, 0.5);
-    /* border-radius: 30px;*/
 }
 
 .form-row {
-    padding: 1%;
+    /*padding: 1%;*/
 }
 
 /*дизайн input*/
@@ -27,7 +25,7 @@
 }
 
 .form-row input[type="radio"] {
-    margin-top: 4%;
+    margin-top: 1%;
 }
 
 .form-row input[type="text"], .form-row input[type="password"],
@@ -101,12 +99,12 @@
 }
 
 .form-row h4 {
-    display: inline-block;
     font-family: 'Roboto', sans-serif;
-    font-weight: 1;
+    font-weight: 600;
     font-size: 18px;
     color: #ffffff;
-    margin-top: -3%; margin-left: 10%;
+    margin-top: 7%;
+
 }
 
 .h4class {
@@ -117,10 +115,15 @@
 
 .form-row h5 {
     font-family: 'Roboto', sans-serif;
-    font-weight: 1000;
-    font-size: 12px;
+    font-weight: 300;
+    font-size: 18px;
     color: #ffffff;
-    margin: 25px;
+    margin-top: 7%;
+    margin-left: 10%;
+}
+
+.blockH{
+    display:inline-block;
 }
 
 /*меняет цвет нижней границы*/
@@ -144,7 +147,7 @@
 /*анимация плавающей строки, остается сверху, если не пустая*/
 .form-row input:focus + label, .form-row input[type="text"]:not(:placeholder-shown) + label,
 .form-row input[type="email"]:not(:placeholder-shown) + label, .form-row input[type="date"]:not(:empty) + label,
-.form-row input[type="password"]:not(:placeholder-shown) + label{
+.form-row input[type="password"]:not(:placeholder-shown) + label {
     transform: translateY(-650%);
     font-size: 100%;
     font-weight: 600;
@@ -157,7 +160,7 @@
     border-color: #F77A52;
 }
 
-.form-row input[type="radio"]:focus+label, .form-row input[type="radio"]:not(:empty)+label {
+.form-row input[type="radio"]:focus + label, .form-row input[type="radio"]:not(:empty) + label {
     transform: translateY(-200%);
     font-size: 150%;
     font-weight: 600;
@@ -174,9 +177,9 @@
 
 /* для элемента label связанного с .custom-radio */
 .custom-radio + label {
-     display: inline-flex;
-     align-items: center;
-     user-select: none;
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
 }
 
 /* создание в label псевдоэлемента  before со следующими стилями */
@@ -228,7 +231,6 @@
 }
 
 
-
 .table {
     border-collapse: collapse;
     width: 100%;
@@ -261,13 +263,76 @@
     text-align: left;
 }
 
-.table input[type="submit"]{
+.table input[type="submit"] {
     background: none;
     border: none;
     cursor: pointer;
     color: #2e86a9;
 }
 
-.table input[type="submit"]:hover{
+.table input[type="submit"]:hover {
     color: #f77a52;
+}
+
+
+/*------------------IMG-------------------*/
+.triangle-caption {
+    display: inline-block;
+    position: relative;;
+    margin: 0 0 3% 5%;
+    overflow: hidden;
+    width: 350px;
+    cursor: pointer;
+}
+
+.triangle-caption img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.caption {
+    text-align: right;
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    right: 0;
+    color: white;
+    line-height: 1;
+    padding: 0 13px 13px 0;
+}
+
+.triangle-caption:after {
+    background: rgba(154, 135, 0, 0.7);
+    content: "";
+    position: absolute;
+    width: 430px;
+    height: 240px;
+    bottom: -200px;
+    transform: rotate(-11deg);
+}
+
+.caption p {
+    font-weight: 1000;
+}
+
+
+.day {
+    position: relative;
+    top: -10px;
+    font-family: 'Rozha One', serif;
+}
+
+.year {
+    font-size: 1.5em;
+    font-family: 'Rozha One', serif;
+}
+
+.triangle-caption:hover {
+    box-shadow: 0 0 10px rgb(243, 210, 1);
+    transition: all 0.2s ease;
+}
+
+.triangle-caption:active {
+    box-shadow: 0 0 10px rgb(247, 122, 82);
 }
