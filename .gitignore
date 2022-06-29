@@ -1,4 +1,4 @@
 logs
 target
 .idea
-**/config/mail.properties
+mail.properties
