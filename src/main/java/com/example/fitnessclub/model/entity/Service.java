@@ -4,7 +4,7 @@ public class Service extends AbstractEntity {
 
     private String serviceName;
     private byte numberVisit;
-    private String validityPeriod;
+    private byte validityPeriod;
     private int price;
     private String description;
 
@@ -12,11 +12,11 @@ public class Service extends AbstractEntity {
         return new Service().new ServiceBuilder();
     }
 
-    public String getValidityPeriod() {
+    public byte getValidityPeriod() {
         return validityPeriod;
     }
 
-    public void setValidityPeriod(String validity_period) {
+    public void setValidityPeriod(byte validity_period) {
         this.validityPeriod = validity_period;
     }
 
@@ -69,7 +69,7 @@ public class Service extends AbstractEntity {
             return this;
         }
 
-        public Service.ServiceBuilder setValidityPeriod(String validity_period) {
+        public Service.ServiceBuilder setValidityPeriod(byte validity_period) {
             Service.this.validityPeriod = validity_period;
             return this;
         }

@@ -43,6 +43,8 @@ public final class AttributeName {
     public static final String NUMBER_CARD = "number_card";
     public static final String PATH_AVATAR = "path_avatar";
     public static final String ABOUT_ME = "about_me";
+    public static final String TRAINERS = "trainers";
+    public static final String IS_BLOCKED = "is_blocked";
 
     //table services
     public static final String SERVICE_ID = "service_id";
@@ -62,6 +64,8 @@ public final class AttributeName {
 
     //appointment + List<exercise>
     public static final String WORKOUTS = "workouts";
+    public static final String WORKOUT = "workout";
+    public static final String WORKOUTS_BY_LOGIN = "workouts_by_login";
 
     //table appointment
     public static final String APPOINTMENT_ID = "appointment_id";
@@ -76,5 +80,10 @@ public final class AttributeName {
     public static final String NUMBER_REPETITIONS = "number_repetitions";
     public static final String EQUIPMENT = "equipment";
 
+    //table contract
+    public static final String TOTAL_COST = "total_cost";
+    public static final String START_DATE = "start_date";
+    public static final String END_DATE = "end_date";
+    public static final String TRAINER_ID = "trainer_id";
 
 }

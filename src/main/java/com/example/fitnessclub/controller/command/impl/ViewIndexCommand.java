@@ -25,18 +25,14 @@ public class ViewIndexCommand implements Command {
         if (services.isEmpty()) {
             try {
                 services = ServiceServiceImpl.getInstance().findAll();
-                request.getServletContext().setAttribute(AttributeName.SERVICES, services); //// TODO: 04.06.2022 что показывать на странице? мне не нужны все подробные услуги(зал на 1, зал на 12 и тд), только главные(зал, фитнес, бассейн и тд) 
+                request.getServletContext().setAttribute(AttributeName.SERVICES, services);
+                logger.log(Level.INFO, "The services have been loaded");
             } catch (ServiceException e) {
-                logger.log(Level.ERROR, "Error service findAll()");
+                logger.log(Level.ERROR, e);
                 throw new CommandException(e);
             }
         }
         request.getSession().setAttribute(AttributeName.CURRENT_PAGE, PagePath.INDEX);
         return new Router(PagePath.INDEX);
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
     }
 }

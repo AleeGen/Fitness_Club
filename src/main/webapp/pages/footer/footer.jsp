@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setBundle basename="prop.text"/>
+<!DOCTYPE>
 <html>
 <head>
   <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">

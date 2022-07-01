@@ -11,10 +11,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +19,9 @@ import java.util.Optional;
 public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
 
     private static final Logger logger = LogManager.getLogger();
-    private static PaymentDaoImpl instance = new PaymentDaoImpl();
+    private static final PaymentDaoImpl instance = new PaymentDaoImpl();
 
     private PaymentDaoImpl() {
-
     }
 
     public static PaymentDaoImpl getInstance() {
@@ -50,15 +46,28 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
     }
 
     @Override
-    public boolean delete(Payment payment) throws DaoException {
+    public boolean delete(String paymentId) throws DaoException {
         return false;
     }
 
     @Override
     public Optional<Payment> find(String id) throws DaoException {
-        return Optional.empty();
+        Optional<Payment> optionalPayment = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_PAYMENT)) {
+            statement.setLong(1, Long.parseLong(id));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    optionalPayment = PaymentMapper.getInstance().rowMap(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return optionalPayment;
     }
 
+    @Override
     public List<Payment> findAll(long userId) throws DaoException {
         List<Payment> listPayment = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -115,12 +124,13 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
         return optionalPayment;
     }
 
-    public boolean buy(long paymentId) throws DaoException {
+    public boolean buy(long paymentId, Date exercise) throws DaoException {
         Connection connection = ConnectionPool.getInstance().getConnection();
-        try (PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.BUY_PAYMENT);
+        try (PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.UPDATE_BUY_PAYMENT);
              PreparedStatement statementBuy = connection.prepareStatement(DatabaseQuery.MONEY_TRANSFER)) {
             connection.setAutoCommit(false);
-            statementUpdate.setLong(1, paymentId);
+            statementUpdate.setDate(1, exercise);
+            statementUpdate.setLong(2, paymentId);
             if (statementUpdate.executeUpdate() == 1) {
                 int result = 1; //statementBuy.executeUpdate(); (stopper)
                 if (result == 1) {
@@ -147,5 +157,4 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
         }
         return false;
     }
-
 }

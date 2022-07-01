@@ -11,8 +11,8 @@ import jakarta.servlet.http.Part;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import java.io.IOException;
 
+import java.io.IOException;
 
 public class EditAvatarCommand implements Command {
 
@@ -21,7 +21,7 @@ public class EditAvatarCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Part part = null;
+        Part part;
         try {
             part = request.getPart(AVATAR);
         } catch (IOException | ServletException e) {
@@ -29,9 +29,8 @@ public class EditAvatarCommand implements Command {
             throw new CommandException(e);
         }
         String login = (String) request.getSession().getAttribute(AttributeName.LOGIN);
-        UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
-            if (userService.editAvatar(part, login)) {
+            if (UserServiceImpl.getInstance().editAvatar(part, login)) {
                 request.setAttribute(MessagePage.MESSAGE, MessagePage.UPLOAD_SUCCESSFULLY);
             } else {
                 request.setAttribute(MessagePage.MESSAGE, MessagePage.UPLOAD_FAILED);
@@ -41,10 +40,5 @@ public class EditAvatarCommand implements Command {
             throw new CommandException(e);
         }
         return new Router((String) request.getSession().getAttribute(AttributeName.CURRENT_PAGE));
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
     }
 }

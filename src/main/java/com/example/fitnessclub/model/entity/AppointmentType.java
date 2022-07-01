@@ -6,8 +6,7 @@ public enum AppointmentType {
     DIET("diet"),
     SWIMMING("swimming"),
     YOGA("yoga"),
-    MARTIAL_ARTS("martial_arts"),
-    DEFAULT("default");
+    MARTIAL_ARTS("martial_arts");
 
     private final String type;
 
@@ -21,6 +20,6 @@ public enum AppointmentType {
                 return t;
             }
         }
-        return DEFAULT;
+        return FITNESS_ROOM;
     }
 }

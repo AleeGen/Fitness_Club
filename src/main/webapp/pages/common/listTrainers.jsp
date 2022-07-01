@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
+<c:set var="queryImage">${pageContext.request.contextPath}/uploadImage?imagePath</c:set>
+<!DOCTYPE>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
@@ -15,43 +17,29 @@
 <c:import url="/pages/header/header.jsp"/>
 <div class="container">
     <jsp:include page="/pages/aside/aside.jsp"/>
-    <c:forEach var="trainer" items="trainers">
-        <div class="posts-list">
-            <article class="post">
-                <div class="post-content">
-                    <h2 class="post-title"><fmt:message key="trainer"/></h2>
-                    <hr>
-                    <p>
-                        <jsp:include page="/text/trainer.htm"/>
-                    </p>
-                    <div class="decor">
-                        <div class="form-row">
-                            <form action="${pageContext.request.contextPath}/controller" method="get">
-                                <input type="hidden" name="command" value="view_trainers">
-                                <input type="submit" value="<fmt:message key="list.trainer"/>"/>
-                            </form>
+    <c:forEach var="trainer" items="${trainers}">
+    <div class="posts-list" style="padding-left: 20%">
+        <article class="post">
+            <div class="post-content">
+                <form action="${pageContext.request.contextPath}/controller" method="get">
+                    <input type="hidden" name="command" value="view_profile"/>
+                    <input type="hidden" name="login" value="${trainer.getLogin()}"/>
+                    <div class="triangle-caption_t">
+                        <img src="${queryImage}=${trainer.getPathAvatar()}" alt="">
+                        <div class="caption" style="padding: 0 10px 0 0; text-align: center;">
+                            <p>
+                                <input style="border: none; cursor: pointer; background: none; color: white"
+                                       type="submit" name="login"
+                                       value="${trainer.getLastname()} ${trainer.getName()}"/>
+                            </p>
                         </div>
                     </div>
-                    <div class="post-footer">
-                        <c:choose>
-                            <c:when test="${sessionScope.get('login')!=null}">
-                                <a class="more-link"
-                                   href="${pageContext.servletContext.contextPath}/pages/common/service.jsp"><fmt:message
-                                        key="submit.buy"/></a>
-                            </c:when>
-                            <c:otherwise>
-                                <a class="more-link"
-                                   href="${pageContext.servletContext.contextPath}/pages/common/logIn.jsp"><fmt:message
-                                        key="submit.buy"/></a>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
-            </article>
-        </div>
-    </c:forEach>
 
-</div>
-<jsp:include page="/pages/footer/footer.jsp"/>
+                </form>
+            </div>
+        </article>
+    </div>
+    </c:forEach>
+    <jsp:include page="/pages/footer/footer.jsp"/>
 </body>
 </html>

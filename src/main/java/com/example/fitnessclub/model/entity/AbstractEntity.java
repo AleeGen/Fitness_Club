@@ -1,6 +1,7 @@
 package com.example.fitnessclub.model.entity;
 
 public class AbstractEntity {
+
     private Long id;
 
     public Long getId() {

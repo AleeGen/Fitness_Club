@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 public class BuyCommand implements Command {
 
@@ -33,10 +32,10 @@ public class BuyCommand implements Command {
         try {
             if (UserServiceImpl.getInstance().buy(login, paymentId)) {
                 request.setAttribute(MessagePage.MESSAGE, SUCCESSFULLY);
-                HashMap tempAttribute = ((HashMap) session.getAttribute(AttributeName.TEMP_ATTRIBUTE));
-                boolean status = (boolean) tempAttribute.get(AttributeName.PAID);
+                HashMap<String, Object> tempAttr = ((HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE));
+                boolean status = (boolean) tempAttr.get(AttributeName.PAID);
                 List<Payment> payments = PaymentServiceImpl.getInstance().findAll(login, status);
-                tempAttribute.put(AttributeName.PAYMENTS, payments);
+                tempAttr.put(AttributeName.PAYMENTS, payments);
             } else {
                 request.setAttribute(MessagePage.MESSAGE, NOT_SUCCESSFULLY);
             }
@@ -45,10 +44,5 @@ public class BuyCommand implements Command {
             throw new CommandException(e);
         }
         return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE));
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
     }
 }

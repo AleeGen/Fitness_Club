@@ -13,6 +13,9 @@ public class MailMain {
     private static final String SUBJECT = "Registration on the \"Fitness club\"";
     private static final String BODY_PATTERN = "Welcome, %1$s %2$s (%3$s)! You have registered in a fitness club";
 
+    private MailMain() {
+    }
+
     public static void sendTo(RequestParameters user) throws IOException {
         Properties properties = new Properties();
         InputStream inputStream = MailMain.class.getClassLoader().getResourceAsStream(PATH_CONFIG_MAIL);

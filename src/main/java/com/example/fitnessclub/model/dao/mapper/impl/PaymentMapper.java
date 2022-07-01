@@ -3,12 +3,9 @@ package com.example.fitnessclub.model.dao.mapper.impl;
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.model.entity.Payment;
 import com.example.fitnessclub.model.dao.mapper.RowMapper;
-import com.example.fitnessclub.model.entity.User;
-import com.example.fitnessclub.model.entity.UserRole;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -16,7 +13,7 @@ import java.util.Optional;
 public class PaymentMapper implements RowMapper<Payment> {
 
     private static final Logger logger = LogManager.getLogger();
-    private final String MAPPING_ERROR = "Mapping error in PaymentMapper class!";
+    private static final String MAPPING_ERROR = "Mapping error in PaymentMapper class!";
     private static PaymentMapper instance;
 
     public static PaymentMapper getInstance() {

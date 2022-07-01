@@ -1,7 +1,6 @@
 package com.example.fitnessclub.model.entity;
 
 import java.sql.Date;
-import java.util.List;
 
 public class Appointment extends AbstractEntity {
 
@@ -48,8 +47,8 @@ public class Appointment extends AbstractEntity {
 
     public class AppBuilder {
 
-        public AppBuilder setId(Long Id) {
-            Appointment.this.setId(Id);
+        public AppBuilder setId(Long id) {
+            Appointment.this.setId(id);
             return this;
         }
 
@@ -64,7 +63,7 @@ public class Appointment extends AbstractEntity {
         }
 
         public AppBuilder setNutrition(String nutrition) {
-            Appointment.this.nutrition= nutrition;
+            Appointment.this.nutrition = nutrition;
             return this;
         }
 

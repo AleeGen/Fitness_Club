@@ -6,7 +6,6 @@ import com.example.fitnessclub.model.entity.Service;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -14,8 +13,7 @@ import java.util.Optional;
 public class ServiceMapper implements RowMapper<Service> {
 
     private static final Logger logger = LogManager.getLogger();
-
-    private final String MAPPING_ERROR = "Mapping error in ItemMapper class!";
+    private static final String MAPPING_ERROR = "Mapping error in ItemMapper class!";
     private static ServiceMapper instance;
 
     public static ServiceMapper getInstance() {
@@ -36,7 +34,7 @@ public class ServiceMapper implements RowMapper<Service> {
                     .setId(resultSet.getLong(AttributeName.SERVICE_ID))
                     .setServiceName(resultSet.getString(AttributeName.SERVICE_NAME))
                     .setNumberVisit(resultSet.getByte(AttributeName.NUMBER_VISITS))
-                    .setValidityPeriod(resultSet.getString(AttributeName.VALIDITY_PERIOD))
+                    .setValidityPeriod(resultSet.getByte(AttributeName.VALIDITY_PERIOD))
                     .setPrice(resultSet.getInt(AttributeName.PRICE))
                     .setDescription(resultSet.getString(AttributeName.DESCRIPTION))
                     .build();

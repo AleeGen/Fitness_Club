@@ -5,20 +5,17 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 @WebFilter(filterName = "SecurityEntryFilter", urlPatterns = {"/pages/person/*"},
         initParams = {@WebInitParam(name = "TRANSITION", value = "/pages/common/logIn.jsp")})
 public class SecurityEntryFilter implements Filter {
-    private static final Logger logger = LogManager.getLogger();
 
     private String transition;
 
-    public void init(FilterConfig config) throws ServletException {
+    @Override
+    public void init(FilterConfig config) {
         transition = config.getInitParameter("TRANSITION");
     }
 

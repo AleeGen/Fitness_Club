@@ -12,20 +12,13 @@ import java.util.HashMap;
 
 @WebListener
 public class SessionCreateListenerImpl implements HttpSessionListener {
+
     private static final Logger logger = LogManager.getLogger();
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        /* Session is created. */
-        logger.log(Level.INFO, "+++++++++> session created with id: " + se.getSession().getId());
-        se.getSession().setAttribute(AttributeName.TEMP_ATTRIBUTE, new HashMap());
+        logger.log(Level.INFO, "session created with id: {0}", se.getSession().getId());
+        se.getSession().setAttribute(AttributeName.TEMP_ATTRIBUTE, new HashMap<String, Object>());
         se.getSession().setAttribute(AttributeName.CURRENT_PAGE, PagePath.INDEX);
     }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se) {
-        /* Session is destroyed. */
-        //logger.log(Level.INFO, "---------> session destroyed with id: " + se.getSession().getId());
-    }
-
 }

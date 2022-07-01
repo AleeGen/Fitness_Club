@@ -10,6 +10,7 @@ import com.example.fitnessclub.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +22,7 @@ import java.util.Optional;
 public class ExerciseDaoImpl extends BaseDao<Exercise> implements ExerciseDao {
 
     private static final Logger logger = LogManager.getLogger();
-    private static ExerciseDaoImpl instance = new ExerciseDaoImpl();
+    private static final ExerciseDaoImpl instance = new ExerciseDaoImpl();
 
     private ExerciseDaoImpl() {
     }
@@ -30,14 +31,24 @@ public class ExerciseDaoImpl extends BaseDao<Exercise> implements ExerciseDao {
         return instance;
     }
 
-
     @Override
     public boolean add(Exercise exercise) throws DaoException {
-        return false;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.INSERT_EXERCISE)) {
+            statement.setString(1, exercise.getName());
+            statement.setByte(2, exercise.getNumberSets());
+            statement.setByte(3, exercise.getNumberRepetitions());
+            statement.setString(4, exercise.getEquipment());
+            statement.setString(5, exercise.getDescription());
+            statement.setLong(6, exercise.getAppointmentId());
+            return statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override
-    public boolean delete(Exercise exercise) throws DaoException {
+    public boolean delete(String exerciseId) throws DaoException {
         return false;
     }
 
@@ -46,6 +57,7 @@ public class ExerciseDaoImpl extends BaseDao<Exercise> implements ExerciseDao {
         return Optional.empty();
     }
 
+    @Override
     public List<Exercise> findAll(long appointmentId) throws DaoException {
         List<Exercise> listExercise = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -66,6 +78,28 @@ public class ExerciseDaoImpl extends BaseDao<Exercise> implements ExerciseDao {
 
     @Override
     public Optional<Exercise> update(Exercise exercise) throws DaoException {
-        return Optional.empty();
+        Optional<Exercise> optionalExercise = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.UPDATE_EXERCISE)) {
+            statementUpdate.setString(1, exercise.getName());
+            statementUpdate.setByte(2, exercise.getNumberSets());
+            statementUpdate.setByte(3, exercise.getNumberRepetitions());
+            statementUpdate.setString(4, exercise.getEquipment());
+            statementUpdate.setString(5, exercise.getDescription());
+            statementUpdate.setLong(6, exercise.getId());
+            if (statementUpdate.executeUpdate() == 1) {
+                try (PreparedStatement statementSelect = connection.prepareStatement(DatabaseQuery.SELECT_EXERCISE)) {
+                    statementSelect.setLong(1, exercise.getAppointmentId());
+                    try (ResultSet resultSet = statementSelect.executeQuery()) {
+                        if (resultSet.next()) {
+                            optionalExercise = ExerciseMapper.getInstance().rowMap(resultSet);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return optionalExercise;
     }
 }

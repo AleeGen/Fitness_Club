@@ -10,11 +10,16 @@ import com.example.fitnessclub.exception.ServiceException;
 import com.example.fitnessclub.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 
-
 public class RegistrationStepOneCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -33,8 +38,9 @@ public class RegistrationStepOneCommand implements Command {
                 page = PagePath.REGISTRATION_STEP_TWO;
                 session.setAttribute(AttributeName.CURRENT_PAGE, page);
             }
-            ((HashMap) session.getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, paramUser);
+            ((HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, paramUser);
         } catch (ServiceException e) {
+            logger.log(Level.ERROR, e);
             throw new CommandException(e);
         }
         return new Router(page);

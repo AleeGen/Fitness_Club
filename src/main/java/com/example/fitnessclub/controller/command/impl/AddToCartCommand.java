@@ -1,6 +1,5 @@
 package com.example.fitnessclub.controller.command.impl;
 
-
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.controller.Router;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.util.HashMap;
 
 public class AddToCartCommand implements Command {
 
@@ -26,21 +26,17 @@ public class AddToCartCommand implements Command {
         String login = (String) session.getAttribute(AttributeName.LOGIN);
         if (login != null) {
             try {
+                HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);
                 if (paymentService.addToCart(login, serviceId)) {
-                    request.setAttribute(MessagePage.MESSAGE, MessagePage.ADDED_TO_CART);
+                    tempAttr.put(MessagePage.MESSAGE, MessagePage.ADDED_TO_CART);
                 } else {
-                    request.setAttribute(MessagePage.MESSAGE, MessagePage.NOT_ADDED_TO_CART);
+                    tempAttr.put(MessagePage.MESSAGE, MessagePage.NOT_ADDED_TO_CART);
                 }
             } catch (ServiceException e) {
                 logger.log(Level.ERROR, e);
                 throw new CommandException(e);
             }
         }
-        return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE));//// TODO: 11.06.2022 redirect чистит запрос, сообщения не будет
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
+        return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE), Router.Type.REDIRECT);
     }
 }

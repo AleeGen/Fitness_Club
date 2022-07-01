@@ -4,18 +4,15 @@ import com.example.fitnessclub.controller.*;
 import com.example.fitnessclub.controller.command.Command;
 import com.example.fitnessclub.exception.CommandException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class SetLocaleCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         String locale = request.getParameter(AttributeName.LOCALE);
-        request.getSession().setAttribute(AttributeName.LOCALE, locale);
-        return new Router((String)request.getSession().getAttribute(AttributeName.CURRENT_PAGE));
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
+        HttpSession session = request.getSession();
+        session.setAttribute(AttributeName.LOCALE, locale);
+        return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE));
     }
 }

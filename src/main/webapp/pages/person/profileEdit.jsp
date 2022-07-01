@@ -5,6 +5,7 @@
 <fmt:setBundle basename="prop.text"/>
 <c:set var="queryImage">${pageContext.request.contextPath}/uploadImage?imagePath</c:set>
 <c:set var="sex">${temp_attribute.get('user').getSex().toString()}</c:set>
+<!DOCTYPE>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">

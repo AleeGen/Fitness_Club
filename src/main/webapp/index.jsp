@@ -4,6 +4,7 @@
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
 ${pageContext.request.session.setAttribute("current_page","index.jsp")}
+<!DOCTYPE>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">

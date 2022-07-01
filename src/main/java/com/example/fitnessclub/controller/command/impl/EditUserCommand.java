@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.HashMap;
+import java.util.Optional;
 
 public class EditUserCommand implements Command {
 
@@ -32,19 +32,16 @@ public class EditUserCommand implements Command {
         paramUser.put(AttributeName.NUMBER_CARD, request.getParameter(AttributeName.NUMBER_CARD));
         paramUser.put(AttributeName.ABOUT_ME, request.getParameter(AttributeName.ABOUT_ME));
         try {
-            User user = UserServiceImpl.getInstance().update(paramUser).get();
-            request.setAttribute(AttributeName.USER_PARAM, paramUser);
-            ((HashMap) request.getSession().getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, user);
-
+            Optional<User> optionalUser = UserServiceImpl.getInstance().update(paramUser);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                request.setAttribute(AttributeName.USER_PARAM, paramUser);
+                ((HashMap<String, Object>) request.getSession().getAttribute(AttributeName.TEMP_ATTRIBUTE)).put(AttributeName.USER, user);
+            }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Error when updating the user");
             throw new CommandException(e);
         }
         return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE));
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
     }
 }

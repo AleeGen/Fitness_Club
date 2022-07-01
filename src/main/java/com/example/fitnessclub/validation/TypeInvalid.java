@@ -1,8 +1,10 @@
 package com.example.fitnessclub.validation;
 
-public final class TypeInvalid { 
-    //// TODO: 06.05.2022 прописать подробные сообщение о некорректности
-    //// TODO: 29.05.2022 Сделать отдельное поле для сообщений невалидности, так как не всё вмещается, а пароли скрыты
+public final class TypeInvalid {
+
+    private TypeInvalid() {
+    }
+
     public static final String OBLIGATORY_FIELD = "obligatory field";
     public static final String INVALID_ROLE = "incorrect role";
     public static final String INVALID_PASSWORD = "incorrect password";
@@ -18,7 +20,5 @@ public final class TypeInvalid {
     public static final String INVALID_CORPORATE = "incorrect corporate";
     public static final String INVALID_DISCOUNT_CODE = "incorrect discount code";
     public static final String COLOR_INVALID = "#797979FF";
-/*    public static final String COLOR_INVALID_RED = "red";*/
     public static final String COLOR_VALID = "";
-
 }

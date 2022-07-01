@@ -20,7 +20,7 @@ import java.util.Optional;
 public class PaymentServiceImpl implements PaymentService {
 
     private static final Logger logger = LogManager.getLogger();
-    private static PaymentServiceImpl instance = new PaymentServiceImpl();
+    private static final PaymentServiceImpl instance = new PaymentServiceImpl();
 
     private PaymentServiceImpl() {
     }
@@ -29,11 +29,12 @@ public class PaymentServiceImpl implements PaymentService {
         return instance;
     }
 
+    @Override
     public boolean addToCart(String login, Long serviceId) throws ServiceException {
         try {
             Optional<Service> service = ServiceDaoImpl.getInstance().find(serviceId.toString());
             Optional<User> user = UserDaoImpl.getInstance().find(login);
-            if (service.isPresent()) {
+            if (service.isPresent() && user.isPresent()) {
                 byte remainedVisits = service.get().getNumberVisit();
                 Payment payment = Payment.newBuilder()
                         .setUserId(user.get().getId())
@@ -47,16 +48,12 @@ public class PaymentServiceImpl implements PaymentService {
             }
         } catch (DaoException e) {
             logger.log(Level.ERROR, "An error occurred while adding to the cart", e);
+            throw new ServiceException(e);
         }
         return false;
     }
 
-
-    public Optional<Payment> update(Payment payment) throws ServiceException {
-        Optional<Payment> optionalPayment = Optional.empty();
-        return optionalPayment;
-    }
-
+    @Override
     public List<Payment> findAll(String login, boolean status) throws ServiceException {
         List<Payment> listPayment = new ArrayList<>();
         try {
@@ -76,5 +73,4 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return listPayment;
     }
-
 }

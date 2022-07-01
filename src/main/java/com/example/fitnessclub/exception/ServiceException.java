@@ -1,6 +1,7 @@
 package com.example.fitnessclub.exception;
 
 public class ServiceException extends Exception{
+
     public ServiceException() {
     }
 

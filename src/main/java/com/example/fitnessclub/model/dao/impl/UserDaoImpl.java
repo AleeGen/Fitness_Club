@@ -22,7 +22,7 @@ import java.util.Optional;
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
 
     private static final Logger logger = LogManager.getLogger();
-    private static UserDaoImpl instance = new UserDaoImpl();
+    private static final UserDaoImpl instance = new UserDaoImpl();
 
     private UserDaoImpl() {
     }
@@ -72,10 +72,11 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public boolean delete(User user) {
+    public boolean delete(String userId) {
         throw new UnsupportedOperationException("delete unsupported");
     }
 
+    @Override
     public Optional<User> find(String login) throws DaoException {
         Optional<User> optionalUser = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -92,19 +93,40 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         return optionalUser;
     }
 
+    @Override
     public List<User> findAll() throws DaoException {
         List<User> users = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_ALL_USERS);
-             ResultSet resultSet = statement.executeQuery();) {
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 Optional<User> user = UserMapper.getInstance().rowMap(resultSet);
-                user.ifPresent(users::add);
+                if (user.isPresent()) {
+                    boolean isBlocked = resultSet.getBoolean(AttributeName.IS_BLOCKED);
+                    user.get().setBlocked(isBlocked);
+                    users.add(user.get());
+                }
             }
         } catch (SQLException e) {
             throw new DaoException(e);
         }
         return users;
+    }
+
+    @Override
+    public List<User> findTrainers() throws DaoException {
+        List<User> trainers = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_ALL_TRAINERS);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                Optional<User> trainer = UserMapper.getInstance().rowMap(resultSet);
+                trainer.ifPresent(trainers::add);
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return trainers;
     }
 
     @Override
@@ -124,7 +146,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             } else {
                 statementUpdate.setString(7, user.getNumberCard());
             }
-            statementUpdate.setString(8, user.getLogin());
+            statementUpdate.setString(8, user.getAboutMe());
+            statementUpdate.setString(9, user.getLogin());
             if (statementUpdate.executeUpdate() == 1) {
                 try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_ALL_BY_LOGIN)) {
                     statementFind.setString(1, user.getLogin());
@@ -141,6 +164,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         return result;
     }
 
+    @Override
     public Optional<User> editFeatures(RequestParameters paramUser) throws DaoException {
         Optional<User> result = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -165,6 +189,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         return result;
     }
 
+    @Override
     public boolean editAvatar(String pathAvatar, String login) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.UPDATE_USER_AVATAR)) {
@@ -172,11 +197,12 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(2, login);
             return (statement.executeUpdate() == 1);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "An error occurred when edit avatar " + e.getMessage());
+            logger.log(Level.ERROR, "An error occurred when edit avatar");
             throw new DaoException(e);
         }
     }
 
+    @Override
     public Optional<String> findPassword(String login) throws DaoException {
         Optional<String> password = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -194,6 +220,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         return password;
     }
 
+    @Override
     public boolean editPassword(String login, String replacePass) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.UPDATE_PASSWORD)) {
@@ -210,13 +237,14 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public Optional<User> authenticate(String login, String codePassword) throws DaoException {
         Optional<User> optionalUser = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_ROLE_BY_LOGIN_PASSWORD)) {
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_USER_BY_LOGIN_PASSWORD)) {
             statement.setString(1, login);
             statement.setString(2, codePassword);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     User user = User.newBuilder().setLogin(login)
                             .setRole(UserRole.getRole(resultSet.getString(AttributeName.ROLE)))
+                            .setBlocked(resultSet.getBoolean(AttributeName.IS_BLOCKED))
                             .build();
                     optionalUser = Optional.of(user);
                 }
@@ -227,4 +255,15 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         return optionalUser;
     }
 
+    @Override
+    public boolean blocked(String login, boolean isBlocked) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.UPDATE_USER_BLOCKED)) {
+            statement.setBoolean(1, isBlocked);
+            statement.setString(2, login);
+            return statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 }

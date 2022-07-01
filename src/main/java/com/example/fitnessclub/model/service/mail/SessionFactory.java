@@ -17,6 +17,7 @@ public class SessionFactory {
         String userPassword = configProperties.getProperty(PASSWORD_PROP);
         return Session.getDefaultInstance(configProperties,
                 new javax.mail.Authenticator() {
+                    @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(userName, userPassword);
                     }

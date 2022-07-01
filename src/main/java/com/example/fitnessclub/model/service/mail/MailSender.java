@@ -38,9 +38,9 @@ public class MailSender {
             initMessage();
             Transport.send(message);
         } catch (AddressException e) {
-            logger.log(Level.ERROR, "Invalid address: " + sendToEmail + " " + e);
+            logger.log(Level.ERROR, "Invalid address: {0}", sendToEmail, e);
         } catch (MessagingException e) {
-            logger.log(Level.ERROR, "Error generating or sending message: " + e);
+            logger.log(Level.ERROR, "Error generating or sending message", e);
         }
     }
 

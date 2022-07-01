@@ -17,4 +17,7 @@ public final class PagePath {
     public static final String APPOINTMENTS = "pages/person/appointments.jsp";
     public static final String LIST_USERS = "pages/person/admin/listUsers.jsp";
     public static final String PAYMENTS = "pages/person/payments.jsp";
+    public static final String TRAINERS = "pages/common/listTrainers.jsp";
+    public static final String EDIT_APPOINTMENT = "pages/person/appointmentEdit.jsp";
+
 }

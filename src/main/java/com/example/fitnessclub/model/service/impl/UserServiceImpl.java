@@ -4,7 +4,10 @@ import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.controller.RequestParameters;
 import com.example.fitnessclub.model.dao.impl.PaymentDaoImpl;
+import com.example.fitnessclub.model.dao.impl.ServiceDaoImpl;
 import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
+import com.example.fitnessclub.model.entity.Payment;
+import com.example.fitnessclub.model.entity.Service;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.exception.ServiceException;
@@ -23,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class UserServiceImpl implements UserService {
@@ -38,19 +43,19 @@ public class UserServiceImpl implements UserService {
     private static final String TRUE = "1";
     private static final String FALSE = "0";
     private static final Properties property = new Properties();
-    private static UserServiceImpl instance = new UserServiceImpl();
+    private static final UserServiceImpl instance = new UserServiceImpl();
 
     private UserServiceImpl() {
     }
 
-    public static UserServiceImpl getInstance() {  //// TODO: 29.05.2022 сделать потокобезопасным?
+    public static UserServiceImpl getInstance() {
         return instance;
     }
 
     @Override
     public Optional<User> authenticate(String login, String password) throws ServiceException {
         String codePassword = Base64.getEncoder().encodeToString(password.getBytes());
-        Optional<User> optionalUser = Optional.empty();
+        Optional<User> optionalUser;
         UserDaoImpl userDao = UserDaoImpl.getInstance();
         try {
             optionalUser = userDao.authenticate(login, codePassword);
@@ -81,38 +86,45 @@ public class UserServiceImpl implements UserService {
                 }
             }
         } else if (paramUser.get(AttributeName.STEP_NUMBER).equals(AttributeName.STEP_TWO)) {
-            if (validation.isValidRegistrationStepTwo(paramUser)) {
-                try {
-                    String password = paramUser.get(AttributeName.PASSWORD);
-                    String codePassword = Base64.getEncoder().encodeToString(password.getBytes());
-                    String date = paramUser.get(AttributeName.DATE_BIRTH);
-                    Date dateResult = date.isBlank() ? null : Date.valueOf(date);
-                    User user = User.newBuilder()
-                            .setLogin(paramUser.get(AttributeName.LOGIN))
-                            .setPassword(codePassword)
-                            .setMail(paramUser.get(AttributeName.MAIL))
-                            .setName(paramUser.get(AttributeName.NAME))
-                            .setLastname(paramUser.get(AttributeName.LASTNAME))
-                            .setDate_birth(dateResult)
-                            .setSex(paramUser.get(AttributeName.SEX))
-                            .setPhone(paramUser.get(AttributeName.PHONE))
-                            .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
-                            .build();
-                    exists = userDao.add(user);
-                    MailMain.sendTo(paramUser);
-                } catch (IOException e) {
-                    logger.log(Level.ERROR, "Failed to send notification to email");
-                } catch (DaoException e) {
-                    logger.log(Level.ERROR, "Error when adding a user");
-                    throw new ServiceException(e);
-                }
+            exists = registrationStepTwo(paramUser);
+        }
+        return exists;
+    }
+
+    private boolean registrationStepTwo(RequestParameters paramUser) throws ServiceException {
+        boolean exists = false;
+        if (ValidationUser.getInstance().isValidRegistrationStepTwo(paramUser)) {
+            try {
+                String password = paramUser.get(AttributeName.PASSWORD);
+                String codePassword = Base64.getEncoder().encodeToString(password.getBytes());
+                String date = paramUser.get(AttributeName.DATE_BIRTH);
+                Date dateResult = date.isBlank() ? null : Date.valueOf(date);
+                User user = User.newBuilder()
+                        .setLogin(paramUser.get(AttributeName.LOGIN))
+                        .setPassword(codePassword)
+                        .setMail(paramUser.get(AttributeName.MAIL))
+                        .setName(paramUser.get(AttributeName.NAME))
+                        .setLastname(paramUser.get(AttributeName.LASTNAME))
+                        .setDateBirth(dateResult)
+                        .setSex(paramUser.get(AttributeName.SEX))
+                        .setPhone(paramUser.get(AttributeName.PHONE))
+                        .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
+                        .build();
+                exists = UserDaoImpl.getInstance().add(user);
+                MailMain.sendTo(paramUser);
+            } catch (IOException e) {
+                logger.log(Level.ERROR, "Failed to send notification to email");
+            } catch (DaoException e) {
+                logger.log(Level.ERROR, "Error when adding a user");
+                throw new ServiceException(e);
             }
         }
         return exists;
     }
 
+    @Override
     public List<User> findAll() throws ServiceException {
-        List<User> users = new ArrayList<>();
+        List<User> users;
         try {
             users = UserDaoImpl.getInstance().findAll();
         } catch (DaoException e) {
@@ -122,12 +134,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findTrainers() throws ServiceException {
+        List<User> trainers;
+        try {
+            trainers = UserDaoImpl.getInstance().findTrainers();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return trainers;
+    }
+
+    @Override
     public Optional<User> find(String login) throws ServiceException {
         Optional<User> optionalUser = Optional.empty();
         if (login != null) {
-            UserDaoImpl userDao = UserDaoImpl.getInstance();
             try {
-                optionalUser = userDao.find(login);
+                optionalUser = UserDaoImpl.getInstance().find(login);
             } catch (DaoException e) {
                 throw new ServiceException(e);
             }
@@ -135,8 +157,9 @@ public class UserServiceImpl implements UserService {
         return optionalUser;
     }
 
+    @Override
     public Optional<User> update(RequestParameters paramUser) throws ServiceException {
-        Optional<User> result = Optional.empty();
+        Optional<User> result;
         String date = paramUser.get(AttributeName.DATE_BIRTH);
         Date dateResult = date.isBlank() ? null : Date.valueOf(date);
         boolean isValid = ValidationUser.getInstance().isValidEditUser(paramUser);
@@ -145,7 +168,7 @@ public class UserServiceImpl implements UserService {
                 .setMail(paramUser.get(AttributeName.MAIL))
                 .setName(paramUser.get(AttributeName.NAME))
                 .setLastname(paramUser.get(AttributeName.LASTNAME))
-                .setDate_birth(dateResult)
+                .setDateBirth(dateResult)
                 .setSex(paramUser.get(AttributeName.SEX))
                 .setPhone(paramUser.get(AttributeName.PHONE))
                 .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
@@ -165,6 +188,7 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
     public Optional<User> editFeatures(RequestParameters paramUser) throws ServiceException {
         Optional<User> result = Optional.empty();
         boolean isValid = ValidationUser.getInstance().isValidEditFeatures(paramUser);
@@ -187,6 +211,7 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
     public boolean editAvatar(Part part, String login) throws ServiceException {
         InputStream inputStream = ConnectionPool.class.getClassLoader().getResourceAsStream(PATH_PROPERTIES);
         try {
@@ -216,6 +241,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public boolean editPassword(RequestParameters parameters) throws ServiceException {
         String currentPass = parameters.get(AttributeName.PASSWORD);
         currentPass = Base64.getEncoder().encodeToString(currentPass.getBytes());
@@ -246,17 +272,39 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
     public boolean buy(String login, long paymentId) throws ServiceException {
         if (canBuy(login)) {
             try {
-                if (PaymentDaoImpl.getInstance().buy(paymentId)) {
-                    return true;
+                Optional<Payment> optionalPayment = PaymentDaoImpl.getInstance().find(String.valueOf(paymentId));
+                if (optionalPayment.isPresent()) {
+                    String serviceId = String.valueOf(optionalPayment.get().getServiceId());
+                    Optional<Service> optionalService = ServiceDaoImpl.getInstance().find(serviceId);
+                    if (optionalService.isPresent()) {
+                        long validityPeriod = optionalService.get().getValidityPeriod();
+                        LocalDateTime now = LocalDateTime.now();
+                        LocalDateTime exercise = now.plusDays(validityPeriod);
+                        String result = exercise.format(DateTimeFormatter.ISO_LOCAL_DATE);
+                        if (PaymentDaoImpl.getInstance().buy(paymentId, Date.valueOf(result))) {
+                            return true;
+                        }
+                    }
                 }
             } catch (DaoException e) {
-                logger.log(Level.ERROR, e);
+                throw new ServiceException(e);
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean blocked(String login, String isBlocked) throws ServiceException {
+        boolean blocked = Boolean.parseBoolean(isBlocked);
+        try {
+            return UserDaoImpl.getInstance().blocked(login, blocked);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     private boolean canBuy(String login) {

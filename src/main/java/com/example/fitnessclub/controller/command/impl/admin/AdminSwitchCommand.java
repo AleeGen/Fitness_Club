@@ -24,9 +24,4 @@ public class AdminSwitchCommand implements Command {
         }
         return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE));
     }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
-    }
 }

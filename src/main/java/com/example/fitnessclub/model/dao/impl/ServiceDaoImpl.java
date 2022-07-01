@@ -6,7 +6,6 @@ import com.example.fitnessclub.model.dao.DatabaseQuery;
 import com.example.fitnessclub.model.dao.ServiceDao;
 import com.example.fitnessclub.model.entity.Service;
 import com.example.fitnessclub.model.dao.mapper.impl.ServiceMapper;
-import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.model.pool.ConnectionPool;
 
 import java.sql.Connection;
@@ -19,10 +18,9 @@ import java.util.Optional;
 
 public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
 
-    private static ServiceDaoImpl instance = new ServiceDaoImpl();
+    private static final ServiceDaoImpl instance = new ServiceDaoImpl();
 
     private ServiceDaoImpl() {
-
     }
 
     public static ServiceDaoImpl getInstance() {
@@ -35,10 +33,11 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
     }
 
     @Override
-    public boolean delete(Service item) throws DaoException {
+    public boolean delete(String itemId) throws DaoException {
         return false;
     }
 
+    @Override
     public List<Service> findAll() throws DaoException {
         List<Service> services = new ArrayList<>();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -56,9 +55,10 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
 
     @Override
     public Optional<Service> update(Service item) throws DaoException {
-        return null;
+        return Optional.empty();
     }
 
+    @Override
     public Optional<Service> find(String serviceId) throws DaoException {
         Optional<Service> item = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();

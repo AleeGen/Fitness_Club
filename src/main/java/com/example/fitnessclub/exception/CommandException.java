@@ -1,6 +1,7 @@
 package com.example.fitnessclub.exception;
 
 public class CommandException extends Exception {
+
     public CommandException() {
     }
 

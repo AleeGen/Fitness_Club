@@ -1,8 +1,8 @@
 package com.example.fitnessclub.controller.command;
 
-
 import com.example.fitnessclub.controller.command.impl.*;
 import com.example.fitnessclub.controller.command.impl.admin.AdminSwitchCommand;
+import com.example.fitnessclub.controller.command.impl.admin.BlockedUserCommand;
 import com.example.fitnessclub.controller.command.impl.admin.EditUserFeaturesCommand;
 import com.example.fitnessclub.controller.command.impl.admin.ViewUsersCommand;
 
@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum CommandType {
+
     DEFAULT(new DefaultCommand()),
     REGISTRATION_STEP_ONE(new RegistrationStepOneCommand()),
     REGISTRATION_STEP_TWO(new RegistrationStepTwoCommand()),
@@ -27,11 +28,17 @@ public enum CommandType {
     ADMIN_SWITCH(new AdminSwitchCommand()),
     VIEW_USERS(new ViewUsersCommand()),
     VIEW_EDIT_PROFILE(new ViewEditProfileCommand()),
-    EDIT_USER_FEATURES (new EditUserFeaturesCommand()),
+    EDIT_USER_FEATURES(new EditUserFeaturesCommand()),
     VIEW_PAYMENT(new ViewPaymentCommand()),
-    BUY(new BuyCommand());
+    BUY(new BuyCommand()),
+    VIEW_TRAINERS(new ViewTrainersCommand()),
+    VIEW_EDIT_APPOINTMENT(new ViewEditAppointmentCommand()),
+    EDIT_APPOINTMENT(new EditAppointmentCommand()),
+    DELETE_APPOINTMENT(new DeleteAppointmentCommand()),
+    ADD_APPOINTMENT(new AddAppointmentCommand()),
+    BLOCKED_USER(new BlockedUserCommand());
 
-    Command command;
+    private final Command command;
 
     CommandType(Command command) {
         this.command = command;

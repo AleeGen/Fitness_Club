@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
+<!DOCTYPE>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
@@ -27,6 +28,7 @@
         <th><fmt:message key="field.user.sex"/></th>
         <th><fmt:message key="field.user.corporate"/></th>
         <th><fmt:message key="field.user.visit_period_months"/></th>
+        <th><fmt:message key="field.user.is_blocked"/></th>
     </tr>
     </thead>
     <tbody>
@@ -47,6 +49,7 @@
             <td>${user.getSex()}</td>
             <td>${user.isCorporate()}</td>
             <td>${user.getVisitPeriodMonths()}</td>
+            <td>${user.isBlocked()}</td>
         </tr>
     </c:forEach>
     </tbody>

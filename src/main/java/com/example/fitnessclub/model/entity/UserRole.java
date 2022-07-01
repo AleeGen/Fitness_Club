@@ -1,6 +1,7 @@
 package com.example.fitnessclub.model.entity;
 
 public enum UserRole {
+
     ADMIN("admin"),
     TRAINER("trainer"),
     CLIENT("client");

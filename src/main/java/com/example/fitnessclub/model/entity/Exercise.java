@@ -63,8 +63,8 @@ public class Exercise extends AbstractEntity {
 
     public class ExerciseBuilder {
 
-        public ExerciseBuilder setId(Long Id) {
-            Exercise.this.setId(Id);
+        public ExerciseBuilder setId(Long id) {
+            Exercise.this.setId(id);
             return this;
         }
 
@@ -79,17 +79,17 @@ public class Exercise extends AbstractEntity {
         }
 
         public ExerciseBuilder setNumberSets(byte numberSets) {
-            Exercise.this.numberSets= numberSets;
+            Exercise.this.numberSets = numberSets;
             return this;
         }
 
         public ExerciseBuilder setNumberRepetitions(byte numberRepetitions) {
-            Exercise.this.numberRepetitions= numberRepetitions;
+            Exercise.this.numberRepetitions = numberRepetitions;
             return this;
         }
 
         public ExerciseBuilder setEquipment(String equipment) {
-            Exercise.this.equipment= equipment;
+            Exercise.this.equipment = equipment;
             return this;
         }
 

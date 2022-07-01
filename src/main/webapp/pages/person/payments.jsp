@@ -4,6 +4,7 @@
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
 <c:set var="paid">${temp_attribute.get('paid')}</c:set>
+<!DOCTYPE>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">

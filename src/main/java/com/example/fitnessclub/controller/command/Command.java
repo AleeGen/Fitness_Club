@@ -4,14 +4,7 @@ import com.example.fitnessclub.controller.Router;
 import com.example.fitnessclub.exception.CommandException;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 @FunctionalInterface
 public interface Command {
     Router execute(HttpServletRequest request) throws CommandException;
-
-    default void refresh() {
-    }
-
 }

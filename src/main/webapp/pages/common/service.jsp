@@ -3,6 +3,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
+<!DOCTYPE>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
@@ -15,7 +16,7 @@
 <div class="container">
     <jsp:include page="/pages/aside/aside.jsp"/>
     <div class="posts-list">
-        <output style="color: red">${message}</output>
+        <output style="color: red">${temp_attribute.get("message")}</output>
         <table class="table">
             <thead>
             <tr>

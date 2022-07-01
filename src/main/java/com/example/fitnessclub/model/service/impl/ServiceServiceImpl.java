@@ -9,13 +9,12 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceServiceImpl implements ServiceService {
 
     private static final Logger logger = LogManager.getLogger();
-    private static ServiceServiceImpl instance = new ServiceServiceImpl();
+    private static final ServiceServiceImpl instance = new ServiceServiceImpl();
 
     private ServiceServiceImpl() {
     }
@@ -25,11 +24,11 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     public List<Service> findAll() throws ServiceException {
-        List<Service> services = new ArrayList<>();
+        List<Service> services;
         try {
             services = ServiceDaoImpl.getInstance().findAll();
         } catch (DaoException e) {
-            logger.log(Level.ERROR,"An error occurred when finding services");
+            logger.log(Level.ERROR, "An error occurred when finding services");
             throw new ServiceException(e);
         }
         return services;

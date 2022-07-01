@@ -8,13 +8,18 @@ import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.CommandException;
 import com.example.fitnessclub.exception.ServiceException;
+import com.example.fitnessclub.model.entity.UserRole;
 import com.example.fitnessclub.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public class LoginCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -26,18 +31,24 @@ public class LoginCommand implements Command {
         try {
             Optional<User> optionalUser = userService.authenticate(login, pass);
             if (optionalUser.isPresent()) {
-                page = PagePath.INDEX;
-                session.setAttribute(AttributeName.ROLE, optionalUser.get().getRole());
-                switch (optionalUser.get().getRole()) {
-                    case ADMIN -> session.setAttribute(AttributeName.ADMIN_SWITCH, false);
-                    case TRAINER -> session.setAttribute(AttributeName.TRAINER_SWITCH, false);
+                if (optionalUser.get().isBlocked()) {
+                    request.setAttribute(MessagePage.MESSAGE, MessagePage.USER_BLOCKED);
+                } else {
+                    page = PagePath.INDEX;
+                    session.setAttribute(AttributeName.ROLE, optionalUser.get().getRole());
+                    if (optionalUser.get().getRole() == UserRole.ADMIN) {
+                        session.setAttribute(AttributeName.ADMIN_SWITCH, false);
+                    } else if (optionalUser.get().getRole() == UserRole.TRAINER) {
+                        session.setAttribute(AttributeName.TRAINER_SWITCH, false);
+                    }
+                    session.setAttribute(AttributeName.LOGIN, optionalUser.get().getLogin());
+                    session.setAttribute(AttributeName.CURRENT_PAGE, page);
                 }
-                session.setAttribute(AttributeName.LOGIN, optionalUser.get().getLogin());
-                session.setAttribute(AttributeName.CURRENT_PAGE, page);
             } else {
                 request.setAttribute(MessagePage.MESSAGE, MessagePage.INCORRECT_LOGIN_PASSWORD);
             }
         } catch (ServiceException e) {
+            logger.log(Level.ERROR, e);
             throw new CommandException(e);
         }
         return new Router(page);

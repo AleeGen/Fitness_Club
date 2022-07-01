@@ -14,9 +14,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.mail.Message;
-import java.util.HashMap;
-
 public class EditPasswordCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
@@ -32,20 +29,15 @@ public class EditPasswordCommand implements Command {
         UserServiceImpl userService = UserServiceImpl.getInstance();
         try {
             if (userService.editPassword(parameters)) {
-                request.setAttribute(MessagePage.MESSAGE,MessagePage.PASSWORD_CHANGED);
+                request.setAttribute(MessagePage.MESSAGE, MessagePage.PASSWORD_CHANGED);
             } else {
                 request.setAttribute(AttributeName.USER_PARAM, parameters);
-                request.setAttribute(MessagePage.MESSAGE,MessagePage.PASSWORD_NOT_CHANGED);
+                request.setAttribute(MessagePage.MESSAGE, MessagePage.PASSWORD_NOT_CHANGED);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Error when changing the password");
             throw new CommandException(e);
         }
         return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE));
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
     }
 }

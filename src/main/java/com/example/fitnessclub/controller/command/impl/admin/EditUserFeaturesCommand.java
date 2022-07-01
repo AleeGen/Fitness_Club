@@ -11,13 +11,12 @@ import com.example.fitnessclub.model.entity.UserRole;
 import com.example.fitnessclub.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Optional;
-
-import static javax.swing.UIManager.put;
 
 public class EditUserFeaturesCommand implements Command {
 
@@ -29,25 +28,21 @@ public class EditUserFeaturesCommand implements Command {
         UserRole role = (UserRole) session.getAttribute(AttributeName.ROLE);
         if (role == UserRole.ADMIN) {
             RequestParameters paramUser = new RequestParameters();
-            HashMap map = (HashMap) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);
-            String login = ((User) map.get(AttributeName.USER)).getLogin();
+            HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);
+            String login = ((User) tempAttr.get(AttributeName.USER)).getLogin();
             paramUser.put(AttributeName.LOGIN, login);
             paramUser.put(AttributeName.ROLE, request.getParameter(AttributeName.ROLE));
             paramUser.put(AttributeName.CORPORATE, request.getParameter(AttributeName.CORPORATE));
             paramUser.put(AttributeName.DISCOUNT_CODE, request.getParameter(AttributeName.DISCOUNT_CODE));
             try {
                 Optional<User> optionalUser = UserServiceImpl.getInstance().editFeatures(paramUser);
-                optionalUser.ifPresent(user -> map.put(AttributeName.USER, user));
+                optionalUser.ifPresent(user -> tempAttr.put(AttributeName.USER, user));
                 request.setAttribute(AttributeName.USER_PARAM, paramUser);
             } catch (ServiceException e) {
+                logger.log(Level.ERROR, e);
                 throw new CommandException(e);
             }
         }
         return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE));
-    }
-
-    @Override
-    public void refresh() {
-        Command.super.refresh();
     }
 }

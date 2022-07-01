@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="prop.text"/>
+<!DOCTYPE>
 <html>
 <head>
     <base href="${pageContext.servletContext.getInitParameter("absolutPath")}">
@@ -26,6 +27,7 @@
         <div class="accordion__body">
             <form action="${pageContext.request.contextPath}/controller" method="get">
                 <input type="hidden" name="command" value="view_workout">
+                <input type="hidden" name="login" value="${sessionScope.login}">
                 <input type="submit" value="<fmt:message key="head.appointments"/>"/>
             </form>
         </div>

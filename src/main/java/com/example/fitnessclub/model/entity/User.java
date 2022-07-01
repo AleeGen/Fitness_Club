@@ -1,6 +1,5 @@
 package com.example.fitnessclub.model.entity;
 
-
 import java.sql.Date;
 
 public class User extends AbstractEntity {
@@ -20,6 +19,7 @@ public class User extends AbstractEntity {
     private String numberCard;
     private String pathAvatar;
     private String aboutMe;
+    private boolean isBlocked;
 
     public static UserBuilder newBuilder() {
         return new User().new UserBuilder();
@@ -145,6 +145,14 @@ public class User extends AbstractEntity {
         this.aboutMe = aboutMe;
     }
 
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
     public class UserBuilder {
 
         public UserBuilder setId(Long userId) {
@@ -182,8 +190,8 @@ public class User extends AbstractEntity {
             return this;
         }
 
-        public UserBuilder setDate_birth(Date date_birth) {
-            User.this.dateBirth = date_birth;
+        public UserBuilder setDateBirth(Date dateBirth) {
+            User.this.dateBirth = dateBirth;
             return this;
         }
 
@@ -198,7 +206,7 @@ public class User extends AbstractEntity {
         }
 
         public UserBuilder setNumberCard(String numberCard) {
-                User.this.numberCard = numberCard;
+            User.this.numberCard = numberCard;
             return this;
         }
 
@@ -224,6 +232,11 @@ public class User extends AbstractEntity {
 
         public UserBuilder setAboutMe(String aboutMe) {
             User.this.aboutMe = aboutMe;
+            return this;
+        }
+
+        public UserBuilder setBlocked(boolean isBlocked) {
+            User.this.isBlocked = isBlocked;
             return this;
         }
 

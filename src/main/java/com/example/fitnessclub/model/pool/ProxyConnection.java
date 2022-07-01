@@ -1,7 +1,8 @@
 package com.example.fitnessclub.model.pool;
 
-import com.example.fitnessclub.exception.ConnectionPoolException;
-
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -9,7 +10,8 @@ import java.util.concurrent.Executor;
 
 public class ProxyConnection implements Connection {
 
-    private Connection connection;
+    private static final Logger logger = LogManager.getLogger();
+    private final Connection connection;
 
     ProxyConnection(Connection connection) {
         this.connection = connection;
@@ -17,18 +19,14 @@ public class ProxyConnection implements Connection {
 
     @Override
     public void close() throws SQLException {
-        try {
-            ConnectionPool.getInstance().releaseConnection(this);
-        } catch (ConnectionPoolException e) {
-            //log
-        }
+        ConnectionPool.getInstance().releaseConnection(this);
     }
 
     void reallyClose() {
         try {
             connection.close();
         } catch (SQLException e) {
-            //log
+            logger.log(Level.ERROR, e);
         }
     }
 

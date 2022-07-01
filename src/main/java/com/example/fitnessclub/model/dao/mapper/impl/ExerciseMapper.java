@@ -11,11 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class ExerciseMapper implements RowMapper {
+public class ExerciseMapper implements RowMapper<Exercise> {
 
     private static final Logger logger = LogManager.getLogger();
-
-    private final String MAPPING_ERROR = "Mapping error in UserMapper class!";
+    private static final String MAPPING_ERROR = "Mapping error in UserMapper class!";
     private static ExerciseMapper instance;
 
     public static ExerciseMapper getInstance() {
@@ -30,7 +29,7 @@ public class ExerciseMapper implements RowMapper {
 
     @Override
     public Optional<Exercise> rowMap(ResultSet resultSet) {
-        Optional<Exercise> optionalExercise= Optional.empty();
+        Optional<Exercise> optionalExercise = Optional.empty();
         try {
             Exercise exercise = Exercise.newBuilder()
                     .setId(resultSet.getLong(AttributeName.EXERCISE_ID))

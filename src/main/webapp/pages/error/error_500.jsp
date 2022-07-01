@@ -1,6 +1,7 @@
 <%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setBundle basename="prop.text"/>
+<!DOCTYPE>
 <html>
 <head>
 <title><fmt:message key="head.error.500"/></title>
