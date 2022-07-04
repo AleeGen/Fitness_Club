@@ -70,16 +70,6 @@ public class WorkoutServiceImpl implements WorkoutService {
         return false;
     }
 
-    private boolean supportRelevant(long userId, long neededId) throws DaoException {
-        List<ContractCT> listContract = ContractDaoImpl.getInstance().findAll(userId);
-        for (var contract : listContract) {
-            if (contract.getUserId() == neededId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public boolean canUserAdd(String loginToChange, String login) throws ServiceException {
         if (loginToChange.equals(login)) {
@@ -87,12 +77,12 @@ public class WorkoutServiceImpl implements WorkoutService {
         }
         boolean result = false;
         try {
-            Optional<User> user = UserDaoImpl.getInstance().find(login);
-            Optional<User> userChange = UserDaoImpl.getInstance().find(loginToChange);
-            if (user.isPresent() && userChange.isPresent()) {
-                long userId = user.get().getId();
-                long userIdChange = user.get().getId();
-                result = supportRelevant(userId, userIdChange);
+            Optional<User> trainer = UserDaoImpl.getInstance().find(login);
+            Optional<User> client = UserDaoImpl.getInstance().find(loginToChange);
+            if (trainer.isPresent() && client.isPresent()) {
+                long trainerId = trainer.get().getId();
+                long clientId = client.get().getId();
+                result = supportRelevant(clientId, trainerId);
             }
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -152,21 +142,6 @@ public class WorkoutServiceImpl implements WorkoutService {
         return optionalWorkout;
     }
 
-    private Optional<Workout> supportFind(String appointmentId) throws ServiceException {
-        Optional<Workout> workout = Optional.empty();
-        try {
-            Optional<Appointment> optionalAppointment = AppointmentDaoImpl.getInstance().find(appointmentId);
-            if (optionalAppointment.isPresent()) {
-                Appointment appointment = optionalAppointment.get();
-                List<Exercise> exercises = ExerciseDaoImpl.getInstance().findAll(appointment.getId());
-                workout = Optional.of(new Workout(appointment, exercises));
-            }
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-        return workout;
-    }
-
     @Override
     public boolean delete(String appointmentId) throws ServiceException {
         try {
@@ -206,5 +181,26 @@ public class WorkoutServiceImpl implements WorkoutService {
             workouts.add(new Workout(app, exerciseList));
         }
         return workouts;
+    }
+
+    private boolean supportRelevant(long trainerId, long userId) throws DaoException {
+        String clientId = String.valueOf(userId);
+        Optional<ContractCT> contract = ContractDaoImpl.getInstance().find(clientId);
+        return contract.filter(contractCT -> contractCT.getTrainerId() == trainerId).isPresent();
+    }
+
+    private Optional<Workout> supportFind(String appointmentId) throws ServiceException {
+        Optional<Workout> workout = Optional.empty();
+        try {
+            Optional<Appointment> optionalAppointment = AppointmentDaoImpl.getInstance().find(appointmentId);
+            if (optionalAppointment.isPresent()) {
+                Appointment appointment = optionalAppointment.get();
+                List<Exercise> exercises = ExerciseDaoImpl.getInstance().findAll(appointment.getId());
+                workout = Optional.of(new Workout(appointment, exercises));
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return workout;
     }
 }

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.HashMap;
 
 public class AddToCartCommand implements Command {
@@ -24,18 +25,16 @@ public class AddToCartCommand implements Command {
         PaymentServiceImpl paymentService = PaymentServiceImpl.getInstance();
         Long serviceId = Long.valueOf(request.getParameter(AttributeName.SERVICE_ID_CART));
         String login = (String) session.getAttribute(AttributeName.LOGIN);
-        if (login != null) {
-            try {
-                HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);
-                if (paymentService.addToCart(login, serviceId)) {
-                    tempAttr.put(MessagePage.MESSAGE, MessagePage.ADDED_TO_CART);
-                } else {
-                    tempAttr.put(MessagePage.MESSAGE, MessagePage.NOT_ADDED_TO_CART);
-                }
-            } catch (ServiceException e) {
-                logger.log(Level.ERROR, e);
-                throw new CommandException(e);
+        try {
+            HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);
+            if (paymentService.addToCart(login, serviceId)) {
+                tempAttr.put(MessagePage.MESSAGE, MessagePage.ADDED_TO_CART);
+            } else {
+                tempAttr.put(MessagePage.MESSAGE, MessagePage.NOT_ADDED_TO_CART);
             }
+        } catch (ServiceException e) {
+            logger.log(Level.ERROR, e);
+            throw new CommandException(e);
         }
         return new Router((String) session.getAttribute(AttributeName.CURRENT_PAGE), Router.Type.REDIRECT);
     }

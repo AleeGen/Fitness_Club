@@ -20,6 +20,7 @@
     <jsp:include page="/pages/aside/aside.jsp"/>
     <div class="posts-list">
         <output style="color: red">${temp_attribute.get("message")}</output>
+        <output style="color: red">${message}</output>
         <form action="${pageContext.request.contextPath}/controller" method="post">
             <article class="post">
                 <div class="accordion__content_body">
@@ -44,13 +45,16 @@
                         </div>
                     </div>
                 </div>
-
                 <table class="table" id="table">
-                    <td><fmt:message key="field.exercise.name"/></td>
-                    <td><fmt:message key="field.exercise.number_sets"/></td>
-                    <td><fmt:message key="field.exercise.number_repetitions"/></td>
-                    <td><fmt:message key="field.exercise.equipment"/></td>
-                    <td><fmt:message key="field.exercise.description"/></td>
+
+
+                    <th><fmt:message key="field.exercise.name"/></th>
+                    <th><fmt:message key="field.exercise.number_sets"/></th>
+                    <th><fmt:message key="field.exercise.number_repetitions"/></th>
+                    <th><fmt:message key="field.exercise.equipment"/></th>
+                    <th><fmt:message key="field.exercise.description"/></th>
+
+
                     <c:forEach var="exercise" items="${workout.getExercises()}">
                         <tbody>
                         <tr style="height: 10px">
@@ -104,9 +108,9 @@
         var tbody = document.getElementById(id).getElementsByTagName("tbody")[0];
         var row = document.createElement("tr")
         var hd = document.createElement("input")
-        hd.setAttribute("type","hidden")
-        hd.setAttribute("name","exercise_id")
-        hd.setAttribute("value","")
+        hd.setAttribute("type", "hidden")
+        hd.setAttribute("name", "exercise_id")
+        hd.setAttribute("value", "")
         var td1 = document.createElement("td")
         var in1 = document.createElement("input")
         in1.setAttribute("name", "name")

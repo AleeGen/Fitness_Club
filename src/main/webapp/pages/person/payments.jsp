@@ -43,9 +43,10 @@
                     <td>${services.get(payment.getServiceId()-1).getPrice()}</td>
                     <c:if test="${!paid}">
                         <td>
-                            <form action="${pageContext.request.contextPath}/controller" method="post">
-                                <input type="hidden" name="command" value="buy">
+                            <form action="${pageContext.request.contextPath}/controller" method="get">
+                                <input type="hidden" name="command" value="arrange_buy">
                                 <input type="hidden" name="payment_id" value="${payment.getId()}">
+                                <input type="hidden" name="service_id" value="${payment.getServiceId()}">
                                 <input type="submit" value="<fmt:message key="submit.buy"/>">
                             </form>
                         </td>

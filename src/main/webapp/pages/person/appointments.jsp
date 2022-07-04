@@ -22,7 +22,7 @@
     <div class="posts-list">
         <output style="color: red">${message}</output>
         <article class="post">
-            <div id="accordion-appointments" >
+            <div id="accordion-appointments">
                 <c:forEach var="workout" items="${temp_attribute.get('workouts')}">
                     <div class="accordion__item_body">
                         <div class="accordion__header" style="font-size: 20px;">
@@ -34,11 +34,13 @@
                                 <c:out value="${workout.getAppointment().getNutrition()}"/>
                             </div>
                             <table class="table">
-                                <td><fmt:message key="field.exercise.name"/></td>
-                                <td><fmt:message key="field.exercise.number_sets"/></td>
-                                <td><fmt:message key="field.exercise.number_repetitions"/></td>
-                                <td><fmt:message key="field.exercise.equipment"/></td>
-                                <td><fmt:message key="field.exercise.description"/></td>
+                                <thead>
+                                <th><fmt:message key="field.exercise.name"/></th>
+                                <th><fmt:message key="field.exercise.number_sets"/></th>
+                                <th><fmt:message key="field.exercise.number_repetitions"/></th>
+                                <th><fmt:message key="field.exercise.equipment"/></th>
+                                <th><fmt:message key="field.exercise.description"/></th>
+                                </thead>
                                 <c:forEach var="exercise" items="${workout.getExercises()}">
                                     <tr>
                                         <td><c:out value="${exercise.getName()}"/></td>
@@ -56,7 +58,8 @@
                             <div class="form-row">
                                 <form action="${pageContext.request.contextPath}/controller" method="get">
                                     <input type="hidden" name="command" value="view_edit_appointment">
-                                    <input type="hidden" name="appointment_id" value="${workout.getAppointment().getId()}">
+                                    <input type="hidden" name="appointment_id"
+                                           value="${workout.getAppointment().getId()}">
                                     <input type="submit" value="<fmt:message key="submit.edit"/>">
                                 </form>
                             </div>
@@ -65,15 +68,15 @@
                     </div>
                 </c:forEach>
             </div>
-                 <div class="decor">
-                     <div class="form-row">
-                         <form action="${pageContext.request.contextPath}/controller" method="post">
-                             <input type="hidden" name="command" value="add_appointment">
-                             <input type="hidden" name="workouts_by_login" value="${workouts_by_login}">
-                             <input type="submit" value="<fmt:message key="submit.add"/>">
-                         </form>
-                     </div>
-                 </div>
+            <div class="decor">
+                <div class="form-row">
+                    <form action="${pageContext.request.contextPath}/controller" method="post">
+                        <input type="hidden" name="command" value="add_appointment">
+                        <input type="hidden" name="workouts_by_login" value="${workouts_by_login}">
+                        <input type="submit" value="<fmt:message key="submit.add"/>">
+                    </form>
+                </div>
+            </div>
         </article>
     </div>
     <script>

@@ -33,7 +33,7 @@ public class EditUserFeaturesCommand implements Command {
             paramUser.put(AttributeName.LOGIN, login);
             paramUser.put(AttributeName.ROLE, request.getParameter(AttributeName.ROLE));
             paramUser.put(AttributeName.CORPORATE, request.getParameter(AttributeName.CORPORATE));
-            paramUser.put(AttributeName.DISCOUNT_CODE, request.getParameter(AttributeName.DISCOUNT_CODE));
+            paramUser.put(AttributeName.DISCOUNT, request.getParameter(AttributeName.DISCOUNT));
             try {
                 Optional<User> optionalUser = UserServiceImpl.getInstance().editFeatures(paramUser);
                 optionalUser.ifPresent(user -> tempAttr.put(AttributeName.USER, user));

@@ -29,27 +29,29 @@
         <th><fmt:message key="field.user.corporate"/></th>
         <th><fmt:message key="field.user.visit_period_months"/></th>
         <th><fmt:message key="field.user.is_blocked"/></th>
+        <th><fmt:message key="field.user.cash"/></th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="user" items="${temp_attribute.get('users')}">
+    <c:forEach var="client" items="${temp_attribute.get('users')}">
         <tr>
-            <td>${user.getRole()}</td>
+            <td>${client.getRole()}</td>
             <td>
                 <form action="${pageContext.request.contextPath}/controller" method="get">
                     <input type="hidden" name="command" value="view_profile"/>
-                    <input class="glow-button" type="submit" name="login" value="${user.getLogin()}"/>
+                    <input class="glow-button" type="submit" name="login" value="${client.getLogin()}"/>
                 </form>
             </td>
-            <td>${user.getLastname()}</td>
-            <td>${user.getName()}</td>
-            <td>${user.getMail()}</td>
-            <td>${user.getPhone()}</td>
-            <td>${user.getDateBirth()}</td>
-            <td>${user.getSex()}</td>
-            <td>${user.isCorporate()}</td>
-            <td>${user.getVisitPeriodMonths()}</td>
-            <td>${user.isBlocked()}</td>
+            <td>${client.getLastname()}</td>
+            <td>${client.getName()}</td>
+            <td>${client.getMail()}</td>
+            <td>${client.getPhone()}</td>
+            <td>${client.getDateBirth()}</td>
+            <td>${client.getSex()}</td>
+            <td>${client.isCorporate()}</td>
+            <td>${client.getVisitPeriodMonths()}</td>
+            <td>${client.isBlocked()}</td>
+            <td>${client.getCash()}</td>
         </tr>
     </c:forEach>
     </tbody>

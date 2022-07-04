@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class ContractCT extends AbstractEntity {
 
-    private byte totalCost;
+    private short totalCost;
     private Date start;
     private Date end;
     private long userId;
@@ -14,11 +14,11 @@ public class ContractCT extends AbstractEntity {
         return new ContractCT().new ContractCTBuilder();
     }
 
-    public byte getTotalCost() {
+    public short getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(byte totalCost) {
+    public void setTotalCost(short totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -61,7 +61,7 @@ public class ContractCT extends AbstractEntity {
             return this;
         }
 
-        public ContractCT.ContractCTBuilder setTotalCost(byte totalCost) {
+        public ContractCT.ContractCTBuilder setTotalCost(short totalCost) {
             ContractCT.this.totalCost = totalCost;
             return this;
         }

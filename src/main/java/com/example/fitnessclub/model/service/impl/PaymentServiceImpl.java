@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private static final Logger logger = LogManager.getLogger();
     private static final PaymentServiceImpl instance = new PaymentServiceImpl();
+    private static final byte COEFFICIENT = 100;
 
     private PaymentServiceImpl() {
     }
@@ -72,5 +75,64 @@ public class PaymentServiceImpl implements PaymentService {
             throw new ServiceException(e);
         }
         return listPayment;
+    }
+
+    @Override
+    public Optional<Short> calculateCost(String login, long serviceId) throws ServiceException {
+        Optional<Short> result = Optional.empty();
+        try {
+            Optional<User> user = UserDaoImpl.getInstance().find(login);
+            if (user.isPresent()) {
+                Optional<Byte> price = ServiceDaoImpl.getInstance().takePrice(serviceId);
+                if (price.isPresent()) {
+                    short cost = (short) (price.get() - price.get() * user.get().getDiscount() / COEFFICIENT);
+                    result = Optional.of(cost);
+                }
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<Payment> find(String id) throws ServiceException {
+        try {
+            return PaymentDaoImpl.getInstance().find(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Optional<LocalDate> calculateExpiry(long serviceId) throws ServiceException {
+        Optional<LocalDate> result = Optional.empty();
+        try {
+            Optional<Service> service = ServiceDaoImpl.getInstance().find(String.valueOf(serviceId));
+            if (service.isPresent()) {
+                byte validityPeriod = service.get().getValidityPeriod();
+                LocalDate expiry = LocalDate.now().plusDays(validityPeriod);
+                result = Optional.of(expiry);
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean buy(String login, long paymentId, LocalDate expiry, short cost) throws ServiceException {
+        Date date = Date.valueOf(expiry);
+        boolean result = false;
+        try {
+            Optional<User> user = UserServiceImpl.getInstance().findByLogin(login);
+            if (user.isPresent()) {
+                long userId = user.get().getId();
+                result = PaymentDaoImpl.getInstance().buy(userId, paymentId, date, cost);
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return result;
     }
 }

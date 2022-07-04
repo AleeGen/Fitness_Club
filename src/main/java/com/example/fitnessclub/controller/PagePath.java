@@ -19,5 +19,7 @@ public final class PagePath {
     public static final String PAYMENTS = "pages/person/payments.jsp";
     public static final String TRAINERS = "pages/common/listTrainers.jsp";
     public static final String EDIT_APPOINTMENT = "pages/person/appointmentEdit.jsp";
-
+    public static final String ARRANGE_CONTRACT = "pages/person/arrangeContract.jsp";
+    public static final String LIST_CLIENTS = "pages/person/trainer/listClients.jsp";
+    public static final String ARRANGE_BUY = "pages/person/arrangeBuy.jsp";
 }

@@ -35,7 +35,7 @@ public class PaymentMapper implements RowMapper<Payment> {
                     .setId(resultSet.getLong(AttributeName.PAYMENT_ID))
                     .setUserId(resultSet.getLong(AttributeName.USER_ID))
                     .setServiceId(resultSet.getLong(AttributeName.SERVICE_ID))
-                    .setRemainedVisits(resultSet.getByte(AttributeName.REMAINED_VISITS))
+                    .setRemainedVisits(resultSet.getShort(AttributeName.REMAINED_VISITS))
                     .setPaid(resultSet.getBoolean(AttributeName.PAID))
                     .build();
             optionalPayment = Optional.of(payment);

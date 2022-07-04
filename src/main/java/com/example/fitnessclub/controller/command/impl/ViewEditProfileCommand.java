@@ -27,7 +27,7 @@ public class ViewEditProfileCommand implements Command {
         String login = (String) session.getAttribute(AttributeName.LOGIN);
         String page = (String) session.getAttribute(AttributeName.CURRENT_PAGE);
         try {
-            Optional<User> optionalUser = UserServiceImpl.getInstance().find(login);
+            Optional<User> optionalUser = UserServiceImpl.getInstance().findByLogin(login);
             if (optionalUser.isPresent()) {
                 page = PagePath.PROFILE_EDIT;
                 HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);

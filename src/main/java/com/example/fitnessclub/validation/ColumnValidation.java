@@ -15,6 +15,7 @@ public final class ColumnValidation {
     public static final String REGEX_SEX = "^(male)|(female)$";
     public static final String REGEX_PHONE = "^\\+?[0-9]{5,15}$";
     public static final String REGEX_CORPORATE = "(true)|(false)$";
-    public static final String REGEX_DISCOUNT_CODE = "^[0-9A-Z]{10}$";
+    public static final String REGEX_DISCOUNT = "^([0-9]|([1-9][0-9])|100)$";
     public static final String REGEX_NUMBER_CARD = "^[0-9]{13,20}$";
+    public static final String REGEX_CASH = "^[1-9]+[0-9]*$";
 }

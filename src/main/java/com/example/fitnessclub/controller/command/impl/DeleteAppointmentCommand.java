@@ -38,8 +38,7 @@ public class DeleteAppointmentCommand implements Command {
             } else {
                 request.setAttribute(MessagePage.MESSAGE, MessagePage.NO_ACCESS);
             }
-        } catch (
-                ServiceException e) {
+        } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             throw new CommandException(e);
         }

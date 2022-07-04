@@ -23,6 +23,16 @@ public final class MessagePage {
     public static final String FAILED_UPDATE_APPOINTMENT = "The appointment update was incorrect";
     public static final String DELETE_INCORRECT = "The deletion was incorrect";
     public static final String ADD_INCORRECT = "The addition was incorrect";
-    public static final String DELETE_SUCCESSFULLY= "Deleted successfully";
+    public static final String DELETE_SUCCESSFULLY = "Deleted successfully";
     public static final String USER_BLOCKED = "User blocked";
+    public static final String INCORRECT_ARRANGE_CONTRACT = "Incorrect arrange contract";
+    public static final String CONTRACT_SUCCESSFULLY = "Еhe contract has been successfully concluded";
+    public static final String CONTRACT_FAILED = "An error occurred while trying to sign the contract";
+    public static final String NOT_FOUND_CLIENT = "Couldn't find the client";
+    public static final String PLUS_CASH_SUCCESSFULLY = "The balance has been successfully replenished";
+    public static final String PLUS_CASH_FAILED = "Balance replenishment failed";
+    public static final String NO_TRAINER = "You don't have a personal trainer";
+    public static final String ARRANGE_BUY_INCORRECT = "Unsuccessful attempt to place an order";
+    public static final String BUY_SUCCESSFULLY = "Buy was successful";
+    public static final String BUY_NOT_SUCCESSFULLY = "Buy was not successful";
 }

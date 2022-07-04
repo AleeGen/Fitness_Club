@@ -26,4 +26,10 @@ public interface UserDao {
     boolean editPassword(String login, String replacePass) throws DaoException;
 
     boolean blocked(String login, boolean isBlocked) throws DaoException;
+
+    Optional<Byte> takeDiscount(String login) throws DaoException;
+
+    Optional<User> find(long id) throws DaoException;
+
+    boolean plusCash(String login, short cash) throws DaoException;
 }

@@ -34,7 +34,7 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.INSERT_PAYMENT)) {
             statement.setLong(1, payment.getUserId());
             statement.setLong(2, payment.getServiceId());
-            statement.setByte(3, payment.getRemainedVisits());
+            statement.setShort(3, payment.getRemainedVisits());
             statement.setBoolean(4, payment.isPaid());
             if (statement.executeUpdate() == 1) {
                 return true;
@@ -87,58 +87,30 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
 
     @Override
     public Optional<Payment> update(Payment payment) throws DaoException {
-        Optional<Payment> optionalPayment = Optional.empty();
-        Connection connection = ConnectionPool.getInstance().getConnection();
-        try (PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.UPDATE_PAYMENT);
-             PreparedStatement statementSelect = connection.prepareStatement(DatabaseQuery.SELECT_PAYMENT)) {
-            connection.setAutoCommit(false);
-            statementUpdate.setByte(1, payment.getRemainedVisits());
-            statementUpdate.setDate(2, payment.getExpiry());
-            statementUpdate.setBoolean(3, payment.isPaid());
-            statementUpdate.setLong(4, payment.getId());
-            if (statementUpdate.executeUpdate() == 1) {
-                statementSelect.setLong(1, payment.getId());
-                ResultSet resultSet = statementSelect.executeQuery();
-                if (resultSet.next()) {
-                    connection.commit();
-                    optionalPayment = PaymentMapper.getInstance().rowMap(resultSet);
-                }
-            } else {
-                connection.rollback();
-            }
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                logger.log(Level.ERROR, ex);
-            }
-            throw new DaoException(e);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-                connection.close();
-            } catch (SQLException e) {
-                logger.log(Level.ERROR, e);
-            }
-        }
-        return optionalPayment;
+        return Optional.empty();
     }
 
-    public boolean buy(long paymentId, Date exercise) throws DaoException {
+    @Override
+    public boolean buy(long userId, long paymentId, Date exercise, short cost) throws DaoException {
+        boolean result = false;
         Connection connection = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.UPDATE_BUY_PAYMENT);
-             PreparedStatement statementBuy = connection.prepareStatement(DatabaseQuery.MONEY_TRANSFER)) {
+             PreparedStatement statementBuy = connection.prepareStatement(DatabaseQuery.MINUS_CASH)) {
             connection.setAutoCommit(false);
             statementUpdate.setDate(1, exercise);
             statementUpdate.setLong(2, paymentId);
             if (statementUpdate.executeUpdate() == 1) {
-                int result = 1; //statementBuy.executeUpdate(); (stopper)
-                if (result == 1) {
+                statementBuy.setShort(1, cost);
+                statementBuy.setLong(2, userId);
+                if (statementBuy.executeUpdate() == 1) {
                     connection.commit();
-                    return true;
+                    connection.setAutoCommit(true);
+                    result = true;
                 }
-            } else {
+            }
+            if (!result) {
                 connection.rollback();
+                connection.setAutoCommit(true);
             }
         } catch (SQLException e) {
             try {
@@ -155,6 +127,6 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
                 logger.log(Level.ERROR, e);
             }
         }
-        return false;
+        return result;
     }
 }

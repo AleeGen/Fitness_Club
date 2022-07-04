@@ -30,7 +30,7 @@ public class ViewWorkoutCommand implements Command {
         String login = request.getParameter(AttributeName.LOGIN);
         WorkoutServiceImpl workoutService = WorkoutServiceImpl.getInstance();
         try {
-            Optional<User> optionalUser = UserServiceImpl.getInstance().find(login);
+            Optional<User> optionalUser = UserServiceImpl.getInstance().findByLogin(login);
             if (optionalUser.isPresent()) {
                 List<Workout> workouts = workoutService.findAll(optionalUser.get().getId());
                 HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);

@@ -6,7 +6,7 @@ public class Payment extends AbstractEntity {
 
     private Long userId;
     private Long serviceId;
-    private byte remainedVisits;
+    private short remainedVisits;
     private Date expiry;
     private boolean paid = false;
 
@@ -46,11 +46,11 @@ public class Payment extends AbstractEntity {
         this.expiry = expiry;
     }
 
-    public byte getRemainedVisits() {
+    public short getRemainedVisits() {
         return remainedVisits;
     }
 
-    public void setRemainedVisits(byte remainedVisits) {
+    public void setRemainedVisits(short remainedVisits) {
         this.remainedVisits = remainedVisits;
     }
 
@@ -71,7 +71,7 @@ public class Payment extends AbstractEntity {
             return this;
         }
 
-        public Payment.PaymentBuilder setRemainedVisits(byte remainedVisits) {
+        public Payment.PaymentBuilder setRemainedVisits(short remainedVisits) {
             Payment.this.remainedVisits = remainedVisits;
             return this;
         }

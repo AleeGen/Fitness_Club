@@ -50,6 +50,24 @@
                 <input type="submit" name="submit" value="<fmt:message key="submit.cart"/>"/>
             </form>
         </div>
+        <c:choose>
+            <c:when test="${sessionScope.get('role')=='TRAINER'}">
+                <div class="accordion__body">
+                    <form action="${pageContext.request.contextPath}/controller" method="get">
+                        <input type="hidden" name="command" value="view_clients">
+                        <input type="submit" name="submit" value="<fmt:message key="submit.clients"/>"/>
+                    </form>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="accordion__body">
+                    <form action="${pageContext.request.contextPath}/controller" method="get">
+                        <input type="hidden" name="command" value="view_personal_trainer">
+                        <input type="submit" name="submit" value="<fmt:message key="submit.personal_trainer"/>"/>
+                    </form>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 <script>

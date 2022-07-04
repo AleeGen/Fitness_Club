@@ -80,8 +80,25 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public Optional<User> find(String login) throws DaoException {
         Optional<User> optionalUser = Optional.empty();
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_USER_ALL_BY_LOGIN)) {
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_USER_BY_LOGIN)) {
             statement.setString(1, login);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    optionalUser = UserMapper.getInstance().rowMap(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return optionalUser;
+    }
+
+    @Override
+    public Optional<User> find(long id) throws DaoException {
+        Optional<User> optionalUser = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_USER_BY_ID)) {
+            statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     optionalUser = UserMapper.getInstance().rowMap(resultSet);
@@ -149,7 +166,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statementUpdate.setString(8, user.getAboutMe());
             statementUpdate.setString(9, user.getLogin());
             if (statementUpdate.executeUpdate() == 1) {
-                try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_ALL_BY_LOGIN)) {
+                try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_BY_LOGIN)) {
                     statementFind.setString(1, user.getLogin());
                     try (ResultSet resultSet = statementFind.executeQuery()) {
                         if (resultSet.next()) {
@@ -171,10 +188,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
              PreparedStatement statementFeatures = connection.prepareStatement(DatabaseQuery.UPDATE_FEATURES_USER)) {
             statementFeatures.setString(1, paramUser.get(AttributeName.ROLE));
             statementFeatures.setInt(2, Integer.parseInt(paramUser.get(AttributeName.CORPORATE)));
-            statementFeatures.setString(3, paramUser.get(AttributeName.DISCOUNT_CODE));
+            statementFeatures.setByte(3, Byte.parseByte(paramUser.get(AttributeName.DISCOUNT)));
             statementFeatures.setString(4, paramUser.get(AttributeName.LOGIN));
             if (statementFeatures.executeUpdate() == 1) {
-                try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_ALL_BY_LOGIN)) {
+                try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_BY_LOGIN)) {
                     statementFind.setString(1, paramUser.get(AttributeName.LOGIN));
                     try (ResultSet resultSet = statementFind.executeQuery()) {
                         if (resultSet.next()) {
@@ -260,6 +277,35 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(DatabaseQuery.UPDATE_USER_BLOCKED)) {
             statement.setBoolean(1, isBlocked);
+            statement.setString(2, login);
+            return statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public Optional<Byte> takeDiscount(String login) throws DaoException {
+        Optional<Byte> discount = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_DISCOUNT_BY_LOGIN)) {
+            statement.setString(1, login);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    discount = Optional.of(resultSet.getByte(AttributeName.DISCOUNT));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return discount;
+    }
+
+    @Override
+    public boolean plusCash(String login, short cash) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.PLUS_CASH)) {
+            statement.setShort(1, cash);
             statement.setString(2, login);
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {

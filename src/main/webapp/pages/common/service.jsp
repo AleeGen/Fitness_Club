@@ -36,11 +36,11 @@
             <c:forEach var="service" items="${services}">
                 <tr>
                     <td><c:out value="${service.getServiceName()}"/></td>
-                    <c:if test="${service.getNumberVisit()==0}">
-                        <td><fmt:message key="month"/></td>
-                    </c:if>
                     <c:if test="${service.getNumberVisit()!=0}">
                         <td><c:out value="${service.getNumberVisit()}"/></td>
+                    </c:if>
+                    <c:if test="${service.getNumberVisit()==0}">
+                        <td></td>
                     </c:if>
                     <td><c:out value="${service.getValidityPeriod()}"/></td>
                     <td><c:out value="${service.getPrice()}"/></td>

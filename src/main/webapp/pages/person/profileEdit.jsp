@@ -74,7 +74,6 @@
                         <input type="date" name="date_birth" style="background: ${param_user.get("date_birth_color")}"
                                value="${temp_attribute.get("user").getDateBirth()}"/>
                         <label><fmt:message key="field.user.date.birth"/></label>
-
                         <input style="transform: translateY(-200%); margin-top: 5%;" id="male" type="radio" name="sex"
                                value="male" <c:if test="${sex.equals('male')}"> checked</c:if>>
                         <label for="male"><fmt:message key="field.user.sex.male"/></label>

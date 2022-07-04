@@ -14,7 +14,9 @@ public interface UserService {
 
     boolean registration(RequestParameters paramUser) throws ServiceException;
 
-    Optional<User> find(String login) throws ServiceException;
+    Optional<User> findByLogin(String login) throws ServiceException;
+
+    Optional<User> findById(String login) throws ServiceException;
 
     List<User> findAll() throws ServiceException;
 
@@ -28,9 +30,9 @@ public interface UserService {
 
     boolean editPassword(RequestParameters parameters) throws ServiceException;
 
-    boolean buy(String login, long paymentId) throws ServiceException;
-
     boolean blocked(String login, String isBlocked) throws ServiceException;
 
+    boolean plusCash(String login, String cash) throws ServiceException;
 
+    Optional<User> findTrainerClient(String login) throws ServiceException;
 }

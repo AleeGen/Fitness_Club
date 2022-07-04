@@ -35,12 +35,12 @@
                 <input style="transform: translateY(-200%);" type="radio" name="corporate" id="id_false" value="false"
                        <c:if test="${!temp_attribute.get('user').isCorporate()}">checked</c:if>>
                 <label for="id_false"><fmt:message key="no"/></label><br>
-                <h2 style="margin: 2%;"><fmt:message key="field.user.discount_code"/>:</h2>
-                ${param_user.get("discount_code")}
-                <input style="margin-top: 1%" type="text" name="discount_code"
-                       value="${temp_attribute.get("user").getDiscountCode()}"
+                <h2 style="margin: 2%;"><fmt:message key="field.user.discount"/>:</h2>
+                ${param_user.get("discount")}
+                <input style="margin-top: 1%" type="number" min="0" max="100" name="discount"
+                       value="${temp_attribute.get("user").getDiscount()}"
                        style="margin-top:-10%; padding-left: 10%; background: ${param_user.get("discount_code_color")}"
-                       pattern="^[a-zA-Z0-9._-]{3,15}$" required>
+                       pattern="^([0-9]|([1-9][0-9])|100)$" required>
                 <input type="submit" value="<fmt:message key="submit.save_changes"/>"/>
             </form>
             <form action="${pageContext.request.contextPath}/controller" method="post">

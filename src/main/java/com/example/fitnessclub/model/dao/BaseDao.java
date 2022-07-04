@@ -13,5 +13,4 @@ public abstract class BaseDao<T extends AbstractEntity> {
     public abstract Optional<T> find(String id) throws DaoException;
 
     public abstract Optional<T> update(T t) throws DaoException;
-
 }

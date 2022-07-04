@@ -23,6 +23,10 @@ public final class AttributeName {
     public static final String DATE = "date";
     public static final String ADMIN_SWITCH = "admin_switch";
     public static final String TRAINER_SWITCH = "trainer_switch";
+    public static final String TRAINER = "trainer";
+    public static final String CLIENT = "client";
+    public static final String CLIENTS = "clients";
+    public static final String COST = "cost";
 
     //table users
     public static final String USER_ID = "user_id";
@@ -39,12 +43,13 @@ public final class AttributeName {
     public static final String PHONE = "phone";
     public static final String CORPORATE = "corporate";
     public static final String VISIT_PERIOD_MONTHS = "visit_period_months";
-    public static final String DISCOUNT_CODE = "discount_code";
+    public static final String DISCOUNT = "discount";
     public static final String NUMBER_CARD = "number_card";
     public static final String PATH_AVATAR = "path_avatar";
     public static final String ABOUT_ME = "about_me";
     public static final String TRAINERS = "trainers";
     public static final String IS_BLOCKED = "is_blocked";
+    public static final String CASH = "cash";
 
     //table services
     public static final String SERVICE_ID = "service_id";
@@ -55,6 +60,7 @@ public final class AttributeName {
     public static final String DESCRIPTION = "description";
 
     //table payment
+    public static final String PAYMENT = "payment";
     public static final String PAYMENTS = "payments";
     public static final String PAYMENT_STATUS = "payment_status";
     public static final String PAYMENT_ID = "payment_id";
@@ -81,9 +87,11 @@ public final class AttributeName {
     public static final String EQUIPMENT = "equipment";
 
     //table contract
+    public static final String CONTRACT_ID = "contract_id";
     public static final String TOTAL_COST = "total_cost";
     public static final String START_DATE = "start_date";
     public static final String END_DATE = "end_date";
     public static final String TRAINER_ID = "trainer_id";
+    public static final String CLIENT_ID = "client_id";
 
 }

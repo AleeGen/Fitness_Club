@@ -7,6 +7,7 @@ import com.example.fitnessclub.model.dao.mapper.RowMapper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -43,11 +44,12 @@ public class UserMapper implements RowMapper<User> {
                     .setPhone(resultSet.getString(AttributeName.PHONE))
                     .setCorporate(resultSet.getBoolean(AttributeName.CORPORATE))
                     .setVisitPeriodMonths(resultSet.getByte(AttributeName.VISIT_PERIOD_MONTHS))
-                    .setDiscountCode(resultSet.getString(AttributeName.DISCOUNT_CODE))
+                    .setDiscount(resultSet.getByte(AttributeName.DISCOUNT))
                     .setNumberCard(resultSet.getString(AttributeName.NUMBER_CARD))
                     .setPathAvatar(resultSet.getString(AttributeName.PATH_AVATAR))
                     .setAboutMe(resultSet.getString(AttributeName.ABOUT_ME))
                     .setBlocked(resultSet.getBoolean(AttributeName.IS_BLOCKED))
+                    .setCash(resultSet.getShort(AttributeName.CASH))
                     .build();
             optionalUser = Optional.of(user);
         } catch (SQLException e) {

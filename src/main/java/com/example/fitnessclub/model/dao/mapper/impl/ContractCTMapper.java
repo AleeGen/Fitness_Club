@@ -6,6 +6,7 @@ import com.example.fitnessclub.model.entity.ContractCT;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -31,11 +32,11 @@ public class ContractCTMapper implements RowMapper<ContractCT> {
         Optional<ContractCT> optionalContract;
         try {
             ContractCT contract = ContractCT.newBuilder()
-                    .setId(resultSet.getLong(AttributeName.SERVICE_ID))
-                    .setTotalCost(resultSet.getByte(AttributeName.TOTAL_COST))
+                    .setId(resultSet.getLong(AttributeName.CONTRACT_ID))
+                    .setTotalCost(resultSet.getShort(AttributeName.TOTAL_COST))
                     .setStart(resultSet.getDate(AttributeName.START_DATE))
                     .setEnd(resultSet.getDate(AttributeName.END_DATE))
-                    .setUserId(resultSet.getLong(AttributeName.USER_ID))
+                    .setUserId(resultSet.getLong(AttributeName.CLIENT_ID))
                     .setTrainerId(resultSet.getLong(AttributeName.TRAINER_ID))
                     .build();
             optionalContract = Optional.of(contract);

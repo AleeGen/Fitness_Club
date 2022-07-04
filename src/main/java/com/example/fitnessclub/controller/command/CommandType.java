@@ -36,7 +36,13 @@ public enum CommandType {
     EDIT_APPOINTMENT(new EditAppointmentCommand()),
     DELETE_APPOINTMENT(new DeleteAppointmentCommand()),
     ADD_APPOINTMENT(new AddAppointmentCommand()),
-    BLOCKED_USER(new BlockedUserCommand());
+    BLOCKED_USER(new BlockedUserCommand()),
+    ARRANGE_CONTRACT(new ArrangeContractCommand()),
+    UP_ACCOUNT_BALANCE(new UpAccountBalanceCommand()),
+    SIGN_CONTRACT(new SignContractCommand()),
+    VIEW_PERSONAL_TRAINER(new ViewPersonalTrainerCommand()),
+    VIEW_CLIENTS(new ViewClientsCommand()),
+    ARRANGE_BUY(new ArrangeBuyCommand());
 
     private final Command command;
 

@@ -1,5 +1,6 @@
 package com.example.fitnessclub.model.dao.impl;
 
+import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.model.dao.BaseDao;
 import com.example.fitnessclub.model.dao.DatabaseQuery;
@@ -73,5 +74,22 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
             throw new DaoException(e);
         }
         return item;
+    }
+
+    @Override
+    public Optional<Byte> takePrice(long id) throws DaoException {
+        Optional<Byte> price = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_SERVICE_PRICE_BY_ID)) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    price = Optional.of(resultSet.getByte(AttributeName.PRICE));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return price;
     }
 }

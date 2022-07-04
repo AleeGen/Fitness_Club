@@ -17,7 +17,7 @@ public class SessionCreateListenerImpl implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        logger.log(Level.INFO, "session created with id: {0}", se.getSession().getId());
+        logger.log(Level.INFO, "Session created with id: " + se.getSession().getId());
         se.getSession().setAttribute(AttributeName.TEMP_ATTRIBUTE, new HashMap<String, Object>());
         se.getSession().setAttribute(AttributeName.CURRENT_PAGE, PagePath.INDEX);
     }

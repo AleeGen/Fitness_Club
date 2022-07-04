@@ -3,9 +3,11 @@ package com.example.fitnessclub.model.service.impl;
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.controller.RequestParameters;
+import com.example.fitnessclub.model.dao.impl.ContractDaoImpl;
 import com.example.fitnessclub.model.dao.impl.PaymentDaoImpl;
 import com.example.fitnessclub.model.dao.impl.ServiceDaoImpl;
 import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
+import com.example.fitnessclub.model.entity.ContractCT;
 import com.example.fitnessclub.model.entity.Payment;
 import com.example.fitnessclub.model.entity.Service;
 import com.example.fitnessclub.model.entity.User;
@@ -91,37 +93,6 @@ public class UserServiceImpl implements UserService {
         return exists;
     }
 
-    private boolean registrationStepTwo(RequestParameters paramUser) throws ServiceException {
-        boolean exists = false;
-        if (ValidationUser.getInstance().isValidRegistrationStepTwo(paramUser)) {
-            try {
-                String password = paramUser.get(AttributeName.PASSWORD);
-                String codePassword = Base64.getEncoder().encodeToString(password.getBytes());
-                String date = paramUser.get(AttributeName.DATE_BIRTH);
-                Date dateResult = date.isBlank() ? null : Date.valueOf(date);
-                User user = User.newBuilder()
-                        .setLogin(paramUser.get(AttributeName.LOGIN))
-                        .setPassword(codePassword)
-                        .setMail(paramUser.get(AttributeName.MAIL))
-                        .setName(paramUser.get(AttributeName.NAME))
-                        .setLastname(paramUser.get(AttributeName.LASTNAME))
-                        .setDateBirth(dateResult)
-                        .setSex(paramUser.get(AttributeName.SEX))
-                        .setPhone(paramUser.get(AttributeName.PHONE))
-                        .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
-                        .build();
-                exists = UserDaoImpl.getInstance().add(user);
-                MailMain.sendTo(paramUser);
-            } catch (IOException e) {
-                logger.log(Level.ERROR, "Failed to send notification to email");
-            } catch (DaoException e) {
-                logger.log(Level.ERROR, "Error when adding a user");
-                throw new ServiceException(e);
-            }
-        }
-        return exists;
-    }
-
     @Override
     public List<User> findAll() throws ServiceException {
         List<User> users;
@@ -145,11 +116,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> find(String login) throws ServiceException {
+    public Optional<User> findByLogin(String login) throws ServiceException {
         Optional<User> optionalUser = Optional.empty();
         if (login != null) {
             try {
                 optionalUser = UserDaoImpl.getInstance().find(login);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return optionalUser;
+    }
+
+    @Override
+    public Optional<User> findById(String userId) throws ServiceException {
+        Optional<User> optionalUser = Optional.empty();
+        if (userId != null) {
+            long id = Long.parseLong(userId);
+            try {
+                optionalUser = UserDaoImpl.getInstance().find(id);
             } catch (DaoException e) {
                 throw new ServiceException(e);
             }
@@ -273,31 +258,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean buy(String login, long paymentId) throws ServiceException {
-        if (canBuy(login)) {
-            try {
-                Optional<Payment> optionalPayment = PaymentDaoImpl.getInstance().find(String.valueOf(paymentId));
-                if (optionalPayment.isPresent()) {
-                    String serviceId = String.valueOf(optionalPayment.get().getServiceId());
-                    Optional<Service> optionalService = ServiceDaoImpl.getInstance().find(serviceId);
-                    if (optionalService.isPresent()) {
-                        long validityPeriod = optionalService.get().getValidityPeriod();
-                        LocalDateTime now = LocalDateTime.now();
-                        LocalDateTime exercise = now.plusDays(validityPeriod);
-                        String result = exercise.format(DateTimeFormatter.ISO_LOCAL_DATE);
-                        if (PaymentDaoImpl.getInstance().buy(paymentId, Date.valueOf(result))) {
-                            return true;
-                        }
-                    }
-                }
-            } catch (DaoException e) {
-                throw new ServiceException(e);
-            }
-        }
-        return false;
-    }
-
-    @Override
     public boolean blocked(String login, String isBlocked) throws ServiceException {
         boolean blocked = Boolean.parseBoolean(isBlocked);
         try {
@@ -307,7 +267,67 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private boolean canBuy(String login) {
-        return true;
+    @Override
+    public boolean plusCash(String login, String cash) throws ServiceException {
+        boolean result = false;
+        if (ValidationUser.getInstance().isValidCash(cash)) {
+            short plusCash = Short.parseShort(cash);
+            try {
+                return UserDaoImpl.getInstance().plusCash(login, plusCash);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<User> findTrainerClient(String login) throws ServiceException {
+        Optional<User> trainer = Optional.empty();
+        try {
+            Optional<User> client = UserDaoImpl.getInstance().find(login);
+            if (client.isPresent()) {
+                String clientId = String.valueOf(client.get().getId());
+                Optional<ContractCT> contract = ContractDaoImpl.getInstance().find(clientId);
+                if (contract.isPresent()) {
+                    long trainerId = contract.get().getTrainerId();
+                    trainer = UserDaoImpl.getInstance().find(trainerId);
+                }
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return trainer;
+    }
+
+    private boolean registrationStepTwo(RequestParameters paramUser) throws ServiceException {
+        boolean exists = false;
+        if (ValidationUser.getInstance().isValidRegistrationStepTwo(paramUser)) {
+            try {
+                String password = paramUser.get(AttributeName.PASSWORD);
+                String codePassword = Base64.getEncoder().encodeToString(password.getBytes());
+                String date = paramUser.get(AttributeName.DATE_BIRTH);
+                Date dateResult = date.isBlank() ? null : Date.valueOf(date);
+                User user = User.newBuilder()
+                        .setLogin(paramUser.get(AttributeName.LOGIN))
+                        .setPassword(codePassword)
+                        .setMail(paramUser.get(AttributeName.MAIL))
+                        .setName(paramUser.get(AttributeName.NAME))
+                        .setLastname(paramUser.get(AttributeName.LASTNAME))
+                        .setDateBirth(dateResult)
+                        .setSex(paramUser.get(AttributeName.SEX))
+                        .setPhone(paramUser.get(AttributeName.PHONE))
+                        .setNumberCard(paramUser.get(AttributeName.NUMBER_CARD))
+                        .build();
+                exists = UserDaoImpl.getInstance().add(user);
+                MailMain.sendTo(paramUser);
+            } catch (IOException e) {
+                logger.log(Level.ERROR, "Failed to send notification to email");
+            } catch (DaoException e) {
+                logger.log(Level.ERROR, "Error when adding a user");
+                throw new ServiceException(e);
+            }
+        }
+        return exists;
     }
 }

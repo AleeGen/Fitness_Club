@@ -56,20 +56,6 @@
                         </form>
                     </div>
                 </div>
-                <div class="post-footer">
-                    <c:choose>
-                        <c:when test="${sessionScope.get('login')!=null}">
-                            <a class="more-link"
-                               href="${pageContext.servletContext.contextPath}/pages/common/service.jsp"><fmt:message
-                                    key="submit.buy"/></a>
-                        </c:when>
-                        <c:otherwise>
-                            <a class="more-link"
-                               href="${pageContext.servletContext.contextPath}/pages/common/logIn.jsp"><fmt:message
-                                    key="submit.buy"/></a>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
             </div>
         </article>
     </div>

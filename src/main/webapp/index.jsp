@@ -14,6 +14,8 @@ ${pageContext.request.session.setAttribute("current_page","index.jsp")}
 </head>
 <body>
 <c:import url="/pages/header/header.jsp"/>
+<div style="color:red">${temp_attribute.get("message")}</div>
+<div style="color:red">${message}</div>
 <a href="pages/common/exerciseRoom.jsp">
     <div class="triangle-caption">
         <img src="pictures/exercise_room.jpg" alt=""/>

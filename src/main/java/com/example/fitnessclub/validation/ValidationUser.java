@@ -51,6 +51,11 @@ public class ValidationUser {
         return pattern.matches();
     }
 
+    public boolean isValidCash(String cash) {
+        Matcher pattern = Pattern.compile(ColumnValidation.REGEX_CASH).matcher(cash);
+        return pattern.matches();
+    }
+
     public boolean isValidDateRegister(String date) {
         boolean result = false;
         if (isValidDate(date)) {
@@ -86,8 +91,8 @@ public class ValidationUser {
         return pattern.matches();
     }
 
-    public boolean isValidDiscountCode(String discountCode) {
-        Matcher pattern = Pattern.compile(ColumnValidation.REGEX_DISCOUNT_CODE).matcher(discountCode);
+    public boolean isValidDiscount(String discount) {
+        Matcher pattern = Pattern.compile(ColumnValidation.REGEX_DISCOUNT).matcher(discount);
         return pattern.matches();
     }
 
@@ -306,12 +311,12 @@ public class ValidationUser {
         } else {
             param.put(AttributeName.CORPORATE + COLOR, TypeInvalid.COLOR_VALID);
         }
-        if (!param.get(AttributeName.DISCOUNT_CODE).isBlank() && !isValidDiscountCode(param.get(AttributeName.DISCOUNT_CODE))) {
+        if (!param.get(AttributeName.DISCOUNT).isBlank() && !isValidDiscount(param.get(AttributeName.DISCOUNT))) {
             isValid = false;
-            param.put(AttributeName.DISCOUNT_CODE, TypeInvalid.INVALID_DISCOUNT_CODE);
-            param.put(AttributeName.DISCOUNT_CODE + COLOR, TypeInvalid.COLOR_INVALID);
+            param.put(AttributeName.DISCOUNT, TypeInvalid.INVALID_DISCOUNT_CODE);
+            param.put(AttributeName.DISCOUNT + COLOR, TypeInvalid.COLOR_INVALID);
         } else {
-            param.put(AttributeName.DISCOUNT_CODE + COLOR, TypeInvalid.COLOR_VALID);
+            param.put(AttributeName.DISCOUNT + COLOR, TypeInvalid.COLOR_VALID);
         }
         return isValid;
     }

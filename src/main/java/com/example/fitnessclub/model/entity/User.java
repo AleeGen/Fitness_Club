@@ -15,11 +15,12 @@ public class User extends AbstractEntity {
     private String phone;
     private boolean corporate;
     private byte visitPeriodMonths;
-    private String discountCode;
+    private byte discount;
     private String numberCard;
     private String pathAvatar;
     private String aboutMe;
     private boolean isBlocked;
+    private short cash;
 
     public static UserBuilder newBuilder() {
         return new User().new UserBuilder();
@@ -121,12 +122,12 @@ public class User extends AbstractEntity {
         this.corporate = corporate;
     }
 
-    public String getDiscountCode() {
-        return discountCode;
+    public byte getDiscount() {
+        return discount;
     }
 
-    public void setDiscountCode(String discountCode) {
-        this.discountCode = discountCode;
+    public void setDiscount(byte discount) {
+        this.discount = discount;
     }
 
     public String getPathAvatar() {
@@ -151,6 +152,14 @@ public class User extends AbstractEntity {
 
     public void setBlocked(boolean blocked) {
         isBlocked = blocked;
+    }
+
+    public short getCash() {
+        return cash;
+    }
+
+    public void setCash(short cash) {
+        this.cash = cash;
     }
 
     public class UserBuilder {
@@ -220,8 +229,8 @@ public class User extends AbstractEntity {
             return this;
         }
 
-        public UserBuilder setDiscountCode(String discountCode) {
-            User.this.discountCode = discountCode;
+        public UserBuilder setDiscount(byte discount) {
+            User.this.discount = discount;
             return this;
         }
 
@@ -237,6 +246,11 @@ public class User extends AbstractEntity {
 
         public UserBuilder setBlocked(boolean isBlocked) {
             User.this.isBlocked = isBlocked;
+            return this;
+        }
+
+        public UserBuilder setCash(short cash) {
+            User.this.cash = cash;
             return this;
         }
 
