@@ -5,6 +5,7 @@ import com.example.fitnessclub.controller.command.impl.admin.AdminSwitchCommand;
 import com.example.fitnessclub.controller.command.impl.admin.BlockedUserCommand;
 import com.example.fitnessclub.controller.command.impl.admin.EditUserFeaturesCommand;
 import com.example.fitnessclub.controller.command.impl.admin.ViewUsersCommand;
+import com.example.fitnessclub.controller.command.impl.trainer.ViewClientsCommand;
 
 import java.util.Arrays;
 import java.util.Optional;

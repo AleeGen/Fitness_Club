@@ -1,4 +1,4 @@
-package com.example.fitnessclub.controller.command.impl;
+package com.example.fitnessclub.controller.command.impl.trainer;
 
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.PagePath;
