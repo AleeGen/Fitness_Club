@@ -24,6 +24,9 @@ public class ContractServiceImpl implements ContractService {
     private static final short DAYS_PER_YEAR = 365;
     private static final byte DAYS_PER_MONTH = 30;
     private static final byte COEFFICIENT = 100;
+    private static final short DISCOUNT_AFTER_DAYS = 365;
+    private static final byte DISCOUNT_CORPORATE = 20;
+    private static final byte DISCOUNT_REGULAR_CLIENTS = 10;
 
     private ContractServiceImpl() {
     }
@@ -48,10 +51,18 @@ public class ContractServiceImpl implements ContractService {
                 short countDays = (short) (years * DAYS_PER_YEAR + months * DAYS_PER_MONTH + days);
                 try {
                     Optional<Byte> price = ServiceDaoImpl.getInstance().takePrice(SERVICE_ID);
-                    Optional<Byte> discount = UserDaoImpl.getInstance().takeDiscount(login);
-                    if (discount.isPresent() && price.isPresent()) {
+                    Optional<User> user = UserDaoImpl.getInstance().find(login);
+                    if (user.isPresent() && price.isPresent()) {
+                        short visitPeriodDays = user.get().getVisitPeriodDays();
+                        byte discount = 0;
+                        if (user.get().isCorporate()) {
+                            discount += DISCOUNT_CORPORATE;
+                        }
+                        if (visitPeriodDays > DISCOUNT_AFTER_DAYS) {
+                            discount += DISCOUNT_REGULAR_CLIENTS;
+                        }
                         short sum = (short) (price.get() * countDays);
-                        short result = (short) (sum - sum * discount.get() / COEFFICIENT);
+                        short result = (short) (sum - sum * discount / COEFFICIENT);
                         cost = Optional.of(result);
                     }
                 } catch (DaoException e) {
@@ -81,10 +92,10 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public List<User> findClients(String login) throws ServiceException {
+    public List<User> findClients(String loginTrainer) throws ServiceException {
         List<User> users = new ArrayList<>();
         try {
-            Optional<User> trainer = UserDaoImpl.getInstance().find(login);
+            Optional<User> trainer = UserDaoImpl.getInstance().find(loginTrainer);
             if (trainer.isPresent()) {
                 List<ContractCT> listContract = ContractDaoImpl.getInstance().findAll(trainer.get().getId());
                 for (var contract : listContract) {

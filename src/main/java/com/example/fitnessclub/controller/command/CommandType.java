@@ -1,10 +1,12 @@
 package com.example.fitnessclub.controller.command;
 
-import com.example.fitnessclub.controller.command.impl.*;
+import com.example.fitnessclub.controller.command.impl.DefaultCommand;
 import com.example.fitnessclub.controller.command.impl.admin.AdminSwitchCommand;
 import com.example.fitnessclub.controller.command.impl.admin.BlockedUserCommand;
 import com.example.fitnessclub.controller.command.impl.admin.EditUserFeaturesCommand;
 import com.example.fitnessclub.controller.command.impl.admin.ViewUsersCommand;
+import com.example.fitnessclub.controller.command.impl.client.*;
+import com.example.fitnessclub.controller.command.impl.common.*;
 import com.example.fitnessclub.controller.command.impl.trainer.ViewClientsCommand;
 
 import java.util.Arrays;
@@ -43,7 +45,8 @@ public enum CommandType {
     SIGN_CONTRACT(new SignContractCommand()),
     VIEW_PERSONAL_TRAINER(new ViewPersonalTrainerCommand()),
     VIEW_CLIENTS(new ViewClientsCommand()),
-    ARRANGE_BUY(new ArrangeBuyCommand());
+    ARRANGE_BUY(new ArrangeBuyCommand()),
+    DELETE_PAYMENT(new DeletePaymentCommand());
 
     private final Command command;
 

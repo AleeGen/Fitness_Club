@@ -39,7 +39,7 @@ public class ContractDaoImpl extends BaseDao<ContractCT> implements ContractDao 
         boolean result = false;
         Connection connection = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement statementContract = connection.prepareStatement(DatabaseQuery.INSERT_CONTRACT);
-             PreparedStatement statementUser = connection.prepareStatement(DatabaseQuery.MINUS_CASH);
+             PreparedStatement statementUser = connection.prepareStatement(DatabaseQuery.UPDATE_MINUS_CASH);
              PreparedStatement statementPayment = connection.prepareStatement(DatabaseQuery.INSERT_PAYMENT_PAID)) {
             connection.setAutoCommit(false);
             statementContract.setLong(1, contractCT.getUserId());

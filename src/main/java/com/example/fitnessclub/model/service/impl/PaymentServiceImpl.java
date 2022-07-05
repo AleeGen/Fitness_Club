@@ -23,6 +23,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     private static final Logger logger = LogManager.getLogger();
     private static final PaymentServiceImpl instance = new PaymentServiceImpl();
+    private static final short DISCOUNT_AFTER_DAYS = 365;
+    private static final byte DISCOUNT_CORPORATE = 20;
+    private static final byte DISCOUNT_REGULAR_CLIENTS = 10;
     private static final byte COEFFICIENT = 100;
 
     private PaymentServiceImpl() {
@@ -82,12 +85,18 @@ public class PaymentServiceImpl implements PaymentService {
         Optional<Short> result = Optional.empty();
         try {
             Optional<User> user = UserDaoImpl.getInstance().find(login);
-            if (user.isPresent()) {
-                Optional<Byte> price = ServiceDaoImpl.getInstance().takePrice(serviceId);
-                if (price.isPresent()) {
-                    short cost = (short) (price.get() - price.get() * user.get().getDiscount() / COEFFICIENT);
-                    result = Optional.of(cost);
+            Optional<Byte> price = ServiceDaoImpl.getInstance().takePrice(serviceId);
+            if (user.isPresent() && price.isPresent()) {
+                short visitPeriodDays = user.get().getVisitPeriodDays();
+                byte discount = 0;
+                if (user.get().isCorporate()) {
+                    discount += DISCOUNT_CORPORATE;
                 }
+                if (visitPeriodDays > DISCOUNT_AFTER_DAYS) {
+                    discount += DISCOUNT_REGULAR_CLIENTS;
+                }
+                short cost = (short) (price.get() - price.get() * discount / COEFFICIENT);
+                result = Optional.of(cost);
             }
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -126,9 +135,30 @@ public class PaymentServiceImpl implements PaymentService {
         boolean result = false;
         try {
             Optional<User> user = UserServiceImpl.getInstance().findByLogin(login);
-            if (user.isPresent()) {
+            Optional<Payment> payment = PaymentServiceImpl.getInstance().find(String.valueOf(paymentId));
+            if (user.isPresent() && payment.isPresent()) {
+                short remainedVisits = payment.get().getRemainedVisits();
                 long userId = user.get().getId();
-                result = PaymentDaoImpl.getInstance().buy(userId, paymentId, date, cost);
+                result = PaymentDaoImpl.getInstance().buy(userId, paymentId, date, cost, remainedVisits);
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean delete(String paymentId, String login) throws ServiceException {
+        boolean result = false;
+        try {
+            Optional<Payment> payment = PaymentServiceImpl.getInstance().find(paymentId);
+            Optional<User> user = UserServiceImpl.getInstance().findByLogin(login);
+            if (payment.isPresent() && user.isPresent()) {
+                long needId = payment.get().getUserId();
+                long currentId = user.get().getId();
+                if (needId == currentId && !payment.get().isPaid()) {
+                    result = PaymentDaoImpl.getInstance().delete(paymentId);
+                }
             }
         } catch (DaoException e) {
             throw new ServiceException(e);

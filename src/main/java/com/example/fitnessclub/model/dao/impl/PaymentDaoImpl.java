@@ -47,7 +47,14 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
 
     @Override
     public boolean delete(String paymentId) throws DaoException {
-        return false;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.DELETE_PAYMENT)) {
+            statement.setLong(1, Long.parseLong(paymentId));
+            return statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            logger.log(Level.ERROR, "Couldn't delete purchase from cart");
+            throw new DaoException(e);
+        }
     }
 
     @Override
@@ -91,17 +98,18 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
     }
 
     @Override
-    public boolean buy(long userId, long paymentId, Date exercise, short cost) throws DaoException {
+    public boolean buy(long userId, long paymentId, Date exercise, short cost, short countDay) throws DaoException {
         boolean result = false;
         Connection connection = ConnectionPool.getInstance().getConnection();
         try (PreparedStatement statementUpdate = connection.prepareStatement(DatabaseQuery.UPDATE_BUY_PAYMENT);
-             PreparedStatement statementBuy = connection.prepareStatement(DatabaseQuery.MINUS_CASH)) {
+             PreparedStatement statementBuy = connection.prepareStatement(DatabaseQuery.UPDATE_CASH_AND_DAYS)) {
             connection.setAutoCommit(false);
             statementUpdate.setDate(1, exercise);
             statementUpdate.setLong(2, paymentId);
             if (statementUpdate.executeUpdate() == 1) {
                 statementBuy.setShort(1, cost);
-                statementBuy.setLong(2, userId);
+                statementBuy.setShort(2, countDay);
+                statementBuy.setLong(3, userId);
                 if (statementBuy.executeUpdate() == 1) {
                     connection.commit();
                     connection.setAutoCommit(true);

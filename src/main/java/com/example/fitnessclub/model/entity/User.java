@@ -14,8 +14,7 @@ public class User extends AbstractEntity {
     private String sex;
     private String phone;
     private boolean corporate;
-    private byte visitPeriodMonths;
-    private byte discount;
+    private short visitPeriodDays;
     private String numberCard;
     private String pathAvatar;
     private String aboutMe;
@@ -106,12 +105,12 @@ public class User extends AbstractEntity {
         this.numberCard = numberCard;
     }
 
-    public byte getVisitPeriodMonths() {
-        return visitPeriodMonths;
+    public short getVisitPeriodDays() {
+        return visitPeriodDays;
     }
 
-    public void setVisitPeriodMonths(byte visitPeriodMonths) {
-        this.visitPeriodMonths = visitPeriodMonths;
+    public void setVisitPeriodDays(short visitPeriodDays) {
+        this.visitPeriodDays = visitPeriodDays;
     }
 
     public boolean isCorporate() {
@@ -120,14 +119,6 @@ public class User extends AbstractEntity {
 
     public void setCorporate(boolean corporate) {
         this.corporate = corporate;
-    }
-
-    public byte getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(byte discount) {
-        this.discount = discount;
     }
 
     public String getPathAvatar() {
@@ -224,13 +215,8 @@ public class User extends AbstractEntity {
             return this;
         }
 
-        public UserBuilder setVisitPeriodMonths(byte visitPeriodMonths) {
-            User.this.visitPeriodMonths = visitPeriodMonths;
-            return this;
-        }
-
-        public UserBuilder setDiscount(byte discount) {
-            User.this.discount = discount;
+        public UserBuilder setVisitPeriodDays(short visitPeriodDays) {
+            User.this.visitPeriodDays = visitPeriodDays;
             return this;
         }
 

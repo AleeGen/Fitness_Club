@@ -1,6 +1,5 @@
 package com.example.fitnessclub.model.dao;
 
-import com.example.fitnessclub.controller.RequestParameters;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.DaoException;
 
@@ -17,7 +16,7 @@ public interface UserDao {
 
     List<User> findTrainers() throws DaoException;
 
-    Optional<User> editFeatures(RequestParameters paramUser) throws DaoException;
+    boolean editFeatures(String login, String role, boolean corporate) throws DaoException;
 
     boolean editAvatar(String pathAvatar, String login) throws DaoException;
 
@@ -26,8 +25,6 @@ public interface UserDao {
     boolean editPassword(String login, String replacePass) throws DaoException;
 
     boolean blocked(String login, boolean isBlocked) throws DaoException;
-
-    Optional<Byte> takeDiscount(String login) throws DaoException;
 
     Optional<User> find(long id) throws DaoException;
 

@@ -291,33 +291,4 @@ public class ValidationUser {
         }
         return isValid;
     }
-
-    public boolean isValidEditFeatures(RequestParameters param) {
-        if (param == null) {
-            return false;
-        }
-        boolean isValid = true;
-        if (!param.get(AttributeName.ROLE).isBlank() && !isValidRole(param.get(AttributeName.ROLE))) {
-            isValid = false;
-            param.put(AttributeName.ROLE, TypeInvalid.INVALID_ROLE);
-            param.put(AttributeName.ROLE + COLOR, TypeInvalid.COLOR_INVALID);
-        } else {
-            param.put(AttributeName.ROLE + COLOR, TypeInvalid.COLOR_VALID);
-        }
-        if (!param.get(AttributeName.CORPORATE).isBlank() && !isValidCorporate(param.get(AttributeName.CORPORATE))) {
-            isValid = false;
-            param.put(AttributeName.CORPORATE, TypeInvalid.INVALID_CORPORATE);
-            param.put(AttributeName.CORPORATE + COLOR, TypeInvalid.COLOR_INVALID);
-        } else {
-            param.put(AttributeName.CORPORATE + COLOR, TypeInvalid.COLOR_VALID);
-        }
-        if (!param.get(AttributeName.DISCOUNT).isBlank() && !isValidDiscount(param.get(AttributeName.DISCOUNT))) {
-            isValid = false;
-            param.put(AttributeName.DISCOUNT, TypeInvalid.INVALID_DISCOUNT_CODE);
-            param.put(AttributeName.DISCOUNT + COLOR, TypeInvalid.COLOR_INVALID);
-        } else {
-            param.put(AttributeName.DISCOUNT + COLOR, TypeInvalid.COLOR_VALID);
-        }
-        return isValid;
-    }
 }

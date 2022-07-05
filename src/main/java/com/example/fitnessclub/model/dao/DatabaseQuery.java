@@ -11,11 +11,11 @@ public final class DatabaseQuery {
             "= ? and password = ?";
 
     public static final String SELECT_USER_BY_ID = "SELECT user_id, login, password, role, mail, " +
-            "name,lastname, date_birth, sex, phone, corporate, visit_period_months, discount, " +
+            "name,lastname, date_birth, sex, phone, corporate, visit_period_days, " +
             "number_card, path_avatar, about_me, is_blocked, cash FROM fitness_club.users WHERE user_id = ?";
 
     public static final String SELECT_USER_BY_LOGIN = "SELECT user_id, login, password, role, mail, " +
-            "name,lastname, date_birth, sex, phone, corporate, visit_period_months, discount, " +
+            "name,lastname, date_birth, sex, phone, corporate, visit_period_days, " +
             "number_card, path_avatar, about_me, is_blocked, cash FROM fitness_club.users WHERE login = ?";
 
     public static final String INSERT_USER = "INSERT INTO fitness_club.users (login, password, mail, name, " +
@@ -46,18 +46,15 @@ public final class DatabaseQuery {
             ", equipment, description, appointment_id FROM fitness_club.exercise WHERE appointment_id = ?";
 
     public static final String SELECT_ALL_USERS = "SELECT user_id, login, password, role, mail, " +
-            "name,lastname, date_birth, sex, phone, corporate, visit_period_months, discount, " +
+            "name,lastname, date_birth, sex, phone, corporate, visit_period_days, " +
             "number_card, path_avatar, about_me, is_blocked, cash FROM fitness_club.users";
 
     public static final String SELECT_ALL_TRAINERS = "SELECT user_id, login, password, role, mail, " +
-            "name,lastname, date_birth, sex, phone, corporate, visit_period_months, discount, " +
+            "name,lastname, date_birth, sex, phone, corporate, visit_period_days, " +
             "number_card, path_avatar, about_me, is_blocked, cash FROM fitness_club.users WHERE role = 'trainer'";
 
-    public static final String UPDATE_FEATURES_USER = "UPDATE fitness_club.users SET role = ?," +
-            "corporate = ?, discount = ? WHERE login = ?";
-
-    public static final String UPDATE_PAYMENT = "UPDATE fitness_club.payment SET remained_visits = ?," +
-            "expiry = ?, paid = ? WHERE payment_id = ?";
+    public static final String UPDATE_FEATURES_USER = "UPDATE fitness_club.users SET role = ?, corporate = ? " +
+            "WHERE login = ?";
 
     public static final String SELECT_PAYMENT = "SELECT payment_id, user_id, service_id, remained_visits, " +
             "expiry, paid FROM fitness_club.payment WHERE payment_id = ?";
@@ -93,17 +90,15 @@ public final class DatabaseQuery {
     public static final String SELECT_SERVICE_PRICE_BY_ID = "SELECT price FROM fitness_club.services " +
             "WHERE service_id = ?";
 
-    public static final String SELECT_DISCOUNT_BY_LOGIN = "SELECT discount FROM fitness_club.users WHERE login = ?";
-
     public static final String INSERT_CONTRACT = "INSERT INTO fitness_club.contract (client_id, trainer_id, " +
             "total_cost, start_date, end_date) VALUES (?,?,?,?,?)";
 
-    public static final String MINUS_CASH = "UPDATE fitness_club.users SET cash = cash - ? WHERE user_id = ?";
+    public static final String UPDATE_MINUS_CASH = "UPDATE fitness_club.users SET cash = cash - ? WHERE user_id = ?";
 
     public static final String INSERT_PAYMENT_PAID = "INSERT INTO fitness_club.payment (user_id, " +
             "service_id, remained_visits, expiry, paid) VALUES (?,?,?,?,?)";
 
-    public static final String PLUS_CASH = "UPDATE fitness_club.users SET cash = cash + ? WHERE login = ?";
+    public static final String UPDATE_PLUS_CASH = "UPDATE fitness_club.users SET cash = cash + ? WHERE login = ?";
 
     public static final String SELECT_CONTRACT_BY_CLIENT = "SELECT contract_id, trainer_id, client_id, start_date, " +
             "end_date, total_cost FROM fitness_club.contract WHERE end_date > NOW() and start_date < NOW() " +
@@ -112,4 +107,9 @@ public final class DatabaseQuery {
     public static final String SELECT_CONTRACTS_BY_TRAINER = "SELECT contract_id, trainer_id, client_id, start_date, " +
             "end_date, total_cost FROM fitness_club.contract WHERE end_date > NOW() and start_date < NOW() " +
             "and trainer_id = ?";
+
+    public static final String DELETE_PAYMENT = "DELETE FROM fitness_club.payment WHERE payment_id = ?";
+
+    public static final String UPDATE_CASH_AND_DAYS = "UPDATE fitness_club.users SET cash = cash - ?, " +
+            "visit_period_days = visit_period_days + ? WHERE user_id = ?";
 }

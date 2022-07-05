@@ -1,4 +1,4 @@
-package com.example.fitnessclub.controller.command.impl;
+package com.example.fitnessclub.controller.command.impl.common;
 
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.command.Command;

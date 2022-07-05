@@ -42,7 +42,7 @@ public final class AttributeName {
     public static final String SEX = "sex";
     public static final String PHONE = "phone";
     public static final String CORPORATE = "corporate";
-    public static final String VISIT_PERIOD_MONTHS = "visit_period_months";
+    public static final String VISIT_PERIOD_DAYS = "visit_period_days";
     public static final String DISCOUNT = "discount";
     public static final String NUMBER_CARD = "number_card";
     public static final String PATH_AVATAR = "path_avatar";
@@ -50,6 +50,7 @@ public final class AttributeName {
     public static final String TRAINERS = "trainers";
     public static final String IS_BLOCKED = "is_blocked";
     public static final String CASH = "cash";
+    public static final String CLIENT_LOGINS = "client_logins";
 
     //table services
     public static final String SERVICE_ID = "service_id";

@@ -47,7 +47,13 @@
                                 <input type="hidden" name="command" value="arrange_buy">
                                 <input type="hidden" name="payment_id" value="${payment.getId()}">
                                 <input type="hidden" name="service_id" value="${payment.getServiceId()}">
-                                <input type="submit" value="<fmt:message key="submit.buy"/>">
+                                <input style="margin:auto" type="submit" value="<fmt:message key="submit.buy"/>">
+                            </form>
+                            <hr style="margin: 5px">
+                            <form action="${pageContext.request.contextPath}/controller" method="post">
+                                <input type="hidden" name="command" value="delete_payment">
+                                <input type="hidden" name="payment_id" value="${payment.getId()}">
+                                <input style="margin:auto" type="submit" value="<fmt:message key="submit.cancel"/>">
                             </form>
                         </td>
                     </c:if>

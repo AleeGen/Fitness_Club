@@ -20,4 +20,6 @@ public interface PaymentService {
     Optional<LocalDate> calculateExpiry(long serviceId) throws ServiceException;
 
     boolean buy(String login, long id, LocalDate expiry, short cost) throws ServiceException;
+
+    boolean delete(String paymentId, String login) throws ServiceException;
 }

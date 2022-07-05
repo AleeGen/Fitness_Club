@@ -24,7 +24,7 @@ public interface UserService {
 
     Optional<User> update(RequestParameters paramUser) throws ServiceException;
 
-    Optional<User> editFeatures(RequestParameters paramUser) throws ServiceException;
+    boolean editFeatures(String login, String role, String corporate) throws ServiceException;
 
     boolean editAvatar(Part part, String login) throws ServiceException;
 

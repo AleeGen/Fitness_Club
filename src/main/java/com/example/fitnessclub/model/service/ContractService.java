@@ -3,6 +3,7 @@ package com.example.fitnessclub.model.service;
 import com.example.fitnessclub.exception.ServiceException;
 import com.example.fitnessclub.model.entity.User;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 

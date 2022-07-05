@@ -1,7 +1,6 @@
 package com.example.fitnessclub.model.dao.impl;
 
 import com.example.fitnessclub.controller.AttributeName;
-import com.example.fitnessclub.controller.RequestParameters;
 import com.example.fitnessclub.model.dao.BaseDao;
 import com.example.fitnessclub.model.dao.DatabaseQuery;
 import com.example.fitnessclub.model.dao.UserDao;
@@ -182,28 +181,16 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> editFeatures(RequestParameters paramUser) throws DaoException {
-        Optional<User> result = Optional.empty();
+    public boolean editFeatures(String login, String role, boolean corporate) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statementFeatures = connection.prepareStatement(DatabaseQuery.UPDATE_FEATURES_USER)) {
-            statementFeatures.setString(1, paramUser.get(AttributeName.ROLE));
-            statementFeatures.setInt(2, Integer.parseInt(paramUser.get(AttributeName.CORPORATE)));
-            statementFeatures.setByte(3, Byte.parseByte(paramUser.get(AttributeName.DISCOUNT)));
-            statementFeatures.setString(4, paramUser.get(AttributeName.LOGIN));
-            if (statementFeatures.executeUpdate() == 1) {
-                try (PreparedStatement statementFind = connection.prepareStatement(DatabaseQuery.SELECT_USER_BY_LOGIN)) {
-                    statementFind.setString(1, paramUser.get(AttributeName.LOGIN));
-                    try (ResultSet resultSet = statementFind.executeQuery()) {
-                        if (resultSet.next()) {
-                            result = UserMapper.getInstance().rowMap(resultSet);
-                        }
-                    }
-                }
-            }
+            statementFeatures.setString(1, role);
+            statementFeatures.setBoolean(2, corporate);
+            statementFeatures.setString(3, login);
+            return statementFeatures.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return result;
     }
 
     @Override
@@ -285,26 +272,9 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<Byte> takeDiscount(String login) throws DaoException {
-        Optional<Byte> discount = Optional.empty();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.SELECT_DISCOUNT_BY_LOGIN)) {
-            statement.setString(1, login);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    discount = Optional.of(resultSet.getByte(AttributeName.DISCOUNT));
-                }
-            }
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-        return discount;
-    }
-
-    @Override
     public boolean plusCash(String login, short cash) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.PLUS_CASH)) {
+             PreparedStatement statement = connection.prepareStatement(DatabaseQuery.UPDATE_PLUS_CASH)) {
             statement.setShort(1, cash);
             statement.setString(2, login);
             return statement.executeUpdate() == 1;

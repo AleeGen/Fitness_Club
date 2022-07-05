@@ -1,4 +1,4 @@
-package com.example.fitnessclub.validator;
+package com.example.fitnessclub;
 
 import com.example.fitnessclub.validation.ValidationUser;
 import org.testng.annotations.DataProvider;
@@ -120,17 +120,6 @@ public class ValidatorTest {
         return data;
     }
 
-    @DataProvider(name = "validation_discount")
-    public Object[][] createDataDiscount() {
-        Object[][] data = new Object[5][2];
-        data[0] = new Object[]{"100", true};
-        data[1] = new Object[]{"101", false};
-        data[2] = new Object[]{"32", true};
-        data[3] = new Object[]{"af", false};
-        data[4] = new Object[]{"-30", false};
-        return data;
-    }
-
     @DataProvider(name = "validation_number_card")
     public Object[][] createDataNumberCard() {
         Object[][] data = new Object[5][2];
@@ -214,20 +203,14 @@ public class ValidatorTest {
         assertEquals(actual, expected, str + " - Invalid!");
     }
 
-    @Test(dataProvider = "validation_discount")
-    public void testValidationDiscount(String str, boolean expected) {
-        boolean actual = validator.isValidDiscount(str);
-        assertEquals(actual, expected, str + " - Invalid!");
-    }
-
     @Test(dataProvider = "validation_number_card")
-    public void testValidationNumberCarD(String str, boolean expected) {
+    public void testValidationNumberCard(String str, boolean expected) {
         boolean actual = validator.isValidNumberCard(str);
         assertEquals(actual, expected, str + " - Invalid!");
     }
 
     @Test(dataProvider = "validation_cash")
-    public void testValidationCashD(String str, boolean expected) {
+    public void testValidationCash(String str, boolean expected) {
         boolean actual = validator.isValidCash(str);
         assertEquals(actual, expected, str + " - Invalid!");
     }

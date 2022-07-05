@@ -68,8 +68,8 @@
                             <th><h5>${client.isCorporate()}</h5></th>
                         </tr>
                         <tr>
-                            <th><h4><fmt:message key="field.user.visit_period_months"/>:</h4></th>
-                            <th><h5>${client.getVisitPeriodMonths()}</h5></th>
+                            <th><h4><fmt:message key="field.user.visit_period_days"/>:</h4></th>
+                            <th><h5>${client.getVisitPeriodDays()}</h5></th>
                         </tr>
                         <tr>
                             <th><h4><fmt:message key="field.user.about_me"/>:</h4></th>
@@ -82,11 +82,6 @@
                         <tr>
                             <th><h4><fmt:message key="field.user.number_cart"/>:</h4></th>
                             <th><h5>${client.getNumberCard()}</h5></th>
-                        </tr>
-                        <tr>
-                            <th><h4 style="color: #47caff;  font-weight: 1000;"><fmt:message
-                                    key="field.user.discount"/>:</h4></th>
-                            <th><h5 style="color: #47caff;  font-weight: 1000;">${client.getDiscount()}</h5></th>
                         </tr>
                         <tr>
                             <th><h4 style="color: #f3d201;  font-weight: 1000;"><fmt:message
@@ -127,6 +122,13 @@
                     <form action="${pageContext.request.contextPath}/controller" method="get">
                         <input type="hidden" name="command" value="view_edit_profile">
                         <input type="submit" value="<fmt:message key="submit.edit"/>"/>
+                    </form>
+                </c:if>
+                <c:if test="${sessionScope.get('client_logins').contains(client.getLogin())}">
+                    <form action="${pageContext.request.contextPath}/controller" method="get">
+                        <input type="hidden" name="command" value="view_workout">
+                        <input type="hidden" name="login" value="${client.getLogin()}">
+                        <input type="submit" value="<fmt:message key="submit.add_appointments"/>">
                     </form>
                 </c:if>
             </div>

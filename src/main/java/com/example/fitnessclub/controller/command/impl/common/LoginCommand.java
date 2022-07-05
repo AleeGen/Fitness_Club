@@ -1,4 +1,4 @@
-package com.example.fitnessclub.controller.command.impl;
+package com.example.fitnessclub.controller.command.impl.common;
 
 import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.PagePath;
@@ -9,12 +9,16 @@ import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.CommandException;
 import com.example.fitnessclub.exception.ServiceException;
 import com.example.fitnessclub.model.entity.UserRole;
+import com.example.fitnessclub.model.service.impl.ContractServiceImpl;
 import com.example.fitnessclub.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 public class LoginCommand implements Command {
@@ -40,6 +44,12 @@ public class LoginCommand implements Command {
                         session.setAttribute(AttributeName.ADMIN_SWITCH, false);
                     } else if (optionalUser.get().getRole() == UserRole.TRAINER) {
                         session.setAttribute(AttributeName.TRAINER_SWITCH, false);
+                        List<User> clients = ContractServiceImpl.getInstance().findClients(login);
+                        HashSet<String> clientLogins = new HashSet<>();
+                        for (var client : clients) {
+                            clientLogins.add(client.getLogin());
+                        }
+                        session.setAttribute(AttributeName.CLIENT_LOGINS, clientLogins);
                     }
                     session.setAttribute(AttributeName.LOGIN, optionalUser.get().getLogin());
                     session.setAttribute(AttributeName.CURRENT_PAGE, page);

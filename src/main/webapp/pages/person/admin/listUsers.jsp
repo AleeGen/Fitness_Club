@@ -27,7 +27,7 @@
         <th><fmt:message key="field.user.date.birth"/></th>
         <th><fmt:message key="field.user.sex"/></th>
         <th><fmt:message key="field.user.corporate"/></th>
-        <th><fmt:message key="field.user.visit_period_months"/></th>
+        <th><fmt:message key="field.user.visit_period_days"/></th>
         <th><fmt:message key="field.user.is_blocked"/></th>
         <th><fmt:message key="field.user.cash"/></th>
     </tr>
@@ -49,7 +49,7 @@
             <td>${client.getDateBirth()}</td>
             <td>${client.getSex()}</td>
             <td>${client.isCorporate()}</td>
-            <td>${client.getVisitPeriodMonths()}</td>
+            <td>${client.getVisitPeriodDays()}</td>
             <td>${client.isBlocked()}</td>
             <td>${client.getCash()}</td>
         </tr>

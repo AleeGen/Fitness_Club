@@ -10,5 +10,5 @@ public interface PaymentDao {
 
     List<Payment> findAll(long userId) throws DaoException;
 
-    boolean buy(long userId, long paymentId, Date exercise, short cost) throws DaoException;
+    boolean buy(long userId, long paymentId, Date exercise, short cost, short countDay) throws DaoException;
 }

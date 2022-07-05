@@ -4,12 +4,8 @@ import com.example.fitnessclub.controller.AttributeName;
 import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.controller.RequestParameters;
 import com.example.fitnessclub.model.dao.impl.ContractDaoImpl;
-import com.example.fitnessclub.model.dao.impl.PaymentDaoImpl;
-import com.example.fitnessclub.model.dao.impl.ServiceDaoImpl;
 import com.example.fitnessclub.model.dao.impl.UserDaoImpl;
 import com.example.fitnessclub.model.entity.ContractCT;
-import com.example.fitnessclub.model.entity.Payment;
-import com.example.fitnessclub.model.entity.Service;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.exception.ServiceException;
@@ -28,13 +24,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LogManager.getLogger();
+    private static final UserServiceImpl instance = new UserServiceImpl();
+    private static final Properties property = new Properties();
     private static final String EMPTY = "";
     private static final String COLOR = "_color";
     private static final String COLOR_INVALID = "#FFEBE8";
@@ -42,10 +38,6 @@ public class UserServiceImpl implements UserService {
     private static final String PATH_AVATAR = "path.avatar";
     private static final String ENCODE = "UTF-8";
     private static final String WRONG_PASSWORD = "Wrong password";
-    private static final String TRUE = "1";
-    private static final String FALSE = "0";
-    private static final Properties property = new Properties();
-    private static final UserServiceImpl instance = new UserServiceImpl();
 
     private UserServiceImpl() {
     }
@@ -174,24 +166,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> editFeatures(RequestParameters paramUser) throws ServiceException {
-        Optional<User> result = Optional.empty();
-        boolean isValid = ValidationUser.getInstance().isValidEditFeatures(paramUser);
+    public boolean editFeatures(String login, String role, String corporate) throws ServiceException {
+        boolean result = false;
+        ValidationUser validation = ValidationUser.getInstance();
+        boolean isValid = validation.isValidLogin(login)
+                && validation.isValidRole(role)
+                && validation.isValidCorporate(corporate);
         if (isValid) {
-            if (Boolean.parseBoolean(paramUser.get(AttributeName.CORPORATE))) {
-                paramUser.put(AttributeName.CORPORATE, TRUE);
-            } else {
-                paramUser.put(AttributeName.CORPORATE, FALSE);
+            Optional<User> user = UserServiceImpl.getInstance().findByLogin(login);
+            if (user.isPresent()) {
+                boolean corporateUser = Boolean.parseBoolean(corporate);
+                try {
+                    if (UserDaoImpl.getInstance().editFeatures(login, role, corporateUser)) {
+                        result = true;
+                    }
+                } catch (DaoException e) {
+                    throw new ServiceException(e);
+                }
             }
-            try {
-                result = UserDaoImpl.getInstance().editFeatures(paramUser);
-                paramUser.clear();
-                paramUser.put(MessagePage.MESSAGE, MessagePage.EDIT_USER_SUCCESSFULLY);
-            } catch (DaoException e) {
-                throw new ServiceException(e);
-            }
-        } else {
-            paramUser.put(MessagePage.MESSAGE, MessagePage.EDIT_USER_FAILED);
         }
         return result;
     }

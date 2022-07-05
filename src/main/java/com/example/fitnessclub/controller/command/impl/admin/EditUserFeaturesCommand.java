@@ -1,7 +1,7 @@
 package com.example.fitnessclub.controller.command.impl.admin;
 
 import com.example.fitnessclub.controller.AttributeName;
-import com.example.fitnessclub.controller.RequestParameters;
+import com.example.fitnessclub.controller.MessagePage;
 import com.example.fitnessclub.controller.Router;
 import com.example.fitnessclub.controller.command.Command;
 import com.example.fitnessclub.exception.CommandException;
@@ -27,17 +27,17 @@ public class EditUserFeaturesCommand implements Command {
         HttpSession session = request.getSession();
         UserRole role = (UserRole) session.getAttribute(AttributeName.ROLE);
         if (role == UserRole.ADMIN) {
-            RequestParameters paramUser = new RequestParameters();
             HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);
             String login = ((User) tempAttr.get(AttributeName.USER)).getLogin();
-            paramUser.put(AttributeName.LOGIN, login);
-            paramUser.put(AttributeName.ROLE, request.getParameter(AttributeName.ROLE));
-            paramUser.put(AttributeName.CORPORATE, request.getParameter(AttributeName.CORPORATE));
-            paramUser.put(AttributeName.DISCOUNT, request.getParameter(AttributeName.DISCOUNT));
+            String roleUser = request.getParameter(AttributeName.ROLE);
+            String corporate = request.getParameter(AttributeName.CORPORATE);
             try {
-                Optional<User> optionalUser = UserServiceImpl.getInstance().editFeatures(paramUser);
-                optionalUser.ifPresent(user -> tempAttr.put(AttributeName.USER, user));
-                request.setAttribute(AttributeName.USER_PARAM, paramUser);
+                if (UserServiceImpl.getInstance().editFeatures(login, roleUser, corporate)) {
+                    Optional<User> user = UserServiceImpl.getInstance().findByLogin(login);
+                    user.ifPresent(value -> tempAttr.put(AttributeName.USER, value));
+                } else {
+                    request.setAttribute(MessagePage.MESSAGE, MessagePage.EDIT_USER_FAILED);
+                }
             } catch (ServiceException e) {
                 logger.log(Level.ERROR, e);
                 throw new CommandException(e);
