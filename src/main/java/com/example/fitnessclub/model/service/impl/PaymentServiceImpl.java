@@ -47,13 +47,12 @@ public class PaymentServiceImpl implements PaymentService {
                         .setServiceId(serviceId)
                         .setRemainedVisits(remainedVisits)
                         .build();
-                PaymentDaoImpl paymentDao = PaymentDaoImpl.getInstance();
-                if (paymentDao.add(payment)) {
+                if (PaymentDaoImpl.getInstance().add(payment)) {
                     return true;
                 }
             }
         } catch (DaoException e) {
-            logger.log(Level.ERROR, "An error occurred while adding to the cart", e);
+            logger.log(Level.ERROR, "An error occurred while adding to the cart users with login = " + login);
             throw new ServiceException(e);
         }
         return false;
@@ -75,6 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "failed when trying to receive payments with the status = " + status);
             throw new ServiceException(e);
         }
         return listPayment;
@@ -99,6 +99,7 @@ public class PaymentServiceImpl implements PaymentService {
                 result = Optional.of(cost);
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to calculating the value buy service for user with login = " + login);
             throw new ServiceException(e);
         }
         return result;
@@ -124,6 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
                 result = Optional.of(expiry);
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to calculate expiry when service_id = " + serviceId);
             throw new ServiceException(e);
         }
         return result;
@@ -142,6 +144,7 @@ public class PaymentServiceImpl implements PaymentService {
                 result = PaymentDaoImpl.getInstance().buy(userId, paymentId, date, cost, remainedVisits);
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to buy payment for payment_id =" + paymentId);
             throw new ServiceException(e);
         }
         return result;

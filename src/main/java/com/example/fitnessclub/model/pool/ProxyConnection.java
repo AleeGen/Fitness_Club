@@ -3,6 +3,7 @@ package com.example.fitnessclub.model.pool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -18,13 +19,14 @@ public class ProxyConnection implements Connection {
     }
 
     @Override
-    public void close() throws SQLException {
+    public void close() {
         ConnectionPool.getInstance().releaseConnection(this);
     }
 
     void reallyClose() {
         try {
             connection.close();
+            logger.log(Level.INFO, "Connection really close!");
         } catch (SQLException e) {
             logger.log(Level.ERROR, e);
         }

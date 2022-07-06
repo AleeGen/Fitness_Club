@@ -23,13 +23,13 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         process(request, response);
-        logger.log(Level.INFO, request.getMethod());
+        logger.log(Level.INFO, request.getMethod() + " end");
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         process(request, response);
-        logger.log(Level.INFO, request.getMethod());
+        logger.log(Level.INFO, request.getMethod() + " end");
     }
 
     private void process(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

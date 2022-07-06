@@ -43,6 +43,7 @@ public class ExerciseDaoImpl extends BaseDao<Exercise> implements ExerciseDao {
             statement.setLong(6, exercise.getAppointmentId());
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to add exercise with appointment_id = " + exercise.getAppointmentId());
             throw new DaoException(e);
         }
     }
@@ -70,7 +71,7 @@ public class ExerciseDaoImpl extends BaseDao<Exercise> implements ExerciseDao {
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, e);
+            logger.log(Level.ERROR, "Failed to find exercises with appointment_id = " + appointmentId);
             throw new DaoException(e);
         }
         return listExercise;
@@ -98,6 +99,7 @@ public class ExerciseDaoImpl extends BaseDao<Exercise> implements ExerciseDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to update exercises with exercise_id = " + exercise.getId());
             throw new DaoException(e);
         }
         return optionalExercise;

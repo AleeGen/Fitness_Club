@@ -71,6 +71,9 @@ public class ContractDaoImpl extends BaseDao<ContractCT> implements ContractDao 
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, e);
             }
+            logger.log(Level.ERROR, contractCT.getUserId() +
+                    "user failed to transaction add contract with trainer_id = "
+                    + contractCT.getTrainerId());
             throw new DaoException(e);
         } finally {
             try {
@@ -100,6 +103,7 @@ public class ContractDaoImpl extends BaseDao<ContractCT> implements ContractDao 
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find contract with client_id = " + clientId);
             throw new DaoException(e);
         }
         return contract;
@@ -123,6 +127,7 @@ public class ContractDaoImpl extends BaseDao<ContractCT> implements ContractDao 
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find contracts with trainer_id = " + trainerId);
             throw new DaoException(e);
         }
         return contracts;

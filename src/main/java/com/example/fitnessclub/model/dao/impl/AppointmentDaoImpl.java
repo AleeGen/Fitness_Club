@@ -7,6 +7,9 @@ import com.example.fitnessclub.model.dao.DatabaseQuery;
 import com.example.fitnessclub.model.dao.mapper.impl.AppointmentMapper;
 import com.example.fitnessclub.model.entity.Appointment;
 import com.example.fitnessclub.model.pool.ConnectionPool;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +21,7 @@ import java.util.Optional;
 
 public class AppointmentDaoImpl extends BaseDao<Appointment> implements AppointmentDao {
 
+    private static final Logger logger = LogManager.getLogger();
     private static final AppointmentDaoImpl instance = new AppointmentDaoImpl();
 
     private AppointmentDaoImpl() {
@@ -36,6 +40,7 @@ public class AppointmentDaoImpl extends BaseDao<Appointment> implements Appointm
             statement.setLong(3, appointment.getUserId());
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to add appointment with user_id = " + appointment.getUserId());
             throw new DaoException(e);
         }
     }
@@ -48,6 +53,7 @@ public class AppointmentDaoImpl extends BaseDao<Appointment> implements Appointm
             statement.setLong(1, Long.parseLong(appointmentId));
             result = statement.executeUpdate() == 1;
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to delete appointment with id = " + appointmentId);
             throw new DaoException(e);
         }
         return result;
@@ -65,6 +71,7 @@ public class AppointmentDaoImpl extends BaseDao<Appointment> implements Appointm
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find appointment with id = " + id);
             throw new DaoException(e);
         }
         return optionalAppointment;
@@ -82,6 +89,7 @@ public class AppointmentDaoImpl extends BaseDao<Appointment> implements Appointm
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find appointments with user_id = " + userId);
             throw new DaoException(e);
         }
         return appointments;
@@ -107,6 +115,7 @@ public class AppointmentDaoImpl extends BaseDao<Appointment> implements Appointm
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to update appointment with id = " + appointment.getId());
             throw new DaoException(e);
         }
         return optionalAppointment;

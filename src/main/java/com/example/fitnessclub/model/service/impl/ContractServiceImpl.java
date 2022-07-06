@@ -9,6 +9,9 @@ import com.example.fitnessclub.model.entity.ContractCT;
 import com.example.fitnessclub.model.entity.User;
 import com.example.fitnessclub.model.service.ContractService;
 import com.example.fitnessclub.validation.ValidationUser;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -30,6 +33,8 @@ public class ContractServiceImpl implements ContractService {
 
     private ContractServiceImpl() {
     }
+
+    private static final Logger logger = LogManager.getLogger();
 
     public static ContractServiceImpl getInstance() {
         return instance;
@@ -66,6 +71,7 @@ public class ContractServiceImpl implements ContractService {
                         cost = Optional.of(result);
                     }
                 } catch (DaoException e) {
+                    logger.log(Level.ERROR, "Failed to calculating the value for user's contract with login" + login);
                     throw new ServiceException(e);
                 }
             }
@@ -104,6 +110,7 @@ public class ContractServiceImpl implements ContractService {
                 }
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to find clients trainer with login" + loginTrainer);
             throw new ServiceException(e);
         }
         return users;

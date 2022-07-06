@@ -21,10 +21,10 @@ public class MailSender {
     private static final String CONTENT_TYPE = "text/html";
 
     private MimeMessage message;
-    private String sendToEmail;
-    private String mailSubject;
-    private String mailText;
-    private Properties properties;
+    private final String sendToEmail;
+    private final String mailSubject;
+    private final String mailText;
+    private final Properties properties;
 
     public MailSender(String sendToEmail, String mailSubject, String mailText, Properties props) {
         this.sendToEmail = sendToEmail;

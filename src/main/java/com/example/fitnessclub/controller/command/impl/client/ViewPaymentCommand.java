@@ -25,18 +25,16 @@ public class ViewPaymentCommand implements Command {
         HttpSession session = request.getSession();
         String login = (String) session.getAttribute(AttributeName.LOGIN);
         boolean status = Boolean.parseBoolean(request.getParameter(AttributeName.PAYMENT_STATUS));
-        String page = (String) session.getAttribute(AttributeName.CURRENT_PAGE);
         try {
             HashMap<String, Object> tempAttr = (HashMap<String, Object>) session.getAttribute(AttributeName.TEMP_ATTRIBUTE);
             List<Payment> payments = PaymentServiceImpl.getInstance().findAll(login, status);
             tempAttr.put(AttributeName.PAYMENTS, payments);
             tempAttr.put(AttributeName.PAID, status);
-            page = PagePath.PAYMENTS;
-            session.setAttribute(AttributeName.CURRENT_PAGE, page);
+            session.setAttribute(AttributeName.CURRENT_PAGE, PagePath.PAYMENTS);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, e);
             throw new CommandException(e);
         }
-        return new Router(page);
+        return new Router(PagePath.PAYMENTS);
     }
 }

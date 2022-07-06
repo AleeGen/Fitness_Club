@@ -41,6 +41,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to checking existence with login = " + login);
             throw new DaoException(e);
         }
         return false;
@@ -65,7 +66,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             }
             return (statement.executeUpdate() == 1);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error during user registration");
+            logger.log(Level.ERROR, "Error during user registration with login = " + user.getLogin());
             throw new DaoException(e);
         }
     }
@@ -87,6 +88,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find user with login = " + login);
             throw new DaoException(e);
         }
         return optionalUser;
@@ -104,6 +106,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find user with id = " + id);
             throw new DaoException(e);
         }
         return optionalUser;
@@ -124,6 +127,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find all users");
             throw new DaoException(e);
         }
         return users;
@@ -140,6 +144,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 trainer.ifPresent(trainers::add);
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find all trainers");
             throw new DaoException(e);
         }
         return trainers;
@@ -175,6 +180,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to update user with login = " + user.getLogin());
             throw new DaoException(e);
         }
         return result;
@@ -189,6 +195,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statementFeatures.setString(3, login);
             return statementFeatures.executeUpdate() == 1;
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to edit features user with login = " + login);
             throw new DaoException(e);
         }
     }
@@ -201,7 +208,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(2, login);
             return (statement.executeUpdate() == 1);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "An error occurred when edit avatar");
+            logger.log(Level.ERROR, "An error occurred when edit avatar with login " + login);
             throw new DaoException(e);
         }
     }
@@ -218,7 +225,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to get password");
+            logger.log(Level.ERROR, "Failed to find password user with login = " + login);
             throw new DaoException(e);
         }
         return password;
@@ -232,7 +239,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(2, login);
             return (statement.executeUpdate() == 1);
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to change password");
+            logger.log(Level.ERROR, "Failed to edit password for user with login = " + login);
             throw new DaoException(e);
         }
     }
@@ -254,6 +261,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to authenticate user with login = " + login);
             throw new DaoException(e);
         }
         return optionalUser;
@@ -267,6 +275,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(2, login);
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to blocked user with login = " + login);
             throw new DaoException(e);
         }
     }
@@ -279,6 +288,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(2, login);
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to plus cash for user with login = " + login);
             throw new DaoException(e);
         }
     }

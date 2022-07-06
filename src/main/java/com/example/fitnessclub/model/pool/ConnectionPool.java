@@ -3,6 +3,7 @@ package com.example.fitnessclub.model.pool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -51,7 +52,7 @@ public class ConnectionPool {
             try {
                 connection = DriverManager.getConnection((String) property.get(URL), property);
             } catch (SQLException e) {
-                logger.warn("Exception when creating connection", e);
+                logger.log(Level.WARN, "Exception when creating connection", e);
             }
             free.add(new ProxyConnection(connection));
         }
@@ -61,7 +62,7 @@ public class ConnectionPool {
                 try {
                     connection = DriverManager.getConnection((String) property.get(URL), property);
                 } catch (SQLException e) {
-                    logger.fatal("Connections was not created!", e);
+                    logger.log(Level.FATAL, "Connections was not created!", e);
                     throw new ExceptionInInitializerError(e.getMessage());
                 }
                 free.add(new ProxyConnection(connection));
@@ -98,7 +99,7 @@ public class ConnectionPool {
     }
 
     public void releaseConnection(Connection connection) {
-        if (connection instanceof ProxyConnection) {
+        if (connection.getClass() == ProxyConnection.class) {
             try {
                 if (used.remove(connection)) {
                     logger.log(Level.INFO, "Connection released");
@@ -110,15 +111,18 @@ public class ConnectionPool {
                 logger.error("Connection not release, thread interrupt", e);
                 Thread.currentThread().interrupt();
             }
+        } else {
+            logger.log(Level.ERROR, "Illegal connection!");
         }
     }
 
     public void destroyPool() {
         for (int i = 0; i < CAPACITY_POOL; i++) {
             try {
-                free.take().close();
-            } catch (SQLException | InterruptedException e) {
-                logger.error("Error when destroy pool", e);
+                free.take().reallyClose();
+            } catch (InterruptedException e) {
+                logger.log(Level.ERROR, "Error when destroy pool", e);
+                Thread.currentThread().interrupt();
             }
         }
         deregisterDrivers();
@@ -128,8 +132,9 @@ public class ConnectionPool {
         DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
             try {
                 DriverManager.deregisterDriver(driver);
+                logger.log(Level.INFO, "Deregister driver");
             } catch (SQLException e) {
-                logger.error("Error when deregister driver", e);
+                logger.log(Level.ERROR, "Error when deregister driver", e);
             }
         });
     }

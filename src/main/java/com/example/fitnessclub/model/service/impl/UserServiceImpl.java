@@ -76,7 +76,8 @@ public class UserServiceImpl implements UserService {
                         paramUser.put(AttributeName.REPEAT_PASSWORD, EMPTY);
                     }
                 } catch (DaoException e) {
-                    logger.log(Level.ERROR, "Error checking the presence of a user");
+                    logger.log(Level.ERROR, "Error checking the presence of a user with login = "
+                            + paramUser.get(AttributeName.LOGIN));
                 }
             }
         } else if (paramUser.get(AttributeName.STEP_NUMBER).equals(AttributeName.STEP_TWO)) {
@@ -204,16 +205,17 @@ public class UserServiceImpl implements UserService {
         }
         String path = part.getSubmittedFileName();
         String randFileName = UUID.randomUUID() + path.substring(path.lastIndexOf("."));
+        String pathAvatar = savePath + File.separator + randFileName;
         try {
-            String pathAvatar = savePath + File.separator + randFileName;
             part.write(pathAvatar);
             UserDaoImpl userDao = UserDaoImpl.getInstance();
             return userDao.editAvatar(URLEncoder.encode(pathAvatar, ENCODE), login);
         } catch (IOException e) {
-            logger.log(Level.ERROR, "Failed to write to the server at the specified path");
+            logger.log(Level.ERROR, "Failed to write to the server at the specified path: " + pathAvatar);
             throw new ServiceException(e);
         } catch (DaoException e) {
-            logger.log(Level.ERROR, "Failed to perform an update in the database");
+            logger.log(Level.ERROR, "Failed to perform an update in the database when edit avatar" +
+                    " for user with login = " + login);
             throw new ServiceException(e);
         }
     }
@@ -240,6 +242,7 @@ public class UserServiceImpl implements UserService {
                     parameters.put(AttributeName.PASSWORD + COLOR, TypeInvalid.COLOR_INVALID);
                 }
             } catch (DaoException e) {
+                logger.log(Level.ERROR, "Failed to edit password for user with login = " + login);
                 throw new ServiceException(e);
             } finally {
                 parameters.put(AttributeName.REPLACE_PASSWORD, EMPTY);
@@ -287,6 +290,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to find trainer for client with login = " + login);
             throw new ServiceException(e);
         }
         return trainer;

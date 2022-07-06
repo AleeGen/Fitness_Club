@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-popup" id="form">
                         <div class="form-container">
-                            <form>
+                            <form action="${pageContext.request.contextPath}/controller" method="post">
                                 <input type="hidden" name="command" value="up_account_balance">
                                 <div class="form-row">
                                     <input type="number" name="cash" min="0">

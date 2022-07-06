@@ -40,6 +40,7 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
                 return true;
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to add payment with user_id = " + payment.getUserId());
             throw new DaoException(e);
         }
         return false;
@@ -52,7 +53,7 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
             statement.setLong(1, Long.parseLong(paymentId));
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Couldn't delete purchase from cart");
+            logger.log(Level.ERROR, "Failed to delete payment with payment_id = " + paymentId);
             throw new DaoException(e);
         }
     }
@@ -69,6 +70,7 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find payment with payment_id = " + id);
             throw new DaoException(e);
         }
         return optionalPayment;
@@ -87,6 +89,7 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find payments with user_id = " + userId);
             throw new DaoException(e);
         }
         return listPayment;
@@ -126,6 +129,7 @@ public class PaymentDaoImpl extends BaseDao<Payment> implements PaymentDao {
             } catch (SQLException ex) {
                 logger.log(Level.ERROR, ex);
             }
+            logger.log(Level.ERROR, "Failed to transaction buy payment for user_id =" + userId);
             throw new DaoException(e);
         } finally {
             try {

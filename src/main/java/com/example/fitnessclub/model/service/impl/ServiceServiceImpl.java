@@ -28,7 +28,6 @@ public class ServiceServiceImpl implements ServiceService {
         try {
             services = ServiceDaoImpl.getInstance().findAll();
         } catch (DaoException e) {
-            logger.log(Level.ERROR, "An error occurred when finding services");
             throw new ServiceException(e);
         }
         return services;

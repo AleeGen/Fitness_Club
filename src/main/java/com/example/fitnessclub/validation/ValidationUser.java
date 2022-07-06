@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class ValidationUser {
 
-    private static ValidationUser instance = new ValidationUser();
+    private static final ValidationUser instance = new ValidationUser();
     private static final String EMPTY = "";
     private static final String COLOR = "_color";
 

@@ -8,6 +8,9 @@ import com.example.fitnessclub.model.dao.ServiceDao;
 import com.example.fitnessclub.model.entity.Service;
 import com.example.fitnessclub.model.dao.mapper.impl.ServiceMapper;
 import com.example.fitnessclub.model.pool.ConnectionPool;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +22,7 @@ import java.util.Optional;
 
 public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
 
+    private static final Logger logger = LogManager.getLogger();
     private static final ServiceDaoImpl instance = new ServiceDaoImpl();
 
     private ServiceDaoImpl() {
@@ -49,6 +53,7 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
                 service.ifPresent(services::add);
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find all services");
             throw new DaoException(e);
         }
         return services;
@@ -71,6 +76,7 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to find service with service_id = " + serviceId);
             throw new DaoException(e);
         }
         return item;
@@ -88,6 +94,7 @@ public class ServiceDaoImpl extends BaseDao<Service> implements ServiceDao {
                 }
             }
         } catch (SQLException e) {
+            logger.log(Level.ERROR, "Failed to takePrice service with service_id = " + id);
             throw new DaoException(e);
         }
         return price;

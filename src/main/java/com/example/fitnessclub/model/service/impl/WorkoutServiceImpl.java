@@ -10,6 +10,9 @@ import com.example.fitnessclub.model.entity.*;
 import com.example.fitnessclub.model.service.WorkoutService;
 import com.example.fitnessclub.exception.DaoException;
 import com.example.fitnessclub.exception.ServiceException;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -17,6 +20,7 @@ import java.util.*;
 
 public class WorkoutServiceImpl implements WorkoutService {
 
+    private static final Logger logger = LogManager.getLogger();
     private static final WorkoutServiceImpl instance = new WorkoutServiceImpl();
     private static final Date DEFAULT_DATE = Date.valueOf(LocalDate.now());
     private static final AppointmentType DEFAULT_TYPE = AppointmentType.FITNESS_ROOM;
@@ -38,6 +42,7 @@ public class WorkoutServiceImpl implements WorkoutService {
                 workouts.add(new Workout(app, exerciseList));
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to find all workout for user with user_id = " + userId);
             throw new ServiceException(e);
         }
         return workouts;
@@ -45,7 +50,11 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public Optional<Workout> find(String appointmentId) throws ServiceException {
-        return supportFind(appointmentId);
+        try {
+            return supportFind(appointmentId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
@@ -65,6 +74,7 @@ public class WorkoutServiceImpl implements WorkoutService {
                 }
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Problem when checking the legality of the user to change workout");
             throw new ServiceException(e);
         }
         return false;
@@ -85,6 +95,7 @@ public class WorkoutServiceImpl implements WorkoutService {
                 result = supportRelevant(clientId, trainerId);
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Problem when checking the legality of the user to add workout");
             throw new ServiceException(e);
         }
         return result;
@@ -137,6 +148,7 @@ public class WorkoutServiceImpl implements WorkoutService {
             }
             optionalWorkout = supportFind(appointmentId);
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to update workout with appointment_id = " + appointmentId);
             throw new ServiceException(e);
         }
         return optionalWorkout;
@@ -168,6 +180,7 @@ public class WorkoutServiceImpl implements WorkoutService {
                 }
             }
         } catch (DaoException e) {
+            logger.log(Level.ERROR, "Failed to add workout for user with login = " + login);
             throw new ServiceException(e);
         }
         return workout;
@@ -189,17 +202,13 @@ public class WorkoutServiceImpl implements WorkoutService {
         return contract.filter(contractCT -> contractCT.getTrainerId() == trainerId).isPresent();
     }
 
-    private Optional<Workout> supportFind(String appointmentId) throws ServiceException {
+    private Optional<Workout> supportFind(String appointmentId) throws DaoException {
         Optional<Workout> workout = Optional.empty();
-        try {
-            Optional<Appointment> optionalAppointment = AppointmentDaoImpl.getInstance().find(appointmentId);
-            if (optionalAppointment.isPresent()) {
-                Appointment appointment = optionalAppointment.get();
-                List<Exercise> exercises = ExerciseDaoImpl.getInstance().findAll(appointment.getId());
-                workout = Optional.of(new Workout(appointment, exercises));
-            }
-        } catch (DaoException e) {
-            throw new ServiceException(e);
+        Optional<Appointment> optionalAppointment = AppointmentDaoImpl.getInstance().find(appointmentId);
+        if (optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            List<Exercise> exercises = ExerciseDaoImpl.getInstance().findAll(appointment.getId());
+            workout = Optional.of(new Workout(appointment, exercises));
         }
         return workout;
     }

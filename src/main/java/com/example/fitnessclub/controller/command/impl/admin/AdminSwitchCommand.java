@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpSession;
 public class AdminSwitchCommand implements Command {
 
     @Override
-    public Router execute(HttpServletRequest request) throws CommandException {
+    public Router execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserRole role = (UserRole) session.getAttribute(AttributeName.ROLE);
         if (role == UserRole.ADMIN) {
